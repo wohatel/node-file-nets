@@ -19,7 +19,8 @@ import com.murong.rpc.vo.FileVo;
 import com.murong.rpc.vo.NodeVo;
 import io.netty.channel.ChannelHandlerContext;
 import org.apache.commons.io.FileUtils;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
@@ -36,8 +37,8 @@ import java.util.stream.Collectors;
 @Component
 public class RpcMsgService {
 
-    @Autowired
-    NodeService nodeService;
+    private static Logger logger = LoggerFactory.getLogger(RpcMsgService.class);
+
 
     private static final Map<String, Method> methods = new ConcurrentHashMap<>();
 
@@ -253,7 +254,7 @@ public class RpcMsgService {
     public void chHomeDirs(ChannelHandlerContext ctx, RpcRequest request) {
         String body = request.getBody();
         List<String> dirs = JsonUtil.parseArray(body, String.class);
-        EnvConfig.clearHomeDirsAndAddAll(dirs);
+        EnvConfig.clearHomeDirsAndAddAll(dirs, System.currentTimeMillis());
         RpcResponse rpcResponse = request.toResponse();
         rpcResponse.setCode(CodeConfig.SUCCESS);
         rpcResponse.setBody(Boolean.toString(true));

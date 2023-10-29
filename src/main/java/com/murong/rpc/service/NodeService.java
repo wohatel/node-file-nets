@@ -15,6 +15,7 @@ import com.murong.rpc.util.JsonUtil;
 import com.murong.rpc.util.RpcResponseHandler;
 import com.murong.rpc.util.StringUtil;
 import com.murong.rpc.util.ThreadUtil;
+import com.murong.rpc.vo.DirsVo;
 import com.murong.rpc.vo.FileVo;
 import com.murong.rpc.vo.NodeVo;
 import org.slf4j.Logger;
@@ -23,9 +24,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 @Service
 public class NodeService {
@@ -315,7 +316,8 @@ public class NodeService {
         RpcFuture rpcFuture = centerClient.sendSynMsg(request);
         RpcResponse rpcResponse = rpcFuture.get();
         logger.info("ack家目录:" + rpcResponse.getBody());
-        EnvConfig.clearHomeDirsAndAddAll(JsonUtil.parseArray(rpcResponse.getBody(), String.class));
+        DirsVo dirsVo = JsonUtil.parseObject(rpcResponse.getBody(), DirsVo.class);
+        EnvConfig.clearHomeDirsAndAddAll(dirsVo.getDirs(), dirsVo.getTime());
     }
 
     /**
@@ -387,5 +389,36 @@ public class NodeService {
         RpcFuture rpcFuture = orConnectClient.sendSynMsg(rpcRequest);
         RpcResponse rpcResponse = rpcFuture.get();
         return RpcResponseHandler.handler(rpcResponse, t -> Boolean.valueOf(t));
+    }
+
+    /**
+     * 中心节点之间同步节点的信息变化
+     */
+    public void syncCenterNodes() {
+        List<NodeVo> nodeVos = EnvConfig.centerNodes();
+        List<String> nodeNames = nodeVos.stream().map(t -> t.getName()).collect(Collectors.toList());
+        if (!nodeNames.contains(nodeConfig.getNodeName())) { // 如果不是中心节点,不需要同步
+            return;
+        }
+        Map<String, NodeVo> map = new ConcurrentHashMap<>();
+        for (int i = 0; i < nodeVos.size(); i++) {
+            NodeVo nodeVo = nodeVos.get(i);
+            ThreadUtil.execSilentException(() -> {
+                RpcAutoReconnectClient client = ClientSitePool.get(nodeVo.getName());
+                RpcRequest rpcRequest = new RpcRequest();
+                rpcRequest.setRequestType(RequestTypeEnmu.getNodes.name());
+                RpcFuture rpcFuture = client.sendSynMsg(rpcRequest);
+                RpcResponse rpcResponse = rpcFuture.get();
+                List<NodeVo> allNodes = JsonUtil.parseArray(rpcResponse.getBody(), NodeVo.class);
+                if (!CollectionUtils.isEmpty(allNodes)) {
+                    for (NodeVo vo : allNodes) {
+                        NodeVo nodeVo1 = map.get(vo.getName()); // 如果有变更时间,则给与优先
+                        if (vo.getStartTime() > nodeVo1.getStartTime()) {
+                            map.put(vo.getName(), vo);
+                        }
+                    }
+                }
+            }, e -> e.printStackTrace());
+        }
     }
 }

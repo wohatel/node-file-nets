@@ -66,5 +66,10 @@ public enum RequestTypeEnmu {
     /**
      * 文件重命名
      */
-    renameFile;
+    renameFile,
+
+    /**
+     * 广播
+     */
+    broadcast;
 }

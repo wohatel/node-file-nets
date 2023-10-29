@@ -1,0 +1,53 @@
+{
+  "groups": [
+    {
+      "name": "home.dir",
+      "type": "com.murong.rpc.config.HomeDirConfig",
+      "sourceType": "com.murong.rpc.config.HomeDirConfig"
+    },
+    {
+      "name": "link.node",
+      "type": "com.murong.rpc.config.NodeConfig",
+      "sourceType": "com.murong.rpc.config.NodeConfig"
+    }
+  ],
+  "properties": [
+    {
+      "name": "home.dir.list",
+      "type": "java.util.List<java.lang.String>",
+      "sourceType": "com.murong.rpc.config.HomeDirConfig"
+    },
+    {
+      "name": "link.node.list",
+      "type": "java.util.List<java.lang.String>",
+      "sourceType": "com.murong.rpc.config.NodeConfig"
+    },
+    {
+      "name": "link.node.node-host",
+      "type": "java.lang.String",
+      "description": "本机的rpc服务启动的host",
+      "sourceType": "com.murong.rpc.config.NodeConfig"
+    },
+    {
+      "name": "link.node.node-name",
+      "type": "java.lang.String",
+      "description": "本机几点名称",
+      "sourceType": "com.murong.rpc.config.NodeConfig"
+    },
+    {
+      "name": "link.node.node-port",
+      "type": "java.lang.Integer",
+      "description": "本机的rpc服务启动的port",
+      "sourceType": "com.murong.rpc.config.NodeConfig",
+      "defaultValue": 0
+    },
+    {
+      "name": "link.node.start-time",
+      "type": "java.lang.Long",
+      "description": "启动时间",
+      "sourceType": "com.murong.rpc.config.NodeConfig",
+      "defaultValue": 0
+    }
+  ],
+  "hints": []
+}

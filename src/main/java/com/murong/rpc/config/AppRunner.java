@@ -29,9 +29,7 @@ public class AppRunner implements ApplicationRunner {
         List<String> homeDirs = homeDirConfig.getList();
         // 安全的工作目录
         if (!CollectionUtils.isEmpty(homeDirs)) {
-            for (String dir : homeDirs) {
-                EnvConfig.addHomeDir(dir);
-            }
+            EnvConfig.clearHomeDirsAndAddAll(homeDirs, System.currentTimeMillis());
         }
         logger.info("读取中心节点");
 

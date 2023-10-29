@@ -1,7 +1,5 @@
 package com.murong.rpc.config;
 
-import java.util.List;
-
 /**
  * 一些code码
  */

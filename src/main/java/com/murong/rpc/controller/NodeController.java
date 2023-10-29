@@ -133,6 +133,6 @@ public class NodeController {
      */
     @GetMapping("/node/homeDirs")
     public ResultVo<List<String>> homeDirs() {
-        return ResultVo.supplier(() -> EnvConfig.homeDirs());
+        return ResultVo.supplier(() -> EnvConfig.homeDirs().getDirs());
     }
 }

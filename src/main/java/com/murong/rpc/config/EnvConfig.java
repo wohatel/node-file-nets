@@ -1,6 +1,10 @@
 package com.murong.rpc.config;
 
+import com.murong.rpc.util.KeyValue;
+import com.murong.rpc.vo.DirsVo;
 import com.murong.rpc.vo.NodeVo;
+import lombok.Data;
+import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,12 +12,13 @@ import java.util.List;
 /**
  * rpc的一些配置
  */
+@Data
 public class EnvConfig {
 
     /**
      * 配置homeDirs ,磁盘上允许的dir操作路径
      */
-    private static final List<String> homeDirs = new ArrayList<>();
+    private static final DirsVo homeDirs = new DirsVo();
 
     private static final List<NodeVo> centerNodes = new ArrayList<>();
 
@@ -22,7 +27,7 @@ public class EnvConfig {
      *
      * @return
      */
-    public static List<String> homeDirs() {
+    public static DirsVo homeDirs() {
         return homeDirs;
     }
 
@@ -36,26 +41,18 @@ public class EnvConfig {
     }
 
     /**
-     * 添加dir路径
-     *
-     * @param homeDir
-     * @return
-     */
-    public static List<String> addHomeDir(String homeDir) {
-        homeDirs.add(homeDir);
-        return homeDirs;
-    }
-
-    /**
      * 清理并添加dir路径,线程间要隔离
      *
      * @param homeDirs
      * @return
      */
-    public static synchronized List<String> clearHomeDirsAndAddAll(List<String> homeDirs) {
-        if (homeDirs != null) {
-            EnvConfig.homeDirs.clear();
-            EnvConfig.homeDirs.addAll(homeDirs);
+    public static synchronized List<String> clearHomeDirsAndAddAll(List<String> homeDirs, Long time) {
+        Long localTime = EnvConfig.homeDirs.getTime();
+        if (time > localTime) {
+            EnvConfig.homeDirs.getDirs().clear();
+            if (!CollectionUtils.isEmpty(homeDirs)) {
+                EnvConfig.homeDirs.getDirs().addAll(homeDirs);
+            }
         }
         return homeDirs;
     }
@@ -81,8 +78,8 @@ public class EnvConfig {
         if (file == null) {
             return false;
         }
-        for (int i = 0; i < homeDirs.size(); i++) {
-            boolean b = file.startsWith(homeDirs.get(i));
+        for (int i = 0; i < homeDirs.getDirs().size(); i++) {
+            boolean b = file.startsWith(homeDirs.getDirs().get(i));
             if (b) {
                 return true;
             }
