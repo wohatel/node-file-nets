@@ -1,6 +1,5 @@
 package com.murong.rpc.config;
 
-import com.murong.rpc.util.KeyValue;
 import com.murong.rpc.vo.DirsVo;
 import com.murong.rpc.vo.NodeVo;
 import lombok.Data;
@@ -21,6 +20,16 @@ public class EnvConfig {
     private static final DirsVo homeDirs = new DirsVo();
 
     private static final List<NodeVo> centerNodes = new ArrayList<>();
+
+    private static String localNodeName;
+
+    public static String getLocalNodeName() {
+        return localNodeName;
+    }
+
+    public static void setLocalNodeName(String localNodeName) {
+        EnvConfig.localNodeName = localNodeName;
+    }
 
     /**
      * 获取dirs路径

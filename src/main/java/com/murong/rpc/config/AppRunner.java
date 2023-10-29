@@ -32,7 +32,8 @@ public class AppRunner implements ApplicationRunner {
             EnvConfig.clearHomeDirsAndAddAll(homeDirs, System.currentTimeMillis());
         }
         logger.info("读取中心节点");
-
+        // 设置本机节点名称
+        EnvConfig.setLocalNodeName(nodeConfig.getLocalNodeName());
         List<String> list = nodeConfig.getList();
         if (!CollectionUtils.isEmpty(list)) {
             for (int i = 0; i < list.size(); i++) {

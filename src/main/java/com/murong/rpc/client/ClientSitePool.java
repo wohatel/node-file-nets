@@ -37,6 +37,9 @@ public class ClientSitePool {
      */
     public static void accept(NodeVo nodeVo) {
         if (clientPool.containsKey(nodeVo.getName())) {
+            if (EnvConfig.getLocalNodeName().equals(nodeVo.getName())) {// 说明是中心节点自己向自己注册
+                clientPool.get(nodeVo.getName()).setData(nodeVo);
+            }
             return;
         }
         List<RpcAutoReconnectClient> list = new ArrayList<>();
