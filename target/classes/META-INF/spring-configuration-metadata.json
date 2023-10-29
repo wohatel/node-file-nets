@@ -20,6 +20,7 @@
     {
       "name": "link.node.list",
       "type": "java.util.List<java.lang.String>",
+      "description": "node的配置节点",
       "sourceType": "com.murong.rpc.config.NodeConfig"
     },
     {

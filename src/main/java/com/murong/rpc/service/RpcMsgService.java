@@ -165,7 +165,7 @@ public class RpcMsgService {
         String body = request.getBody();
         NodeVo nodeVo = JsonUtil.parseObject(body, NodeVo.class);
         // 优先建立连接
-        ClientSitePool.accept(nodeVo.getName(), nodeVo.getHost(), nodeVo.getPort());
+        ClientSitePool.accept(nodeVo);
         RpcResponse rpcResponse = request.toResponse();
         rpcResponse.setCode(CodeConfig.SUCCESS);
         rpcResponse.setSuccess(true);

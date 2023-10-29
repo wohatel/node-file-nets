@@ -191,7 +191,7 @@ public class NodeService {
             throw new RuntimeException("未查询到接目标:" + nodeName + " 节点信息");
         }
 
-        ClientSitePool.accept(nodeVo.getName(), nodeVo.getHost(), nodeVo.getPort());
+        ClientSitePool.accept(nodeVo);
         return ClientSitePool.get(nodeVo.getName());
     }
 
@@ -345,7 +345,7 @@ public class NodeService {
             for (NodeVo nodeVo : nodeVos) {
                 ThreadUtil.execSilentException(() -> {
                     ThreadUtil.execSilentVoid(() -> {
-                        ClientSitePool.accept(nodeVo.getName(), nodeVo.getHost(), nodeVo.getPort());
+                        ClientSitePool.accept(nodeVo);
                     });
                 }, e -> e.printStackTrace());
             }

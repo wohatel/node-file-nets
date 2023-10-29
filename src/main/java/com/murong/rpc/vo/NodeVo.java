@@ -11,9 +11,5 @@ public class NodeVo {
     private int port;
     private String host;
     private boolean isActive;
-    /**
-     * 接地那描述
-     */
-    private String mark;
     private long startTime;
 }
