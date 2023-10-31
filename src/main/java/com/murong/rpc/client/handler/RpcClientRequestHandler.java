@@ -12,12 +12,6 @@ public class RpcClientRequestHandler extends ChannelInboundHandlerAdapter {
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-        RpcRequest request = (RpcRequest) msg;
-        RpcResponse rpcResponse = new RpcResponse();
-        rpcResponse.setRequestId(request.getRequestId());
-        rpcResponse.setMsg("good" + new Random().nextInt());
-        rpcResponse.setBody("good" + new Random().nextInt());
-        RpcMsgTransUtil.write(ctx.channel(), rpcResponse);
     }
 
     @Override
