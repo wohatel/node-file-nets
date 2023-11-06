@@ -1,0 +1,15 @@
+
+g	java:S112R"FDefine and throw a dedicated exception instead of using a generic one.(Ò‚Òéüÿÿÿÿ8õú‹Ø·1
+g	java:S112o"FDefine and throw a dedicated exception instead of using a generic one.(Ò‚Òéüÿÿÿÿ8úú‹Ø·1
+R
+java:S1066Ê"/Merge this if statement with the enclosing one.(ÂÔÆ®şÿÿÿÿ8²û‹Ø·1
+H
+java:S2201:"+The return value of "collect" must be used.(œçÖß8†ı‹Ø·1
+>
+java:S38646"!Remove this use of "Stream.peek".(¹åš8†ı‹Ø·1
+{
+java:S2142Q"^Either re-interrupt this method or rethrow the "InterruptedException" that can be caught here.(”ı¾8ı‹Ø·1
+{
+java:S2142n"^Either re-interrupt this method or rethrow the "InterruptedException" that can be caught here.(”ı¾8•ı‹Ø·1
+L
+java:S1068("*Remove this unused "logger" private field.(Ì‰Ò‹ùÿÿÿÿ8£Æ¥Ø·1

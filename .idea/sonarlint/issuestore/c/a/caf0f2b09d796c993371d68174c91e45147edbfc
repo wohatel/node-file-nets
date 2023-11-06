@@ -1,0 +1,41 @@
+
+a	java:S112R"FDefine and throw a dedicated exception instead of using a generic one.(£îğ8İ¸“Ö·1
+g	java:S112U"FDefine and throw a dedicated exception instead of using a generic one.(ÊÆÁÖşÿÿÿÿ8Ş¸“Ö·1
+g	java:S1129"FDefine and throw a dedicated exception instead of using a generic one.(ñİ˜şÿÿÿÿ8Ş¸“Ö·1
+g	java:S112l"FDefine and throw a dedicated exception instead of using a generic one.(˜«µ»ùÿÿÿÿ8Ş¸“Ö·1
+a	java:S112o"FDefine and throw a dedicated exception instead of using a generic one.(àìã8Ş¸“Ö·1
+g	java:S112r"FDefine and throw a dedicated exception instead of using a generic one.(şâ®Ğúÿÿÿÿ8Ş¸“Ö·1
+a	java:S112~"FDefine and throw a dedicated exception instead of using a generic one.(£îğ8Ş¸“Ö·1
+h	java:S112"FDefine and throw a dedicated exception instead of using a generic one.(ÊÆÁÖşÿÿÿÿ8Ş¸“Ö·1
+a	java:S112c"FDefine and throw a dedicated exception instead of using a generic one.(Æš¸%8Ş¸“Ö·1
+c	java:S112İ"FDefine and throw a dedicated exception instead of using a generic one.(üÜœ­8Ş¸“Ö·1
+a
+java:S2259L"DA "NullPointerException" could be thrown; "cipher" is nullable here.(ÛøÒµ8Ø¹“Ö·1
+a
+java:S2147B"DCombine this catch with the one at line 64, which has the same body.(Ë‡…¨8ä¹“Ö·1
+9
+java:S5542="Use a secure padding scheme.(¿®²8ç¹“Ö·1
+;
+java:S5547="Use a strong cipher algorithm.(¿®²8ç¹“Ö·1
+J	java:S108D")Either remove or fill this block of code.(“³Ûİüÿÿÿÿ8ê¹“Ö·1
+9
+java:S5542g"Use a secure padding scheme.(¿®²8í¹“Ö·1
+;
+java:S5547g"Use a strong cipher algorithm.(¿®²8í¹“Ö·1
+b
+java:S1124•"EReorder the modifiers to comply with the Java Language Specification.( ¹µH8ñ¹“Ö·1
+c
+java:S1124—"EReorder the modifiers to comply with the Java Language Specification.(ÇÁ–å8ñ¹“Ö·1
+c
+java:S1124˜"EReorder the modifiers to comply with the Java Language Specification.(»¼¼€8ñ¹“Ö·1
+h
+java:S1124ª"EReorder the modifiers to comply with the Java Language Specification.(Ú‘ÊŸøÿÿÿÿ8ó¹“Ö·1
+I
+java:S1905¯"&Remove this unnecessary cast to "int".(İ¤¢‘üÿÿÿÿ8ô¹“Ö·1
+I
+java:S1905²"&Remove this unnecessary cast to "int".(äêÉÆúÿÿÿÿ8ô¹“Ö·1
+I
+java:S1905·"&Remove this unnecessary cast to "int".(ÌŸŒúÿÿÿÿ8ô¹“Ö·1
+c
+java:S1124É"EReorder the modifiers to comply with the Java Language Specification.(™¼ãÈ8ö¹“Ö·1
+V	java:S106ã"9Replace this use of System.out or System.err by a logger.(µøÂ‘8ö¹“Ö·1
