@@ -13,6 +13,7 @@ import com.murong.rpc.interaction.RpcResponse;
 import com.murong.rpc.service.RpcMsgService;
 import com.murong.rpc.util.JsonUtil;
 import com.murong.rpc.util.OperationMsg;
+import com.murong.rpc.util.SpringContextHolder;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
@@ -27,7 +28,8 @@ public class RpcServerRequestHandler extends ChannelInboundHandlerAdapter {
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
         RpcRequest request = (RpcRequest) msg;
-        RpcMsgService.exec(ctx, request);
+        RpcMsgService rpcMsgService = SpringContextHolder.getBean(RpcMsgService.class);
+        rpcMsgService.exec(ctx, request);
     }
 
     @Override

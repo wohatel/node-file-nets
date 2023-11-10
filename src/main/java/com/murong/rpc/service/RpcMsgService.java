@@ -47,7 +47,7 @@ public class RpcMsgService {
      *
      * @param request
      */
-    public static void exec(ChannelHandlerContext ctx, RpcRequest request) throws InvocationTargetException, IllegalAccessException {
+    public void exec(ChannelHandlerContext ctx, RpcRequest request) throws InvocationTargetException, IllegalAccessException {
         if (methods.isEmpty()) {
             List<Method> innserMethods = Arrays.stream(RpcMsgService.class.getDeclaredMethods()).filter(m -> m.isAnnotationPresent(RpcMethod.class)).collect(Collectors.toList());
 
@@ -61,7 +61,7 @@ public class RpcMsgService {
         if (method == null) {
             return;
         }
-        method.invoke(new RpcMsgService(), ctx, request);
+        method.invoke(this, ctx, request);
     }
 
     @RpcMethod("sendFile")
