@@ -25,7 +25,6 @@ public class AppRunner implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
-        // 配置链接的节点
         List<String> homeDirs = homeDirConfig.getList();
         // 安全的工作目录
         if (!CollectionUtils.isEmpty(homeDirs)) {
@@ -34,6 +33,7 @@ public class AppRunner implements ApplicationRunner {
         logger.info("读取中心节点");
         // 设置本机节点名称
         EnvConfig.setLocalNodeName(nodeConfig.getLocalNodeName());
+        // 中心节点
         List<String> list = nodeConfig.getList();
         if (!CollectionUtils.isEmpty(list)) {
             for (int i = 0; i < list.size(); i++) {
