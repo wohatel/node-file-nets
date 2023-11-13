@@ -1,13 +1,16 @@
 package com.murong.rpc.interaction;
 
 import com.alibaba.fastjson.JSON;
+import org.springframework.util.CollectionUtils;
 
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadPoolExecutor;
 
 public class RpcInteractionContainer {
     private static final ConcurrentHashMap<String, RpcFuture> futureMap = new ConcurrentHashMap<>();
@@ -39,6 +42,15 @@ public class RpcInteractionContainer {
         rpcFuture.setReponseTime(System.currentTimeMillis());
         rpcFuture.setResponse(rpcResponse);
         rpcFuture.setDone(true);
+        List<RpcResponseListener> listeners = rpcFuture.getListeners();
+        if (!CollectionUtils.isEmpty(listeners)) {
+            for (int i = 0; i < listeners.size(); i++) {
+                RpcResponseListener rpcResponseListener = listeners.get(i);
+                RpcThreadPool.getExecutorService().submit(() -> {
+                    rpcResponseListener.handle(rpcResponse);
+                }); // 处理响应事件
+            }
+        }
     }
 
     public static void addResponse(String rpcResponseString) {

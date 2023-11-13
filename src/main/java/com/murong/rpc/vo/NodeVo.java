@@ -10,6 +10,6 @@ public class NodeVo {
     private String name;
     private int port;
     private String host;
-    private boolean isActive;
+    private boolean isActive = true;
     private long startTime;
 }

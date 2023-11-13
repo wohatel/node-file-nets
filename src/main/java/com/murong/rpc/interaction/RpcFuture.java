@@ -1,9 +1,14 @@
 package com.murong.rpc.interaction;
 
 
+import lombok.Data;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
+@Data
 public class RpcFuture implements Future<RpcResponse> {
     private long timeOut = 8000l;
     private long requestTime = System.currentTimeMillis();
@@ -13,6 +18,11 @@ public class RpcFuture implements Future<RpcResponse> {
     private boolean isDone;
     private boolean isCanceled;
     private boolean mayInterruptIfRunning;
+
+    /**
+     * 事件监听
+     */
+    private List<RpcResponseListener> listeners = new ArrayList<>();
 
     @Override
     public boolean cancel(boolean mayInterruptIfRunning) {
@@ -56,7 +66,7 @@ public class RpcFuture implements Future<RpcResponse> {
             if (time >= timeOut) {
                 break;
             }
-            Thread.sleep(1);
+            Thread.sleep(10);
         }
         return response;
     }
@@ -104,4 +114,16 @@ public class RpcFuture implements Future<RpcResponse> {
     public void setReponseTime(long reponseTime) {
         this.reponseTime = reponseTime;
     }
+
+    /**
+     * 添加监听
+     *
+     * @param listener
+     * @return
+     */
+    public RpcFuture addListener(RpcResponseListener listener) {
+        this.listeners.add(listener);
+        return this;
+    }
+
 }
