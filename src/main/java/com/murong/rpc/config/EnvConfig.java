@@ -59,9 +59,8 @@ public class EnvConfig {
         Long localTime = EnvConfig.homeDirs.getTime();
         if (time > localTime) {
             EnvConfig.homeDirs.getDirs().clear();
-            if (!CollectionUtils.isEmpty(homeDirs)) {
-                EnvConfig.homeDirs.getDirs().addAll(homeDirs);
-            }
+            EnvConfig.homeDirs.getDirs().addAll(homeDirs);
+            EnvConfig.homeDirs.setTime(time);
         }
         return homeDirs;
     }

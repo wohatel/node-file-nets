@@ -103,7 +103,7 @@ public class NodeController {
      * 文件下的所有目录
      */
     @PostMapping("/node/filesOfDir")
-    public ResultVo<List<FileVo>> filesOfDir(GetFileOfDirInput input) {
+    public ResultVo<List<FileVo>> filesOfDir(@RequestBody GetFileOfDirInput input) {
         Assert.isTrue(!StringUtil.isBlank(input.getDir()), "文件夹路径参数错误");
         Assert.isTrue(!StringUtil.isBlank(input.getNodeName()), "节点名参数错误");
         Assert.isTrue(EnvConfig.isFilePathOk(input.getDir()), "目标文件夹没有匹配工作目录");

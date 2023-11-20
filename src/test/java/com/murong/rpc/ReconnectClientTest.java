@@ -3,7 +3,10 @@ package com.murong.rpc;
 
 import com.murong.rpc.client.RpcAutoReconnectClient;
 import com.murong.rpc.interaction.*;
+import io.netty.util.internal.PlatformDependent;
+import org.springframework.util.ReflectionUtils;
 
+import java.lang.reflect.Field;
 import java.util.concurrent.atomic.AtomicLong;
 
 public class ReconnectClientTest {
@@ -11,6 +14,11 @@ public class ReconnectClientTest {
     public static void test() {
         RpcAutoReconnectClient client = new RpcAutoReconnectClient("127.0.0.1", 8888);
         client.reConnect();
+
+        client.sendMsg(new RpcRequest());
+
+
+
 
         AtomicLong atomicLong = new AtomicLong();
         ThreadUtil.run(30, () -> {
@@ -31,6 +39,15 @@ public class ReconnectClientTest {
                     } else {
                         RpcFuture rpcFuture = client.sendSynMsg(rpcFileRequest);
                         rpcFuture.get();
+                    }
+
+                    Field field = ReflectionUtils.findField(PlatformDependent.class, "DIRECT_MEMORY_COUNTER");
+                    field.setAccessible(true);
+                    try {
+                        AtomicLong directMemory = ((AtomicLong) field.get(PlatformDependent.class));
+                        System.out.println("文件大小:" + directMemory);
+                    } catch (IllegalAccessException e) {
+                        throw new RuntimeException(e);
                     }
 
                 } catch (Exception e) {
