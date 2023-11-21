@@ -121,6 +121,13 @@ public class RpcMsgService {
         }
     }
 
+
+    @RpcMethod("heart")
+    public void heart(ChannelHandlerContext ctx, RpcRequest request) {
+        RpcMsgTransUtil.sendMsg(ctx.channel(), request);
+
+    }
+
     @RpcMethod("getNodes")
     public void getNodes(ChannelHandlerContext ctx, RpcRequest request) {
         // 最终会找到中心节点
