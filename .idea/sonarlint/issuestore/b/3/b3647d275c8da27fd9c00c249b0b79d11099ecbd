@@ -1,12 +1,0 @@
-
-\
-java:S1118":Add a private constructor to hide the implicit public one.(Ò©´õşÿÿÿÿ8À†íÚ·1
-N
-java:S1602F",Remove useless curly braces around statement(€ğòÇúÿÿÿÿ8Ï†íÚ·1
-c
-java:S1612F"AReplace this lambda with method reference 'client::closeChannel'.(€ğòÇúÿÿÿÿ8Âñã½1
-U	java:S106b"9Replace this use of System.out or System.err by a logger.(‘èÊ¹8Ñ†íÚ·1
-@
-java:S2119v"Save and re-use this "Random".(‡ ïÛıÿÿÿÿ8Ó†íÚ·1
-[
-java:S1128"9Remove this unused import 'com.murong.rpc.util.JsonUtil'.(‚‡˜ïıÿÿÿÿ8Ìñã½1

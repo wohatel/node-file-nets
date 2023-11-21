@@ -5,6 +5,7 @@
 package com.murong.rpc.client.handler;
 
 
+import com.murong.rpc.client.RpcHeartClient;
 import com.murong.rpc.client.SimpleRpcClient;
 import com.murong.rpc.interaction.RpcMsgTransUtil;
 import com.murong.rpc.interaction.RpcRequest;
@@ -22,23 +23,23 @@ import io.netty.handler.timeout.IdleStateEvent;
  */
 public class RpcClientHeartHandler extends ChannelInboundHandlerAdapter {
 
-    private SimpleRpcClient simpleRpcClient;
+    private RpcHeartClient rpcHeartClient;
 
-    public RpcClientHeartHandler(SimpleRpcClient simpleRpcClient) {
-        this.simpleRpcClient = simpleRpcClient;
+    public RpcClientHeartHandler(RpcHeartClient rpcHeartClient) {
+        this.rpcHeartClient = rpcHeartClient;
     }
 
     @Override
     public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
         IdleStateEvent idle = (IdleStateEvent) evt;
         if (idle.state() == IdleState.WRITER_IDLE) {
-            System.out.println("写一次");
             RpcRequest request = new RpcRequest();
             request.setRequestType(RpcRequestType.heart.name());
             RpcMsgTransUtil.sendMsg(ctx.channel(), request);
+            rpcHeartClient.setWriteTime(System.currentTimeMillis());
         } else if (idle.state() == IdleState.READER_IDLE) {
             // 此时说明心跳已经超时
-            System.out.println("服务端超时超时超时");
+            rpcHeartClient.setReadOut(true);
         }
     }
 
