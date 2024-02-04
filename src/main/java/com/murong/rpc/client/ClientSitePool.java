@@ -1,11 +1,14 @@
 package com.murong.rpc.client;
 
 import com.murong.rpc.config.EnvConfig;
+import com.murong.rpc.config.PoolManagerRunner;
 import com.murong.rpc.util.JsonUtil;
 import com.murong.rpc.util.KeyValue;
 import com.murong.rpc.util.ThreadUtil;
 import com.murong.rpc.vo.NodeVo;
 import io.netty.channel.nio.NioEventLoopGroup;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.util.CollectionUtils;
 
 import java.util.*;
@@ -14,6 +17,7 @@ import java.util.stream.Collectors;
 
 public class ClientSitePool {
 
+    static Logger logger = LoggerFactory.getLogger(ClientSitePool.class);
 
     /**
      * 配置公用的eventLoopGroup
@@ -97,6 +101,8 @@ public class ClientSitePool {
                         });
                     }
                 }
+                NodeVo data = value.getData();
+                logger.info("清理链接:{}:{}",data.getHost(),data.getPort());
                 iterator.remove();
             });
         }

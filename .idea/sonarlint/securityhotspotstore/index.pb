@@ -23,8 +23,6 @@ k
 ;src/main/java/com/murong/rpc/interaction/RpcThreadPool.java,9/a/9a08250ecb7c3c2e0afbbfdcf364e54bda80bdff
 f
 6src/main/java/com/murong/rpc/annotation/RpcMethod.java,2/8/2873cc9f2d85da094e0680513c2f77c700b16b2d
-[
-+src/main/java/com/murong/rpc/vo/NodeVo.java,7/d/7d3ac8c4780996a7f7e54ab392737a7b905c3118
 h
 8src/main/java/com/murong/rpc/input/GetFileInfoInput.java,a/d/ad73c804003261eac304ecf6d095ca96bd4bbc65
 i
