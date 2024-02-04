@@ -90,9 +90,6 @@ public class ClientSitePool {
 
                 List<RpcAutoReconnectClient> clients = value.getKey();
                 RpcHeartClient rpcHeartClient = value.getValue();
-                ThreadUtil.execSilentVoid(() -> {
-                    rpcHeartClient.closeChannel();
-                });
                 if (!rpcHeartClient.isActive()) {
                     for (RpcAutoReconnectClient autoReconnectClient : clients) {
                         ThreadUtil.execSilentVoid(() -> {
