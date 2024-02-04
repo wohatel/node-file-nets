@@ -1,20 +1,17 @@
 package com.murong.rpc.config;
 
 import com.murong.rpc.client.ClientSitePool;
+import com.murong.rpc.server.RpcServer;
 import com.murong.rpc.service.NodeService;
 import com.murong.rpc.util.ThreadUtil;
 import com.murong.rpc.util.TimeUtil;
-import io.netty.util.internal.PlatformDependent;
+import io.netty.channel.nio.NioEventLoopGroup;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
-import org.springframework.util.ReflectionUtils;
-
-import java.lang.reflect.Field;
-import java.util.concurrent.atomic.AtomicLong;
 
 @Component
 public class PoolManagerRunner implements ApplicationRunner {
@@ -29,6 +26,8 @@ public class PoolManagerRunner implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
+        // 首先启动当前节点
+        rpcStart();
         // 管理本机链接远程的端口
         ExecutorPool.getExecutorService().submit(() -> { // 每15s检测下连接
             TimeUtil.execDapByFunction(() -> {
@@ -53,8 +52,21 @@ public class PoolManagerRunner implements ApplicationRunner {
                 ThreadUtil.execSilentException(() -> nodeService.syncCenterNodes(), e -> e.printStackTrace());
                 logger.info("初始化完毕...");
                 return false;
-            }, 60000);
+            }, 30000);
         });
     }
 
+    /**
+     * 启动rpc服务
+     *
+     * @throws Exception
+     */
+    public boolean rpcStart() throws Exception {
+        logger.info("开始启动节点服务...");
+        RpcServer rpcServer = new RpcServer(nodeConfig.getNodePort(), new NioEventLoopGroup(), new NioEventLoopGroup());
+        rpcServer.start();
+        logger.info("结束启动节点服务...");
+        Thread.sleep(3000);
+        return true;
+    }
 }

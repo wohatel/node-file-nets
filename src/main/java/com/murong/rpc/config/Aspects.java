@@ -1,7 +1,6 @@
 package com.murong.rpc.config;
 
 
-import com.murong.rpc.vo.ResultVo;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
