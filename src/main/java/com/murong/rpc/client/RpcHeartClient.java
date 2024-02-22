@@ -10,7 +10,7 @@ import java.util.concurrent.TimeUnit;
 
 public class RpcHeartClient extends RpcDefaultClient {
 
-    private Long writeTime;
+    private Long writeTime = System.currentTimeMillis();
 
     private boolean isReadOut;
 

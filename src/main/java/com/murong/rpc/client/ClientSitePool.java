@@ -100,10 +100,10 @@ public class ClientSitePool {
                             autoReconnectClient.closeChannel();
                         });
                     }
+                    NodeVo data = value.getData();
+                    logger.info("清理链接:{}:{}", data.getHost(), data.getPort());
+                    iterator.remove();
                 }
-                NodeVo data = value.getData();
-                logger.info("清理链接:{}:{}",data.getHost(),data.getPort());
-                iterator.remove();
             });
         }
     }

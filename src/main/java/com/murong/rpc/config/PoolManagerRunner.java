@@ -52,7 +52,7 @@ public class PoolManagerRunner implements ApplicationRunner {
                 ThreadUtil.execSilentException(() -> nodeService.syncCenterNodes(), e -> e.printStackTrace());
                 logger.info("初始化完毕...");
                 return false;
-            }, 30000);
+            }, 10000);
         });
     }
 
