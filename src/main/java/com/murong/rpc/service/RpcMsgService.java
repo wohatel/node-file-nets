@@ -21,6 +21,7 @@ import io.netty.channel.ChannelHandlerContext;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
@@ -67,9 +68,10 @@ public class RpcMsgService {
     @RpcMethod("sendFile")
     public void sendFile(ChannelHandlerContext ctx, RpcRequest request) {
         String body = request.getBody();
+        logger.info("sendFile:{}", body);
         OperationMsg vo = new OperationMsg();
         List<String> bodyCmd = JsonUtil.parseArray(body, String.class);
-        RpcDefaultClient rpcDefaultClient = ClientSitePool.get(bodyCmd.get(0));
+        RpcDefaultClient rpcDefaultClient = ClientSitePool.getOrConnectClient(bodyCmd.get(0));
         if (rpcDefaultClient == null) {
             vo.setCode(CodeConfig.ERROR);
             vo.setMsg("无效的命令: 目标机器链接不存在");
@@ -77,6 +79,7 @@ public class RpcMsgService {
         }
         ExecutorPool.getExecutorService().submit(() -> {
             try {
+                logger.info("开始发送:{}", body);
                 rpcDefaultClient.sendFile(bodyCmd.get(1), bodyCmd.get(2));
             } catch (Exception e) {
                 throw new RuntimeException(e);
@@ -98,7 +101,7 @@ public class RpcMsgService {
         String body = request.getBody();
         OperationMsg vo = new OperationMsg();
         List<String> bodyCmd = JsonUtil.parseArray(body, String.class);
-        RpcDefaultClient rpcDefaultClient = ClientSitePool.get(bodyCmd.get(0));
+        RpcDefaultClient rpcDefaultClient = ClientSitePool.getOrConnectClient(bodyCmd.get(0));
         if (rpcDefaultClient == null) {
             vo.setCode(CodeConfig.ERROR);
             vo.setMsg("无效的命令: 目标机器链接不存在");
@@ -149,7 +152,7 @@ public class RpcMsgService {
     @RpcMethod("getNode")
     public void getNode(ChannelHandlerContext ctx, RpcRequest request) {
         OperationMsg vo = new OperationMsg();
-        RpcAutoReconnectClient client = ClientSitePool.get(request.getBody());
+        RpcAutoReconnectClient client = ClientSitePool.getOrConnectClient(request.getBody());
         if (request.isNeedResponse()) {
             RpcResponse rpcResponse = request.toResponse();
             rpcResponse.setCode(vo.getCode());

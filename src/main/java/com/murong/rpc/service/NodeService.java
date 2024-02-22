@@ -46,7 +46,7 @@ public class NodeService {
         if (CollectionUtils.isEmpty(nodeVos)) {
             return new ArrayList<>();
         }
-        RpcAutoReconnectClient client = this.getCenterClient();
+        RpcAutoReconnectClient client = ClientSitePool.getCenterClient();
         if (client == null) {
             return new ArrayList<>();
         }
@@ -72,7 +72,7 @@ public class NodeService {
             throw new RuntimeException("来源节点和目标节点一致且来源文件和目标文件一样,不需要拷贝");
         }
         if (sourceNode.equals(nodeConfig.getLocalNodeName())) {
-            RpcAutoReconnectClient client = getOrConnectClient(targetNode);
+            RpcAutoReconnectClient client = ClientSitePool.getOrConnectClient(targetNode);
             if (client == null) {
                 throw new RuntimeException("无指向目标节点的");
             }
@@ -85,7 +85,7 @@ public class NodeService {
             });
             return true;
         } else {
-            RpcDefaultClient rpcDefaultClient = getOrConnectClient(sourceNode);
+            RpcDefaultClient rpcDefaultClient = ClientSitePool.getOrConnectClient(sourceNode);
             if (rpcDefaultClient == null) {
                 throw new RuntimeException("未发现源节点的连接");
             }
@@ -127,7 +127,7 @@ public class NodeService {
         }
         // 如果本机是来源节点
         if (sourceNode.equals(nodeConfig.getLocalNodeName())) {
-            RpcDefaultClient rpcDefaultClient = this.getOrConnectClient(targetNode);
+            RpcDefaultClient rpcDefaultClient = ClientSitePool.getOrConnectClient(targetNode);
             if (rpcDefaultClient == null) {
                 throw new RuntimeException("未发现目标节点的连接:" + targetNode);
             }
@@ -142,7 +142,7 @@ public class NodeService {
             });
             return true;
         } else {
-            RpcDefaultClient rpcDefaultClient = this.getOrConnectClient(sourceNode);
+            RpcDefaultClient rpcDefaultClient = ClientSitePool.getOrConnectClient(sourceNode);
             if (rpcDefaultClient == null) {
                 throw new RuntimeException("无指向来源节点的连接");
             }
@@ -159,62 +159,6 @@ public class NodeService {
     }
 
     /**
-     * 获取连接
-     *
-     * @param nodeName
-     * @return
-     */
-    public RpcAutoReconnectClient getOrConnectClient(String nodeName) {
-        RpcAutoReconnectClient rpcDefaultClient = ClientSitePool.get(nodeName);
-        if (rpcDefaultClient != null) {
-            return rpcDefaultClient;
-        }
-        RpcAutoReconnectClient centerClient = getCenterClient();
-        if (centerClient == null) {
-            throw new RuntimeException("未获取到中心节点有效连接:" + nodeName);
-        }
-        RpcRequest request = new RpcRequest();
-        request.setRequestType(RequestTypeEnmu.getNode.name());
-        request.setBody(nodeName);
-        RpcFuture rpcFuture = centerClient.sendSynMsg(request);
-        RpcResponse rpcResponse = null;
-        try {
-            rpcResponse = rpcFuture.get();
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
-        String body = rpcResponse.getBody();
-
-        NodeVo nodeVo = JsonUtil.parseObject(body, NodeVo.class);
-
-        if (nodeVo == null) {
-            throw new RuntimeException("未查询到接目标:" + nodeName + " 节点信息");
-        }
-
-        ClientSitePool.accept(nodeVo);
-        return ClientSitePool.get(nodeVo.getName());
-    }
-
-    /**
-     * 获取注册节点连接
-     *
-     * @return
-     */
-    public RpcAutoReconnectClient getCenterClient() {
-        List<NodeVo> nodeVos = EnvConfig.centerNodes();
-        List<NodeVo> newList = new ArrayList<>(nodeVos);
-        Collections.shuffle(newList);
-        for (int i = 0; i < newList.size(); i++) {
-            String centerNode = newList.get(0).getName();
-            RpcAutoReconnectClient client = ClientSitePool.get(centerNode);
-            if (client != null) {
-                return client;
-            }
-        }
-        return null;
-    }
-
-    /**
      * 查询文件内容
      *
      * @param sourceNode
@@ -222,7 +166,7 @@ public class NodeService {
      * @return
      */
     public FileVo fileInfo(String sourceNode, String file) throws InterruptedException {
-        RpcAutoReconnectClient client = getOrConnectClient(sourceNode);
+        RpcAutoReconnectClient client = ClientSitePool.getOrConnectClient(sourceNode);
         RpcRequest rpcRequest = new RpcRequest();
         rpcRequest.setBody(file);
         rpcRequest.setRequestType(RequestTypeEnmu.fileInfo.name());
@@ -242,7 +186,7 @@ public class NodeService {
         if (StringUtil.isBlank(dir)) {
             throw new RuntimeException("文件名称为空");
         }
-        RpcAutoReconnectClient client = getOrConnectClient(sourceNode);
+        RpcAutoReconnectClient client = ClientSitePool.getOrConnectClient(sourceNode);
         RpcRequest rpcRequest = new RpcRequest();
         rpcRequest.setBody(dir);
         rpcRequest.setRequestType(RequestTypeEnmu.fileInfo.name());
@@ -260,7 +204,7 @@ public class NodeService {
      * @throws InterruptedException
      */
     public boolean fileDelete(String sourceNode, String file) throws InterruptedException {
-        RpcAutoReconnectClient client = getOrConnectClient(sourceNode);
+        RpcAutoReconnectClient client = ClientSitePool.getOrConnectClient(sourceNode);
         RpcRequest rpcRequest = new RpcRequest();
         rpcRequest.setBody(file);
         rpcRequest.setRequestType(RequestTypeEnmu.fileDelete.name());
@@ -293,7 +237,7 @@ public class NodeService {
 
                 ThreadUtil.execSilentVoid(() -> {
                     logger.info(String.format(format, nodeConfig.getNodeHost(), nodeConfig.getNodePort(), nodeVo.getHost(), nodeVo.getPort()));
-                    RpcDefaultClient orConnectClient = this.getOrConnectClient(name);
+                    RpcDefaultClient orConnectClient = ClientSitePool.getOrConnectClient(name);
                     if (orConnectClient != null) {
                         RpcRequest request = new RpcRequest();
                         request.setRequestType(RequestTypeEnmu.registerNode.name());
@@ -310,7 +254,7 @@ public class NodeService {
      * 获取中心节点的工作目录并同步
      */
     public void syncCenterHomeDirs() throws InterruptedException {
-        RpcAutoReconnectClient centerClient = this.getCenterClient();
+        RpcAutoReconnectClient centerClient = ClientSitePool.getCenterClient();
         RpcRequest request = new RpcRequest();
         request.setRequestType(RequestTypeEnmu.getHomeDirs.name());
         RpcFuture rpcFuture = centerClient.sendSynMsg(request);
@@ -327,7 +271,7 @@ public class NodeService {
      * @return
      */
     public boolean chHomeDirs(List<String> dirs) throws InterruptedException {
-        RpcAutoReconnectClient client = getCenterClient();
+        RpcAutoReconnectClient client = ClientSitePool.getCenterClient();
         RpcRequest rpcRequest = new RpcRequest();
         rpcRequest.setBody(JsonUtil.toJSONString(dirs));
         rpcRequest.setRequestType(RequestTypeEnmu.chHomeDirs.name());
@@ -358,7 +302,7 @@ public class NodeService {
      * @return
      */
     public List<NodeVo> linkedList(String nodeName) throws InterruptedException {
-        RpcAutoReconnectClient orConnectClient = getOrConnectClient(nodeName);
+        RpcAutoReconnectClient orConnectClient = ClientSitePool.getOrConnectClient(nodeName);
         RpcRequest rpcRequest = new RpcRequest();
         rpcRequest.setRequestType(RequestTypeEnmu.linkedList.name());
         rpcRequest.setBody(nodeName);
@@ -377,7 +321,7 @@ public class NodeService {
      * @return
      */
     public boolean renameFile(String nodeName, String file, String newName) throws InterruptedException {
-        RpcAutoReconnectClient orConnectClient = getOrConnectClient(nodeName);
+        RpcAutoReconnectClient orConnectClient = ClientSitePool.getOrConnectClient(nodeName);
         RpcRequest rpcRequest = new RpcRequest();
         rpcRequest.setRequestType(RequestTypeEnmu.renameFile.name());
 
