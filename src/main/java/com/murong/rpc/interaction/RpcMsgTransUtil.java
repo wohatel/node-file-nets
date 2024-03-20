@@ -9,6 +9,7 @@ import com.murong.rpc.util.TimeUtil;
 import io.netty.channel.Channel;
 import org.apache.commons.codec.digest.DigestUtils;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.nio.ByteBuffer;
@@ -63,6 +64,9 @@ public class RpcMsgTransUtil {
             long position = 0;
             while (true) {
                 // 此处等待执行,如果一直不可用就一直等待
+                if (!channel.isOpen()) {
+                    break;
+                }
                 TimeUtil.execDapByFunction(() -> channel.isWritable(), 100, 100);
                 int read = fileChannel.read(byteBuffer);
                 if (read > 0) {

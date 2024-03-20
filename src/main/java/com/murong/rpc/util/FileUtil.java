@@ -25,8 +25,9 @@ public class FileUtil {
 
     /**
      * 文件处理
+     * node2 keyValue: 1文件传输的大小, FileChannel 文件打开的通道, Long当前时间
      */
-    public static Map<String, KeyValue<String, FileChannel, Long>> channelMap = new ConcurrentHashMap<>();
+    public static Map<String, KeyValue<Long, FileChannel, Long>> channelMap = new ConcurrentHashMap<>();
 
     /**
      * 默认处于关闭中,上下文可见
@@ -78,6 +79,12 @@ public class FileUtil {
     }
 
     public static void appendFile(RpcFileRequest rpcFileRequest) throws IOException {
+        String s = rpcFileRequest.getTargetFilePath() + ".ok";
+        File file1 = new File(s);
+        if (file1.exists()) {
+            file1.delete();
+        }
+
         boolean contains = channelMap.containsKey(rpcFileRequest.getHash());
         // 1尝试创建文件夹
         String targetFilePath = rpcFileRequest.getTargetFilePath();
@@ -87,18 +94,27 @@ public class FileUtil {
         if (!file.exists()) {
             file.mkdirs();
         }
-        FileChannel fileChannel = null;
+        KeyValue<Long, FileChannel, Long> keyValue = null;
         if (contains) {
-            KeyValue<String, FileChannel, Long> keyValue = channelMap.get(rpcFileRequest.getHash());
+            keyValue = channelMap.get(rpcFileRequest.getHash());
             keyValue.setData(System.currentTimeMillis()); // 设置时间
-            fileChannel = keyValue.getValue();
+            // 总数
+            keyValue.setKey(keyValue.getKey() + rpcFileRequest.getBytes().length); //以前读取的 + 本次读取的文件块大小 = 一共读取了多少字节
         } else {
-            fileChannel = FileChannel.open(Paths.get(rpcFileRequest.getTargetFilePath()), StandardOpenOption.CREATE, StandardOpenOption.WRITE, StandardOpenOption.APPEND);
-            KeyValue<String, FileChannel, Long> keyValue = new KeyValue<>(rpcFileRequest.getHash(), fileChannel, System.currentTimeMillis());
+            FileChannel fileChannel = FileChannel.open(Paths.get(rpcFileRequest.getTargetFilePath()), StandardOpenOption.CREATE, StandardOpenOption.WRITE, StandardOpenOption.APPEND);
+            keyValue = new KeyValue<>(Long.valueOf(rpcFileRequest.getBytes().length), fileChannel, System.currentTimeMillis());
             channelMap.put(rpcFileRequest.getHash(), keyValue);
         }
+        FileChannel fileChannel = keyValue.getValue();
         ByteBuffer byteBuffer = ByteBuffer.wrap(rpcFileRequest.getBytes());
         fileChannel.write(byteBuffer);
+
+        if (keyValue.getKey() >= rpcFileRequest.getLength()) {// 如果当前读取的文件大小 > 源文件的大小 认为是读取完毕
+            // ---- 建个.ok
+            System.out.println(rpcFileRequest.getTargetFilePath());
+            file1.createNewFile();
+            // 可以考虑直接释放连接
+        }
     }
 
     public static RpcResponse dealRpcFileRequest(RpcFileRequest rpcFileRequest) throws IOException {
@@ -129,10 +145,10 @@ public class FileUtil {
             clearing = true; // 占位
             try {
                 TimeUtil.execDapByFunction(() -> {
-                    Iterator<Map.Entry<String, KeyValue<String, FileChannel, Long>>> iterator = channelMap.entrySet().iterator();
+                    Iterator<Map.Entry<String, KeyValue<Long, FileChannel, Long>>> iterator = channelMap.entrySet().iterator();
                     while (iterator.hasNext()) {
-                        Map.Entry<String, KeyValue<String, FileChannel, Long>> next = iterator.next();
-                        KeyValue<String, FileChannel, Long> value = next.getValue();
+                        Map.Entry<String, KeyValue<Long, FileChannel, Long>> next = iterator.next();
+                        KeyValue<Long, FileChannel, Long> value = next.getValue();
                         Long time = value.getData();
                         long current = System.currentTimeMillis();
                         if (current - time > 20 * 1000) { // 如果超过20s的时间没有活动,则认为文件已处理完成

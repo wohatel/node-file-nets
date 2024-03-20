@@ -1,0 +1,25 @@
+
+r
+java:S1104"VMake channelMap a static final constant or non-public and provide accessors if needed.(Δ’¥|8ύΘκα1
+L
+java:S1444"0Make this "public static channelMap" field final(Δ’¥|8ώΘκα1
+9
+java:S2386"Make this member "protected".(Δ’¥|8‡Ικα1
+\
+java:S1118":Add a private constructor to hide the implicit public one.(‡ΫΪύÿÿÿÿ8‡Ικα1
+b
+java:S1124#"EReorder the modifiers to comply with the Java Language Specification.(θζσΤ8Ικα1
+E	java:S108L")Either remove or fill this block of code.(ο­£Δ8‹Ικα1
+V	java:S899U";Do something with the "boolean" value returned by "delete".(±ά‹8Ικα1
+j
+java:S4042U"NUse "java.nio.file.Files#delete" here for better messages on error conditions.(±ά‹8Ικα1
+U	java:S106r"9Replace this use of System.out or System.err by a logger.(Θ¥Ν8Ικα1
+^	java:S899s"BDo something with the "boolean" value returned by "createNewFile".(α‡³8Ικα1
+F	java:S108")Either remove or fill this block of code.(”ύΎ8Ικα1
+V	java:S106§"9Replace this use of System.out or System.err by a logger.(¶ώΔÿ8Ικα1
+^
+java:S1128"<Remove this unused import 'com.murong.rpc.config.EnvConfig'.(ÿΜ‚ψÿÿÿÿ8Ικα1
+[
+java:S1128	">Remove this unused import 'io.netty.util.internal.StringUtil'.(‡ΫΦ†8Ικα1
+M
+java:S1128"+Remove this unused import 'java.util.List'.(Υλ±Δψÿÿÿÿ8Ικα1

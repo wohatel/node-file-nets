@@ -1,14 +1,0 @@
-
-g	java:S112#"FDefine and throw a dedicated exception instead of using a generic one.(ÅÎ‰¨ıÿÿÿÿ8ìÿç²¼1
-™
-java:S11307"wRemove the declaration of thrown exception 'java.lang.InterruptedException', as it cannot be thrown from method's body.(š†ÖËşÿÿÿÿ8íÀ½1
-@
-java:S21199"Save and re-use this "Random".(Ë†Şİüÿÿÿÿ8öÿç²¼1
-]
-java:S1612B"@Replace this lambda with method reference 'channel::isWritable'.(–û·©8íÀ½1
-_
-java:S1128"=Remove this unused import 'com.murong.rpc.config.CodeConfig'.(´Õ’ışÿÿÿÿ8’íÀ½1
-[
-java:S1128"9Remove this unused import 'com.murong.rpc.util.FileUtil'.(œÆºûøÿÿÿÿ8’íÀ½1
-]
-java:S1128";Remove this unused import 'com.murong.rpc.util.ThreadUtil'.(•¹Û½úÿÿÿÿ8’íÀ½1

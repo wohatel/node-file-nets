@@ -32,7 +32,7 @@ public class NodeConfig {
     private long startTime = System.currentTimeMillis();
 
     /**
-     * 本机几点名称
+     * 本机节点名称
      */
     private String nodeName;
 

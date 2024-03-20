@@ -1,0 +1,21 @@
+
+˜
+java:S1319T"The return type of this method should be an interface such as "ConcurrentMap" rather than the implementation "ConcurrentHashMap".(‘’Ÿ
+_
+java:S2583Y"DChange this condition so that it does not always evaluate to "false"(®¾Ğ™ùÿÿÿÿ
+U
+java:S1118":Add a private constructor to hide the implicit public one.(€ÎßŸıÿÿÿÿ
+G
+java:S16021",Remove useless curly braces around statement(Ëˆİ€üÿÿÿÿ
+E
+java:S1128"/Remove this unused import 'java.util.Iterator'.(¥ÍòÕ
+E
+java:S1128"*Remove this unused import 'java.util.Map'.(¼è½Òşÿÿÿÿ
+E
+java:S1128	"*Remove this unused import 'java.util.Set'.(ö²„¤şÿÿÿÿ
+\
+java:S1128"ARemove this unused import 'java.util.concurrent.ExecutorService'.(æ÷–£ùÿÿÿÿ
+V
+java:S1128";Remove this unused import 'java.util.concurrent.Executors'.(äåÒÛÿÿÿÿÿ
+Z
+java:S1128"DRemove this unused import 'java.util.concurrent.ThreadPoolExecutor'.(¦ÿöÊ

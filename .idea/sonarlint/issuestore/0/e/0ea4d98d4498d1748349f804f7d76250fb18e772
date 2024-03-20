@@ -1,7 +1,0 @@
-
-`	java:S112e"FDefine and throw a dedicated exception instead of using a generic one.(Ò‚Òιόÿÿÿÿ
-X
-java:S1163e"=Refactor this code to not throw exceptions in finally blocks.(Ò‚Òιόÿÿÿÿ
-O
-java:S1143e"4Remove this throw statement from this finally block.(Ò‚Òιόÿÿÿÿ
->	java:S108Q")Either remove or fill this block of code.(”ύΎ
