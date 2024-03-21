@@ -2,7 +2,9 @@ package com.murong.rpc.config;
 
 import com.murong.rpc.vo.DirsVo;
 import com.murong.rpc.vo.NodeVo;
+import com.murong.rpc.vo.RateLimitVo;
 import lombok.Data;
+import lombok.Getter;
 import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
@@ -18,6 +20,12 @@ public class EnvConfig {
      * 配置homeDirs ,磁盘上允许的dir操作路径
      */
     private static final DirsVo homeDirs = new DirsVo();
+
+    /**
+     * 限速策略
+     */
+    private static final RateLimitVo rateLimitVo = new RateLimitVo();
+
 
     private static final List<NodeVo> centerNodes = new ArrayList<>();
 
@@ -99,4 +107,21 @@ public class EnvConfig {
         return false;
     }
 
+    /**
+     * 设置限速
+     *
+     * @param rateLimit
+     * @param time
+     */
+    public static void casRateLimit(long rateLimit, long time) {
+        if (time > rateLimitVo.getTime()) {
+            rateLimitVo.setRateLimit(rateLimit);
+            rateLimitVo.setTime(time);
+        }
+    }
+
+
+    public static RateLimitVo getRateLimitVo() {
+        return rateLimitVo;
+    }
 }

@@ -15,9 +15,8 @@ import com.murong.rpc.util.JsonUtil;
 import com.murong.rpc.util.RpcResponseHandler;
 import com.murong.rpc.util.StringUtil;
 import com.murong.rpc.util.ThreadUtil;
-import com.murong.rpc.vo.DirsVo;
-import com.murong.rpc.vo.FileVo;
-import com.murong.rpc.vo.NodeVo;
+import com.murong.rpc.vo.*;
+import lombok.SneakyThrows;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -253,7 +252,8 @@ public class NodeService {
     /**
      * 获取中心节点的工作目录并同步
      */
-    public void syncCenterHomeDirs() throws InterruptedException {
+    @SneakyThrows
+    public void syncCenterHomeDirs() {
         RpcAutoReconnectClient centerClient = ClientSitePool.getCenterClient();
         RpcRequest request = new RpcRequest();
         request.setRequestType(RequestTypeEnmu.getHomeDirs.name());
@@ -262,6 +262,18 @@ public class NodeService {
         logger.info("ack家目录:" + rpcResponse.getBody());
         DirsVo dirsVo = JsonUtil.parseObject(rpcResponse.getBody(), DirsVo.class);
         EnvConfig.clearHomeDirsAndAddAll(dirsVo.getDirs(), dirsVo.getTime());
+    }
+
+    @SneakyThrows
+    public void getRateLimit() {
+        RpcAutoReconnectClient centerClient = ClientSitePool.getCenterClient();
+        RpcRequest request = new RpcRequest();
+        request.setRequestType(RequestTypeEnmu.getRateLimit.name());
+        RpcFuture rpcFuture = centerClient.sendSynMsg(request);
+        RpcResponse rpcResponse = rpcFuture.get();
+        logger.info("ack限速策略:" + rpcResponse.getBody());
+        RateLimitVo reteLimitVo = JsonUtil.parseObject(rpcResponse.getBody(), RateLimitVo.class);
+        EnvConfig.casRateLimit(reteLimitVo.getRateLimit(), reteLimitVo.getTime());
     }
 
     /**
@@ -336,33 +348,84 @@ public class NodeService {
     }
 
     /**
-     * 中心节点之间同步节点的信息变化
+     * 中心节点之间配置信息及节点信息
+     * 2: 家目录
+     * 3: 限速策略
      */
-    public void syncCenterNodes() {
+    public void syncCenterConf() {
         List<NodeVo> nodeVos = EnvConfig.centerNodes();
         List<String> nodeNames = nodeVos.stream().map(t -> t.getName()).collect(Collectors.toList());
-        if (!nodeNames.contains(nodeConfig.getNodeName())) { // 如果不是中心节点,不需要同步
+        if (!nodeNames.contains(nodeConfig.getLocalNodeName())) { // 如果不是中心节点,不需要同步
             return;
         }
-        Map<String, NodeVo> map = new ConcurrentHashMap<>();
         for (int i = 0; i < nodeVos.size(); i++) {
             NodeVo nodeVo = nodeVos.get(i);
             ThreadUtil.execSilentException(() -> {
                 RpcAutoReconnectClient client = ClientSitePool.get(nodeVo.getName());
                 RpcRequest rpcRequest = new RpcRequest();
-                rpcRequest.setRequestType(RequestTypeEnmu.getNodes.name());
+                rpcRequest.setRequestType(RequestTypeEnmu.getConf.name());
                 RpcFuture rpcFuture = client.sendSynMsg(rpcRequest);
                 RpcResponse rpcResponse = rpcFuture.get();
-                List<NodeVo> allNodes = JsonUtil.parseArray(rpcResponse.getBody(), NodeVo.class);
-                if (!CollectionUtils.isEmpty(allNodes)) {
-                    for (NodeVo vo : allNodes) {
-                        NodeVo nodeVo1 = map.get(vo.getName()); // 如果有变更时间,则给与优先
-                        if (vo.getStartTime() > nodeVo1.getStartTime()) {
-                            map.put(vo.getName(), vo);
-                        }
+                EnvConfVo confVo = JsonUtil.parseObject(rpcResponse.getBody(), EnvConfVo.class);
+                if (confVo != null) {
+                    // 同步家目录信息
+                    DirsVo dirsVo = confVo.getDirsVo();
+                    if (!CollectionUtils.isEmpty(dirsVo.getDirs())) {// 如果非空
+                        EnvConfig.clearHomeDirsAndAddAll(dirsVo.getDirs(), dirsVo.getTime());
+                    }
+                    // 同步限速策略
+                    RateLimitVo rateLimitVo = confVo.getRateLimitVo();
+                    if (rateLimitVo != null) {// 如果非空
+                        EnvConfig.casRateLimit(rateLimitVo.getRateLimit(), rateLimitVo.getTime());
                     }
                 }
+
             }, e -> e.printStackTrace());
         }
+    }
+
+    /**
+     * 普通节点从中心节点拉取配置
+     * 2: 家目录
+     * 3: 限速策略
+     */
+    @SneakyThrows
+    public void syncConf() {
+        List<NodeVo> nodeVos = EnvConfig.centerNodes();
+        List<String> nodeNames = nodeVos.stream().map(t -> t.getName()).collect(Collectors.toList());
+        if (nodeNames.contains(nodeConfig.getLocalNodeName())) { // 如果自己是中心节点直接不需要再获取
+            return;
+        }
+        RpcAutoReconnectClient client = ClientSitePool.getCenterClient();
+        RpcRequest rpcRequest = new RpcRequest();
+        rpcRequest.setRequestType(RequestTypeEnmu.getConf.name());
+        RpcFuture rpcFuture = client.sendSynMsg(rpcRequest);
+        RpcResponse rpcResponse = rpcFuture.get();
+        EnvConfVo confVo = JsonUtil.parseObject(rpcResponse.getBody(), EnvConfVo.class);
+        if (confVo != null) {
+            // 同步家目录信息
+            DirsVo dirsVo = confVo.getDirsVo();
+            if (!CollectionUtils.isEmpty(dirsVo.getDirs())) {// 如果非空
+                EnvConfig.clearHomeDirsAndAddAll(dirsVo.getDirs(), dirsVo.getTime());
+            }
+            // 同步限速策略
+            RateLimitVo rateLimitVo = confVo.getRateLimitVo();
+            if (rateLimitVo != null) {// 如果非空
+                EnvConfig.casRateLimit(rateLimitVo.getRateLimit(), rateLimitVo.getTime());
+            }
+        }
+
+    }
+
+    // 发送限速命令
+    @SneakyThrows
+    public Boolean chRateLimit(long rateLimit) {
+        RpcAutoReconnectClient client = ClientSitePool.getCenterClient();
+        RpcRequest rpcRequest = new RpcRequest();
+        rpcRequest.setBody(String.valueOf(rateLimit));
+        rpcRequest.setRequestType(RequestTypeEnmu.chRateLimit.name());
+        RpcFuture rpcFuture = client.sendSynMsg(rpcRequest);
+        RpcResponse rpcResponse = rpcFuture.get();
+        return RpcResponseHandler.handler(rpcResponse, t -> Boolean.valueOf(t));
     }
 }

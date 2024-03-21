@@ -44,12 +44,13 @@ public class PoolManagerRunner implements ApplicationRunner {
                 ThreadUtil.execSilentException(() -> nodeService.registerNode(), e -> e.printStackTrace());
                 TimeUtil.execDapByFunction(() -> false, 3000, 1);
                 // 向注册中心同步目录
-                logger.info("获取家目录...");
-                ThreadUtil.execSilentException(() -> nodeService.syncCenterHomeDirs(), e -> e.printStackTrace());
+                logger.info("普通节点向中心节点获取配置信息...");
+                ThreadUtil.execSilentException(() -> nodeService.syncConf(), e -> e.printStackTrace());
                 // 中心节点更新节点信息
                 TimeUtil.execDapByFunction(() -> false, 2000, 1);
-                logger.info("中心节点间的节点数据同步...");
-                ThreadUtil.execSilentException(() -> nodeService.syncCenterNodes(), e -> e.printStackTrace());
+                logger.info("中心节点间的节点配置信息同步...");
+                ThreadUtil.execSilentException(() -> nodeService.syncCenterConf(), e -> e.printStackTrace());
+
                 logger.info("初始化完毕...");
                 return false;
             }, 10000);

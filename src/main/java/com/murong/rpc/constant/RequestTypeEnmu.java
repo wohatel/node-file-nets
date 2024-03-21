@@ -1,5 +1,7 @@
 package com.murong.rpc.constant;
 
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+
 import javax.annotation.Resource;
 
 /**
@@ -21,6 +23,11 @@ public enum RequestTypeEnmu {
      * 获取nodes
      */
     getNodes,
+
+    /**
+     * 获取配置
+     */
+    getConf,
 
 
     /**
@@ -60,6 +67,11 @@ public enum RequestTypeEnmu {
     getHomeDirs,
 
     /**
+     * 获取工作目录
+     */
+    getRateLimit,
+
+    /**
      * 查询节点连接情况
      */
     linkedList,
@@ -71,5 +83,12 @@ public enum RequestTypeEnmu {
     /**
      * 广播
      */
-    broadcast;
+    broadcast,
+
+    /**
+     * 限速
+     */
+    chRateLimit
+
+    ;
 }

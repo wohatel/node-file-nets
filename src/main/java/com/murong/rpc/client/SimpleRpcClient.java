@@ -83,7 +83,7 @@ public class SimpleRpcClient {
         if (!realFile.isFile()) {
             throw new RuntimeException("非文件传输,请检查");
         }
-        RpcMsgTransUtil.writeFile(channel, file, targetFile, 1024 * 1024);
+        RpcMsgTransUtil.writeFile(channel, file, targetFile, 512 * 1024);
     }
 
     public void sendFile(String file, String targetFile, int buffer) throws IOException, InterruptedException {

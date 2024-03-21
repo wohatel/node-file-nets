@@ -15,6 +15,7 @@ import com.murong.rpc.interaction.RpcResponse;
 import com.murong.rpc.util.JsonUtil;
 import com.murong.rpc.util.OperationMsg;
 import com.murong.rpc.util.ThreadUtil;
+import com.murong.rpc.vo.EnvConfVo;
 import com.murong.rpc.vo.FileVo;
 import com.murong.rpc.vo.NodeVo;
 import io.netty.channel.ChannelHandlerContext;
@@ -268,6 +269,30 @@ public class RpcMsgService {
         RpcResponse rpcResponse = request.toResponse();
         rpcResponse.setCode(CodeConfig.SUCCESS);
         rpcResponse.setBody(Boolean.toString(true));
+        RpcMsgTransUtil.write(ctx.channel(), rpcResponse);
+    }
+
+    @RpcMethod("chRateLimit")
+    public void chRateLimit(ChannelHandlerContext ctx, RpcRequest request) {
+        String body = request.getBody();
+        long rateLimit = Long.parseLong(body);
+        // 设置限速
+        EnvConfig.casRateLimit(rateLimit, System.currentTimeMillis());
+        RpcResponse rpcResponse = request.toResponse();
+        rpcResponse.setCode(CodeConfig.SUCCESS);
+        rpcResponse.setBody(Boolean.toString(true));
+        RpcMsgTransUtil.write(ctx.channel(), rpcResponse);
+    }
+
+    @RpcMethod("getConf")
+    public void getConf(ChannelHandlerContext ctx, RpcRequest request) {
+        EnvConfVo result = new EnvConfVo();
+        result.setDirsVo(EnvConfig.homeDirs());
+        result.setRateLimitVo(EnvConfig.getRateLimitVo());
+
+        RpcResponse rpcResponse = request.toResponse();
+        rpcResponse.setCode(CodeConfig.SUCCESS);
+        rpcResponse.setBody(JsonUtil.toJSONString(result));
         RpcMsgTransUtil.write(ctx.channel(), rpcResponse);
     }
 

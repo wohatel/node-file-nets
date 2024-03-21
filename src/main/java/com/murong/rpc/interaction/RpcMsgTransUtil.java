@@ -2,10 +2,9 @@ package com.murong.rpc.interaction;
 
 import com.alibaba.fastjson.JSON;
 import com.murong.rpc.config.CodeConfig;
-import com.murong.rpc.util.ArrayUtil;
-import com.murong.rpc.util.FileUtil;
+import com.murong.rpc.config.EnvConfig;
+import com.murong.rpc.util.*;
 import com.murong.rpc.util.ThreadUtil;
-import com.murong.rpc.util.TimeUtil;
 import io.netty.channel.Channel;
 import org.apache.commons.codec.digest.DigestUtils;
 
@@ -62,10 +61,19 @@ public class RpcMsgTransUtil {
             long size = fileChannel.size(); //文件的总长度
             ByteBuffer byteBuffer = ByteBuffer.allocate(len);
             long position = 0;
+
+            // 定义一个限速器
+            RateLimiter rateLimiter = new RateLimiter(EnvConfig.getRateLimitVo().getRateLimit());
             while (true) {
                 // 此处等待执行,如果一直不可用就一直等待
                 if (!channel.isOpen()) {
                     break;
+                }
+                // 实时判断如果超速了,就停100ms
+                if (rateLimiter.refresh(EnvConfig.getRateLimitVo().getRateLimit()).isOverSpeed()) {
+                    System.out.println("当前速度:" + rateLimiter.currentSpeed());
+                    Thread.sleep(100);
+                    continue;
                 }
                 TimeUtil.execDapByFunction(() -> channel.isWritable(), 100, 100);
                 int read = fileChannel.read(byteBuffer);
@@ -75,6 +83,8 @@ public class RpcMsgTransUtil {
                     long tempPosition = position + limit; // 计算偏移后的位置
                     RpcFileRequest rpcFileRequest = new RpcFileRequest();
                     rpcFileRequest.setTargetFilePath(targetFile);
+                    // 计数器计数
+                    rateLimiter.increaseSent(limit);
                     if (limit == len) { //如果缓冲区填满
                         rpcFileRequest.setBytes(byteBuffer.array());
                     } else {

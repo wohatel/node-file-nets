@@ -135,4 +135,20 @@ public class NodeController {
     public ResultVo<List<String>> homeDirs() {
         return ResultVo.supplier(() -> EnvConfig.homeDirs().getDirs());
     }
+
+    /**
+     * 变更文件传输速度
+     */
+    @PostMapping("/node/chRateLimit")
+    public ResultVo<Boolean> chRateLimit(@RequestBody ChRateLimitInput input) {
+        return ResultVo.supplier(() -> nodeService.chRateLimit(input.getRateLimit()));
+    }
+
+    /**
+     * 获取文件传输速度
+     */
+    @GetMapping("/node/rateLimit")
+    public ResultVo<Long> rateLimit() {
+        return ResultVo.supplier(() -> EnvConfig.getRateLimitVo().getRateLimit());
+    }
 }
