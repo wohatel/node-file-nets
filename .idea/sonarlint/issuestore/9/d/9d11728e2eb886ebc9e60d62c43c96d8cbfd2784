@@ -1,25 +1,23 @@
 
+˜
+java:S1104"VMake channelMap a static final constant or non-public and provide accessors if needed.(Ä’¥|8Ûûãûí1J$a077e3f9-16bb-46a7-ae23-b7ceee508f32
 r
-java:S1104"VMake channelMap a static final constant or non-public and provide accessors if needed.(Ä’¥|8ıÈœêá1
-L
-java:S1444"0Make this "public static channelMap" field final(Ä’¥|8şÈœêá1
-9
-java:S2386"Make this member "protected".(Ä’¥|8‡Éœêá1
-\
-java:S1118":Add a private constructor to hide the implicit public one.(‡ÛŸÚıÿÿÿÿ8‡Éœêá1
-b
-java:S1124#"EReorder the modifiers to comply with the Java Language Specification.(èæóÔ8ŠÉœêá1
-E	java:S108L")Either remove or fill this block of code.(ï­£Ä8‹Éœêá1
-V	java:S899U";Do something with the "boolean" value returned by "delete".(±Ü‹8ŒÉœêá1
-j
-java:S4042U"NUse "java.nio.file.Files#delete" here for better messages on error conditions.(±Ü‹8ŒÉœêá1
-U	java:S106r"9Replace this use of System.out or System.err by a logger.(Èœ¥Í8Éœêá1
-^	java:S899s"BDo something with the "boolean" value returned by "createNewFile".(á‡³8Éœêá1
-F	java:S108")Either remove or fill this block of code.(”ı¾8Éœêá1
-V	java:S106§"9Replace this use of System.out or System.err by a logger.(¶şÄÿ8Éœêá1
-^
-java:S1128"<Remove this unused import 'com.murong.rpc.config.EnvConfig'.(ÿÌ‚øÿÿÿÿ8Éœêá1
-[
-java:S1128	">Remove this unused import 'io.netty.util.internal.StringUtil'.(‡ÛÖ†8Éœêá1
-M
-java:S1128"+Remove this unused import 'java.util.List'.(Õë±Äøÿÿÿÿ8Éœêá1
+java:S1444"0Make this "public static channelMap" field final(Ä’¥|8Ûûãûí1J$f624a8eb-2501-4924-a958-bb7b76a2d35c
+_
+java:S2386"Make this member "protected".(Ä’¥|8æûãûí1J$5d426936-1147-4a60-88bf-b7ebf4236974
+‚
+java:S1118":Add a private constructor to hide the implicit public one.(‡ÛŸÚıÿÿÿÿ8æûãûí1J$bafe47fd-4d69-4786-8b77-e015c9b47515
+ˆ
+java:S1124$"EReorder the modifiers to comply with the Java Language Specification.(èæóÔ8éûãûí1J$336dddf0-eb1a-437c-9fdf-a5a0b4d191dd
+k	java:S108M")Either remove or fill this block of code.(ï­£Ä8ëûãûí1J$4a3bd3ed-7d73-4c35-b8d2-937e30c5a31f
+m	java:S106p"+Replace this use of System.out by a logger.(Èœ¥Í8íûãûí1J$8ea26296-3206-4562-87c4-8dec2cd3fdce
+„	java:S899q"BDo something with the "boolean" value returned by "createNewFile".(á‡³8íûãûí1J$3e6d8cba-d068-47bf-bf54-343356963518
+l	java:S108£")Either remove or fill this block of code.(”ı¾8ïûãûí1J$6832b3a3-d1df-4989-908a-6b97df45711b
+n	java:S106¬"+Replace this use of System.out by a logger.(¶şÄÿ8ïûãûí1J$555c956d-afff-442d-ad4d-81b6265e1753
+…	java:S899Í"BDo something with the "boolean" value returned by "createNewFile".(Ü•¿8ğûãûí1J$c554d137-ac02-48f2-8a3d-223bd4c170f7
+„
+java:S1128"<Remove this unused import 'com.murong.rpc.config.EnvConfig'.(ÿÌ‚øÿÿÿÿ8ğûãûí1J$3dcd0c3e-d780-4cd5-91b9-43c9d1426f75
+
+java:S1128	">Remove this unused import 'io.netty.util.internal.StringUtil'.(‡ÛÖ†8ğûãûí1J$6aa42c4c-eda6-4f3b-a158-240d13af1b78
+s
+java:S1128"+Remove this unused import 'java.util.List'.(Õë±Äøÿÿÿÿ8ğûãûí1J$c58f0ca9-6763-4fa6-9a73-46a8260cb734

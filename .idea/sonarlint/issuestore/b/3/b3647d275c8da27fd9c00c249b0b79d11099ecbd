@@ -1,0 +1,19 @@
+
+‰	java:S112¤"FDefine and throw a dedicated exception instead of using a generic one.(ÕïÊ8¯°·øÜ1J$f282c0df-1e2c-432a-8b53-6b5f0d852637
+	java:S112®"FDefine and throw a dedicated exception instead of using a generic one.(Ò‚Òéüÿÿÿÿ8¯°·øÜ1J$b3d7fe1d-f07f-4ae6-9298-5d47b287259d
+‰	java:S112±"FDefine and throw a dedicated exception instead of using a generic one.(³ØÂÅ8åÃòúí1J$d168e24a-3775-4295-a2bf-8bb14ea8bea5
+‰	java:S112·"FDefine and throw a dedicated exception instead of using a generic one.(³ØÂÅ8Í‘óúí1J$fe821905-1f5f-49ec-bf48-8b68964930b8
+‚
+java:S1118":Add a private constructor to hide the implicit public one.(Ò©´õşÿÿÿÿ8ıï»øÜ1J$99aa0a70-d192-4d32-9bd3-2268054febf7
+t
+java:S1602U",Remove useless curly braces around statement(€ğòÇúÿÿÿÿ8Ö±€–×1J$bb9e3fae-4529-4ab6-91ab-3f2854e70b98
+‰
+java:S1612U"AReplace this lambda with method reference 'client::closeChannel'.(€ğòÇúÿÿÿÿ8ç–ê„æ1J$c72fbe44-a6fb-4b90-ab45-d83754abbc85
+t
+java:S1602j",Remove useless curly braces around statement(€ğòÇúÿÿÿÿ8×±€–×1J$af62c74e-9923-47d6-9531-a09bb6bff39b
+–
+java:S1612j"NReplace this lambda with method reference 'autoReconnectClient::closeChannel'.(€ğòÇúÿÿÿÿ8è–ê„æ1J$2e53f9ad-b540-403b-9427-7e35a6d1d188
+g
+java:S2119‚"Save and re-use this "Random".(‡ ïÛıÿÿÿÿ8Ø±€–×1J$29343e6c-41fa-4be5-912d-002fac8b992e
+¢
+java:S2142­"^Either re-interrupt this method or rethrow the "InterruptedException" that can be caught here.(ä ¹€8¿°·øÜ1J$ca7132f9-0d77-4a46-9cc1-8f0e783eeefa

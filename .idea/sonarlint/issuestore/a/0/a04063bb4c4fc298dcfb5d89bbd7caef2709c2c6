@@ -1,21 +1,21 @@
 
-˜
-java:S1319T"The return type of this method should be an interface such as "ConcurrentMap" rather than the implementation "ConcurrentHashMap".(‘’Ÿ
-_
-java:S2583Y"DChange this condition so that it does not always evaluate to "false"(®¾Ğ™ùÿÿÿÿ
-U
-java:S1118":Add a private constructor to hide the implicit public one.(€ÎßŸıÿÿÿÿ
-G
-java:S16021",Remove useless curly braces around statement(Ëˆİ€üÿÿÿÿ
-E
-java:S1128"/Remove this unused import 'java.util.Iterator'.(¥ÍòÕ
-E
-java:S1128"*Remove this unused import 'java.util.Map'.(¼è½Òşÿÿÿÿ
-E
-java:S1128	"*Remove this unused import 'java.util.Set'.(ö²„¤şÿÿÿÿ
-\
-java:S1128"ARemove this unused import 'java.util.concurrent.ExecutorService'.(æ÷–£ùÿÿÿÿ
-V
-java:S1128";Remove this unused import 'java.util.concurrent.Executors'.(äåÒÛÿÿÿÿÿ
-Z
-java:S1128"DRemove this unused import 'java.util.concurrent.ThreadPoolExecutor'.(¦ÿöÊ
+¾
+java:S1319T"The return type of this method should be an interface such as "ConcurrentMap" rather than the implementation "ConcurrentHashMap".(‘’ŸJ$59433100-4c87-419c-83f4-43513d0b0a25
+…
+java:S2583Y"DChange this condition so that it does not always evaluate to "false"(®¾Ğ™ùÿÿÿÿJ$e0b754e2-ed6d-411a-9d49-d37e14e8e170
+{
+java:S1118":Add a private constructor to hide the implicit public one.(€ÎßŸıÿÿÿÿJ$affe2a3b-63b8-4530-918c-224808c9bf3d
+m
+java:S16021",Remove useless curly braces around statement(Ëˆİ€üÿÿÿÿJ$b15cd205-718c-4a65-8f22-e6431b3c4760
+k
+java:S1128"/Remove this unused import 'java.util.Iterator'.(¥ÍòÕJ$6a49b367-02ad-48f8-9814-76fa8abf80b2
+k
+java:S1128"*Remove this unused import 'java.util.Map'.(¼è½ÒşÿÿÿÿJ$7cb256b5-5ed2-4303-9ce8-c4ff801ad0e7
+k
+java:S1128	"*Remove this unused import 'java.util.Set'.(ö²„¤şÿÿÿÿJ$7c026e7e-be53-4cf8-a033-c195fe58d646
+‚
+java:S1128"ARemove this unused import 'java.util.concurrent.ExecutorService'.(æ÷–£ùÿÿÿÿJ$0dfc48dd-476a-4255-bd84-dcafa1b93f5b
+|
+java:S1128";Remove this unused import 'java.util.concurrent.Executors'.(äåÒÛÿÿÿÿÿJ$25f7a789-73c8-49e1-a9a0-1f1112a0c6a0
+€
+java:S1128"DRemove this unused import 'java.util.concurrent.ThreadPoolExecutor'.(¦ÿöÊJ$65d3130d-ad27-41d3-8d5e-934d300832a9

@@ -53,11 +53,15 @@ public class RpcMsgTransUtil {
      * @throws IOException
      */
     public static void writeFile(Channel channel, String file, String targetFile, int len) throws IOException, InterruptedException {
+        // 传输空文件
+        if (new File(file).length() == 0L) {
+            writeVoidFile(channel, file, targetFile);
+            return;
+        }
         String fileName = file.substring(file.lastIndexOf("/"));
         String hash = DigestUtils.md5Hex(file + System.currentTimeMillis() + new Random().nextInt());
         // 1尝试发送空包,检测效果是否可以传输
         try (RandomAccessFile randomAccessFile = new RandomAccessFile(file, "r"); FileChannel fileChannel = randomAccessFile.getChannel();) {
-
             long size = fileChannel.size(); //文件的总长度
             ByteBuffer byteBuffer = ByteBuffer.allocate(len);
             long position = 0;
@@ -104,5 +108,28 @@ public class RpcMsgTransUtil {
                 }
             }
         }
+    }
+
+    /**
+     * 向服务端写文件
+     *
+     * @param channel
+     * @param file
+     * @param targetFile
+     * @param
+     * @throws IOException
+     */
+    public static void writeVoidFile(Channel channel, String file, String targetFile) {
+        String fileName = file.substring(file.lastIndexOf("/"));
+        String hash = DigestUtils.md5Hex(file + System.currentTimeMillis() + new Random().nextInt());
+        // 1尝试发送空包,检测效果是否可以传输
+        RpcFileRequest rpcFileRequest = new RpcFileRequest();
+        rpcFileRequest.setTargetFilePath(targetFile);
+        rpcFileRequest.setFinished(true);
+        rpcFileRequest.setLength(0L);
+        rpcFileRequest.setPosition(0L);
+        rpcFileRequest.setHash(hash);
+        rpcFileRequest.setFileName(fileName);
+        RpcMsgTransUtil.sendMsg(channel, rpcFileRequest);
     }
 }

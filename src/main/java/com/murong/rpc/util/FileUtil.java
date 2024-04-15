@@ -7,6 +7,7 @@ import com.murong.rpc.config.ExecutorPool;
 import com.murong.rpc.interaction.RpcFileRequest;
 import com.murong.rpc.interaction.RpcResponse;
 import io.netty.util.internal.StringUtil;
+import lombok.SneakyThrows;
 import org.apache.commons.codec.digest.DigestUtils;
 
 import java.io.File;
@@ -81,10 +82,7 @@ public class FileUtil {
     public static void appendFile(RpcFileRequest rpcFileRequest) throws IOException {
         String s = rpcFileRequest.getTargetFilePath() + ".ok";
         File file1 = new File(s);
-        if (file1.exists()) {
-            file1.delete();
-        }
-
+        file1.deleteOnExit();
         boolean contains = channelMap.containsKey(rpcFileRequest.getHash());
         // 1尝试创建文件夹
         String targetFilePath = rpcFileRequest.getTargetFilePath();
@@ -120,7 +118,14 @@ public class FileUtil {
     public static RpcResponse dealRpcFileRequest(RpcFileRequest rpcFileRequest) throws IOException {
         RpcResponse rpcResponse = rpcFileRequest.toResponse();
         try {
-            appendFile(rpcFileRequest);
+            // 空文件处理
+            boolean ifVoid = rpcFileRequest.getLength() == 0;
+            if (ifVoid) {
+                reCreateFile(rpcFileRequest.getFileName());
+                reCreateFile(rpcFileRequest.getFileName() + ".ok");
+            } else {
+                appendFile(rpcFileRequest);
+            }
         } catch (Exception e) {
             rpcResponse.setMsg(e.getMessage());
             rpcResponse.setCode(CodeConfig.ERROR);
@@ -161,7 +166,7 @@ public class FileUtil {
                         }
                     }
                     return channelMap.size() <= 0; // 如果为结果小于=0,则说明没有流操作了
-                }, 10 * 1000l, 500); // 这就要求文件不能太大了
+                }, 10 * 1000L, 500); // 这就要求文件不能太大了
             } finally {
                 clearing = false; // 释放
                 System.out.println("释放链接");
@@ -187,5 +192,18 @@ public class FileUtil {
         String substring = absolutePath.substring(fromPath.length());
         return toPath + substring;
     }
+
+
+    /**
+     * 重建文件
+     */
+    @SneakyThrows
+    public static void reCreateFile(String file) {
+        File oldFile = new File(file);
+        oldFile.deleteOnExit();
+        // 创建新file
+        oldFile.createNewFile();
+    }
+
 
 }

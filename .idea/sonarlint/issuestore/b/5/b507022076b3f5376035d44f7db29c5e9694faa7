@@ -1,0 +1,21 @@
+
+{	java:S115"ZRename this constant name to match the regular expression '^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$'.(ùˆÑ½ÿÿÿÿÿ8«¨‚×·1
+{	java:S115"ZRename this constant name to match the regular expression '^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$'.(ƒ‹œëùÿÿÿÿ8¬¨‚×·1
+{	java:S115"ZRename this constant name to match the regular expression '^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$'.(‹«î§ûÿÿÿÿ8¬¨‚×·1
+{	java:S115"ZRename this constant name to match the regular expression '^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$'.(ÊãËÿøÿÿÿÿ8šâ–÷å1
+v	java:S115$"ZRename this constant name to match the regular expression '^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$'.(¹ˆþ‡8¬¨‚×·1
+{	java:S115*"ZRename this constant name to match the regular expression '^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$'.(óÜ¨ëùÿÿÿÿ8¬¨‚×·1
+v	java:S115/"ZRename this constant name to match the regular expression '^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$'.(ðº¢”8¬¨‚×·1
+{	java:S1154"ZRename this constant name to match the regular expression '^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$'.(…ƒòáýÿÿÿÿ8¬¨‚×·1
+{	java:S1159"ZRename this constant name to match the regular expression '^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$'.(¼¶ÿÿÿÿÿ8¬¨‚×·1
+{	java:S115>"ZRename this constant name to match the regular expression '^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$'.(ÿçœ›ùÿÿÿÿ8¬¨‚×·1
+{	java:S115C"ZRename this constant name to match the regular expression '^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$'.(Ì©ªÎþÿÿÿÿ8¬¨‚×·1
+{	java:S115H"ZRename this constant name to match the regular expression '^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$'.(Âøù˜ùÿÿÿÿ8Ì‡˜Õå1
+v	java:S115M"ZRename this constant name to match the regular expression '^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$'.(á©€ì8¬¨‚×·1
+v	java:S115Q"ZRename this constant name to match the regular expression '^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$'.(î—­ê8¬¨‚×·1
+v	java:S115V"ZRename this constant name to match the regular expression '^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$'.(â×ì–8¬¨‚×·1
+{	java:S115["ZRename this constant name to match the regular expression '^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$'.(íÂÇ‡üÿÿÿÿ8½Â‰ùå1
+l
+java:S1128"JRemove this unused import 'com.fasterxml.jackson.annotation.JsonSubTypes'.( ™ÎÄûÿÿÿÿ8æã‰ùå1
+S
+java:S1128"6Remove this unused import 'javax.annotation.Resource'.(î¾Ì—8æã‰ùå1

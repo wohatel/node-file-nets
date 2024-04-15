@@ -1,0 +1,10 @@
+
+P
+java:S1118
+":Add a private constructor to hide the implicit public one.(Îêáú
+R
+java:S3064"7Fully initialize "executorService" before assigning it.(äô×Ÿşÿÿÿÿ
+O
+java:S2168"9Remove this dangerous instance of double-checked locking.(Î¸ªı
+W
+java:S11266"AReplace this if-then-else statement by a single return statement.(¬Ÿ¾
