@@ -15,7 +15,11 @@ import com.murong.rpc.util.JsonUtil;
 import com.murong.rpc.util.RpcResponseHandler;
 import com.murong.rpc.util.StringUtil;
 import com.murong.rpc.util.ThreadUtil;
-import com.murong.rpc.vo.*;
+import com.murong.rpc.vo.DirsVo;
+import com.murong.rpc.vo.EnvConfVo;
+import com.murong.rpc.vo.FileVo;
+import com.murong.rpc.vo.NodeVo;
+import com.murong.rpc.vo.RateLimitVo;
 import lombok.SneakyThrows;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,8 +27,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
-import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
@@ -353,7 +357,7 @@ public class NodeService {
      * 3: 限速策略
      */
     public void syncCenterConf() {
-        List<NodeVo> nodeVos = EnvConfig.centerNodes();
+        List<NodeVo> nodeVos = EnvConfig.centerNodes(); //所有的中心节点,包括自己
         List<String> nodeNames = nodeVos.stream().map(t -> t.getName()).collect(Collectors.toList());
         if (!nodeNames.contains(nodeConfig.getLocalNodeName())) { // 如果不是中心节点,不需要同步
             return;
@@ -418,6 +422,12 @@ public class NodeService {
     }
 
     // 发送限速命令
+
+    /**
+     * kb/s
+     * @param rateLimit
+     * @return
+     */
     @SneakyThrows
     public Boolean chRateLimit(long rateLimit) {
         RpcAutoReconnectClient client = ClientSitePool.getCenterClient();

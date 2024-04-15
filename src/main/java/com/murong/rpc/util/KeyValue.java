@@ -1,5 +1,11 @@
 package com.murong.rpc.util;
 
+import lombok.Data;
+
+/**
+ * @author yaochuang
+ */
+@Data
 public class KeyValue<K, V, D> {
     private K key;
     private V value;
@@ -20,27 +26,4 @@ public class KeyValue<K, V, D> {
         this.data = data;
     }
 
-    public K getKey() {
-        return key;
-    }
-
-    public void setKey(K key) {
-        this.key = key;
-    }
-
-    public V getValue() {
-        return value;
-    }
-
-    public void setValue(V value) {
-        this.value = value;
-    }
-
-    public D getData() {
-        return data;
-    }
-
-    public void setData(D data) {
-        this.data = data;
-    }
 }

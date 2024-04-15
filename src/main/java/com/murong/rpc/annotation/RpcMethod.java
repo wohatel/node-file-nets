@@ -13,7 +13,7 @@ public @interface RpcMethod {
     /**
      * 在方法上
      *
-     * @return
+     * @return String
      */
     String value() default "";
 

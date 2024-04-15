@@ -1,23 +1,9 @@
 package com.murong.rpc.util;
 
+import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
 
 public class TimeUtil {
-
-    /**
-     * 每隔一段时间执行一次
-     */
-    public static void execByInterval(Runnable runnable, long timeMillis) {
-        while (true) {
-            runnable.run();
-            try {
-                Thread.sleep(timeMillis);
-            } catch (Exception e) {
-
-            }
-        }
-    }
-
 
     /**
      * 每隔一段时间执行一次,supplier结果为true
@@ -44,9 +30,9 @@ public class TimeUtil {
     /**
      * 每隔一段时间执行一次,supplier结果为true
      */
-    public static void execDapByFunction(Supplier<Boolean> supplier, long timeMillis, int maxTimes) {
+    public static void execDapByFunction(BooleanSupplier supplier, long timeMillis, int maxTimes) {
         for (int i = 0; i < maxTimes; i++) {
-            Boolean aBoolean = supplier.get();
+            Boolean aBoolean = supplier.getAsBoolean();
             if (aBoolean) {
                 return;
             }

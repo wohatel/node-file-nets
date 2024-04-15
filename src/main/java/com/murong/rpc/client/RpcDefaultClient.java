@@ -2,7 +2,6 @@ package com.murong.rpc.client;
 
 
 import com.murong.rpc.initializer.StringChannelInitializer;
-import com.murong.rpc.util.TimeUtil;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelOption;
@@ -10,7 +9,9 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.util.concurrent.Future;
 import io.netty.util.concurrent.GenericFutureListener;
+import lombok.Data;
 
+@Data
 public class RpcDefaultClient extends SimpleRpcClient {
     protected String host;
     protected Integer port;
@@ -41,22 +42,6 @@ public class RpcDefaultClient extends SimpleRpcClient {
             }
         });
         return f;
-    }
-
-    public String getHost() {
-        return host;
-    }
-
-    public void setHost(String host) {
-        this.host = host;
-    }
-
-    public Integer getPort() {
-        return port;
-    }
-
-    public void setPort(Integer port) {
-        this.port = port;
     }
 
     public void closeNioEventLoopGroup() {

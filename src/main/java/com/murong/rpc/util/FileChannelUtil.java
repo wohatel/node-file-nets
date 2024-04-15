@@ -5,10 +5,18 @@ import com.murong.rpc.interaction.RpcFileRequest;
 import com.murong.rpc.interaction.RpcMsgTransUtil;
 import com.murong.rpc.interaction.RpcResponse;
 import io.netty.channel.Channel;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 
 import java.io.File;
 import java.io.IOException;
 
+/**
+ * 文件通道处理工具
+ *
+ * @author yaochuang 2024/04/12 17:21
+ */
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class FileChannelUtil {
 
 

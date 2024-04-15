@@ -37,10 +37,10 @@ public class FileUtil {
     /**
      * 文件追加或插入
      *
-     * @param file
-     * @param bytes
-     * @param startPosition
-     * @throws IOException
+     * @param file          文件全路径名
+     * @param bytes         字节数
+     * @param startPosition 开始position
+     * @throws IOException 抛出的异常
      */
     public static void appendFile(String file, byte[] bytes, long startPosition) throws IOException {
         try (FileChannel channel = FileChannel.open(Paths.get(file), StandardOpenOption.CREATE, StandardOpenOption.WRITE, StandardOpenOption.APPEND);) {
@@ -52,9 +52,9 @@ public class FileUtil {
     /**
      * 文件追加到末尾
      *
-     * @param file
-     * @param bytes
-     * @throws IOException
+     * @param file  文件名
+     * @param bytes 字节
+     * @throws IOException 抛出异常
      */
     public static void appendFile(String file, byte[] bytes) throws IOException {
         try (FileChannel channel = FileChannel.open(Paths.get(file), StandardOpenOption.CREATE, StandardOpenOption.WRITE, StandardOpenOption.APPEND);) {
@@ -66,9 +66,9 @@ public class FileUtil {
     /**
      * md5文件hash
      *
-     * @param file
-     * @return
-     * @throws IOException
+     * @param file 文件名
+     * @return String 文件hash
+     * @throws IOException 抛出异常
      */
     public static String fileMd5Hash(String file) {
         try {

@@ -1,7 +1,5 @@
 package com.murong.rpc.util;
 
-import java.io.IOException;
-
 /**
  * 空供应者
  */

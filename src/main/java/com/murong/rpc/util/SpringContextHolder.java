@@ -1,5 +1,6 @@
 package com.murong.rpc.util;
 
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,6 +21,7 @@ public class SpringContextHolder implements ApplicationContextAware, DisposableB
     /**
      * 上下文
      */
+    @Getter
     private static ApplicationContext context;
     /**
      * 日志
@@ -37,23 +39,23 @@ public class SpringContextHolder implements ApplicationContextAware, DisposableB
         }
     }
 
-	/**
- 	 * 得到bean
- 	 */
+    /**
+     * 得到bean
+     */
     public static Object getBean(String beanName) {
         return context.getBean(beanName);
     }
 
-	/**
- 	 * 得到bean
- 	 */
+    /**
+     * 得到bean
+     */
     public static <T> T getBean(Class<T> clazzName) {
         return context.getBean(clazzName);
     }
 
-	/**
- 	 * 得到bean
- 	 */
+    /**
+     * 得到bean
+     */
     public static <T> T getBean(String beanName, Class<T> clazz) {
         return context.getBean(beanName, clazz);
     }
@@ -75,19 +77,10 @@ public class SpringContextHolder implements ApplicationContextAware, DisposableB
     }
 
     /**
-     * getContext
-     *
-     * @return
+     * 破坏
      */
-    public static ApplicationContext getContext() {
-        return context;
-    }
-
-	/**
- 	 * 破坏
- 	 */
     @Override
-    public void destroy() throws Exception {
+    public void destroy() {
         if (context.getClass().isAssignableFrom(ClassPathXmlApplicationContext.class)) {
             ((ClassPathXmlApplicationContext) context).close();
         } else if (context.getClass().isAssignableFrom(FileSystemXmlApplicationContext.class)) {

@@ -2,11 +2,13 @@ package com.murong.rpc.util;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
-import com.murong.rpc.vo.FileVo;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 
 import java.util.Collection;
 import java.util.List;
 
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class JsonUtil {
 
     public static <T> T parseObject(Object obj, Class<T> clazz) {

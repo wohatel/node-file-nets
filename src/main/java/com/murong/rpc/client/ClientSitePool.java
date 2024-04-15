@@ -1,7 +1,6 @@
 package com.murong.rpc.client;
 
 import com.murong.rpc.config.EnvConfig;
-import com.murong.rpc.config.PoolManagerRunner;
 import com.murong.rpc.constant.RequestTypeEnmu;
 import com.murong.rpc.interaction.RpcFuture;
 import com.murong.rpc.interaction.RpcRequest;
@@ -15,9 +14,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.CollectionUtils;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.stream.Collectors;
 
 public class ClientSitePool {
 
@@ -170,8 +173,10 @@ public class ClientSitePool {
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
+        if (rpcResponse == null) {
+            throw new RuntimeException("未查询到接目标:" + nodeName + " 节点信息");
+        }
         String body = rpcResponse.getBody();
-
         NodeVo nodeVo = JsonUtil.parseObject(body, NodeVo.class);
 
         if (nodeVo == null) {

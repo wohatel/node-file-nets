@@ -1,7 +1,6 @@
 package com.murong.rpc.util;
 
 
-
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
@@ -17,12 +16,8 @@ import java.security.NoSuchAlgorithmException;
 public class MD5Util {
 
     /**
-     * @Title: getMD5
-     * @Description: 根据字符串生成md5
-     * @author: logic
-     * @date: 2021/3/23 16:42
-     * @params:
-     * @return:
+     * @param : content 内容
+     * @return: String hash
      */
     public static String getMD5(CharSequence content) {
         if (content == null || content.length() == 0) {

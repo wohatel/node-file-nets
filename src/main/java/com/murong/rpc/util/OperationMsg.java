@@ -1,8 +1,11 @@
 package com.murong.rpc.util;
 
+import lombok.Data;
+
 /**
  * 操作结果
  */
+@Data
 public class OperationMsg {
 
     private boolean operateStatus = true;
@@ -10,28 +13,4 @@ public class OperationMsg {
     private String msg;
 
     private int code;
-
-    public int getCode() {
-        return code;
-    }
-
-    public void setCode(int code) {
-        this.code = code;
-    }
-
-    public boolean isOperateStatus() {
-        return operateStatus;
-    }
-
-    public void setOperateStatus(boolean operateStatus) {
-        this.operateStatus = operateStatus;
-    }
-
-    public String getMsg() {
-        return msg;
-    }
-
-    public void setMsg(String msg) {
-        this.msg = msg;
-    }
 }

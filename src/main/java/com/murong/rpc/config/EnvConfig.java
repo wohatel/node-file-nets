@@ -5,7 +5,7 @@ import com.murong.rpc.vo.NodeVo;
 import com.murong.rpc.vo.RateLimitVo;
 import lombok.Data;
 import lombok.Getter;
-import org.springframework.util.CollectionUtils;
+import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,20 +24,16 @@ public class EnvConfig {
     /**
      * 限速策略
      */
+    @Getter
     private static final RateLimitVo rateLimitVo = new RateLimitVo();
 
 
     private static final List<NodeVo> centerNodes = new ArrayList<>();
 
+
+    @Getter
+    @Setter
     private static String localNodeName;
-
-    public static String getLocalNodeName() {
-        return localNodeName;
-    }
-
-    public static void setLocalNodeName(String localNodeName) {
-        EnvConfig.localNodeName = localNodeName;
-    }
 
     /**
      * 获取dirs路径
@@ -120,8 +116,4 @@ public class EnvConfig {
         }
     }
 
-
-    public static RateLimitVo getRateLimitVo() {
-        return rateLimitVo;
-    }
 }

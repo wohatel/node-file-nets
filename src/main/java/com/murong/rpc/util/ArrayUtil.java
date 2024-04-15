@@ -1,7 +1,11 @@
 package com.murong.rpc.util;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+
 import java.nio.ByteBuffer;
 
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class ArrayUtil {
 
     public static byte[] toBytes(ByteBuffer byteBuffer) {
