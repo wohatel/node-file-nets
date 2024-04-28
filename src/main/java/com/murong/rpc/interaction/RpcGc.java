@@ -5,22 +5,21 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 public final class RpcGc {
 
-    private static ScheduledExecutorService executorService;
+    private static ScheduledExecutorService executorService = new ScheduledThreadPoolExecutor(1);
     private static int handleLimit = 20_0000; // 20_0000,就开始清理启动清理数据
     private static int handleLimtUpTime = 1000_000; // 1000s未清理,则必须清理
     private static long lastHandleOutTime = System.currentTimeMillis(); // 上次gc时间
 
+
     public static void callWake() {
         if (executorService == null) {
             synchronized (RpcInteractionContainer.class) {
-                if (executorService == null) {
-                    executorService = Executors.newSingleThreadScheduledExecutor();
-                    executorService.scheduleWithFixedDelay(RpcGc::handleOutTime, 0l, 4000, TimeUnit.MILLISECONDS);
-                }
+                executorService.scheduleWithFixedDelay(RpcGc::handleOutTime, 0L, 4000, TimeUnit.MILLISECONDS);
             }
         }
     }
@@ -60,7 +59,7 @@ public final class RpcGc {
     /**
      * 当容器中数量超过 handleLimit 时,必须及时开始gc
      *
-     * @param handleLimit
+     * @param handleLimit 处理限制
      */
     public static void configHandleLimit(int handleLimit) {
         RpcGc.handleLimit = handleLimit;
@@ -69,7 +68,7 @@ public final class RpcGc {
     /**
      * 当上次gc时间间隔时间超过 handleLimtUpTime ms时,时必须及时开始gc
      *
-     * @param handleLimtUpTime
+     * @param handleLimtUpTime 处理时间
      */
     public static void configHandleLimtUpTime(int handleLimtUpTime) {
         RpcGc.handleLimtUpTime = handleLimtUpTime;

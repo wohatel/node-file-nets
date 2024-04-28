@@ -1,15 +1,15 @@
 package com.murong.rpc.interaction;
 
+import lombok.Data;
+
 import java.util.Objects;
 
+@Data
 public class RpcMsg {
     private RpcCommandType rpcCommandType;
     private RpcRequest request;
     private RpcResponse response;
     private RpcFileRequest rpcFileRequest;
-
-    public RpcMsg() {
-    }
 
     public static RpcMsg build(Object object) {
         Objects.requireNonNull(object);
@@ -38,36 +38,4 @@ public class RpcMsg {
         this.rpcFileRequest = rpcFileRequest;
     }
 
-    public RpcCommandType getRpcCommandType() {
-        return rpcCommandType;
-    }
-
-
-    public RpcFileRequest getRpcFileRequest() {
-        return rpcFileRequest;
-    }
-
-    public void setRpcFileRequest(RpcFileRequest rpcFileRequest) {
-        this.rpcFileRequest = rpcFileRequest;
-    }
-
-    public void setRpcCommandType(RpcCommandType rpcCommandType) {
-        this.rpcCommandType = rpcCommandType;
-    }
-
-    public RpcRequest getRequest() {
-        return request;
-    }
-
-    public void setRequest(RpcRequest request) {
-        this.request = request;
-    }
-
-    public RpcResponse getResponse() {
-        return response;
-    }
-
-    public void setResponse(RpcResponse response) {
-        this.response = response;
-    }
 }

@@ -41,10 +41,9 @@ public class NodeService {
 
     /**
      * 从注册节点获取所有的节点
-     *
-     * @return
      */
-    public List<NodeVo> nodeList() throws InterruptedException {
+    @SneakyThrows
+    public List<NodeVo> nodeList() {
         List<NodeVo> nodeVos = EnvConfig.centerNodes();
         if (CollectionUtils.isEmpty(nodeVos)) {
             return new ArrayList<>();
@@ -63,11 +62,10 @@ public class NodeService {
     /**
      * 拷贝文件
      *
-     * @param sourceNode
-     * @param targetNode
-     * @param sourceFile
-     * @param targetFile
-     * @return
+     * @param sourceNode 源节点
+     * @param targetNode 目标节点
+     * @param sourceFile 源文件全路径
+     * @param targetFile 目标文件全路径
      */
     public boolean cpFile(String sourceNode, String targetNode, String sourceFile, String targetFile) {
         // 如果本机是来源节点
@@ -107,13 +105,13 @@ public class NodeService {
     /**
      * 拷贝目录
      *
-     * @param sourceNode
-     * @param targetNode
-     * @param sourceDir
-     * @param targetDir
-     * @return
+     * @param sourceNode 源节点
+     * @param targetNode 目标节点
+     * @param sourceDir  源节点文件夹
+     * @param targetDir  目标节点文件夹
+     *  响应结果
      */
-    public boolean cpDir(String sourceNode, String targetNode, String sourceDir, String targetDir) throws InterruptedException {
+    public boolean cpDir(String sourceNode, String targetNode, String sourceDir, String targetDir) {
         if (!sourceDir.endsWith("/")) {
             sourceDir += "/";
         }
@@ -164,11 +162,12 @@ public class NodeService {
     /**
      * 查询文件内容
      *
-     * @param sourceNode
-     * @param file
-     * @return
+     * @param sourceNode 源节点
+     * @param file       文件全路径
+     *  文件信息
      */
-    public FileVo fileInfo(String sourceNode, String file) throws InterruptedException {
+    @SneakyThrows
+    public FileVo fileInfo(String sourceNode, String file) {
         RpcAutoReconnectClient client = ClientSitePool.getOrConnectClient(sourceNode);
         RpcRequest rpcRequest = new RpcRequest();
         rpcRequest.setBody(file);
@@ -181,11 +180,11 @@ public class NodeService {
     /**
      * 查询某节点下的所有文件信息
      *
-     * @param sourceNode
-     * @param dir
-     * @return
+     * @param sourceNode 节点名
+     * @param dir        文件节
      */
-    public List<FileVo> filesOfDir(String sourceNode, String dir) throws InterruptedException {
+    @SneakyThrows
+    public List<FileVo> filesOfDir(String sourceNode, String dir) {
         if (StringUtil.isBlank(dir)) {
             throw new RuntimeException("文件名称为空");
         }
@@ -201,12 +200,11 @@ public class NodeService {
     /**
      * 删除文件或文件夹
      *
-     * @param sourceNode
-     * @param file
-     * @return
-     * @throws InterruptedException
+     * @param sourceNode 节点名
+     * @param file       文件全路径
      */
-    public boolean fileDelete(String sourceNode, String file) throws InterruptedException {
+    @SneakyThrows
+    public boolean fileDelete(String sourceNode, String file) {
         RpcAutoReconnectClient client = ClientSitePool.getOrConnectClient(sourceNode);
         RpcRequest rpcRequest = new RpcRequest();
         rpcRequest.setBody(file);
@@ -284,9 +282,10 @@ public class NodeService {
      * 变更工作目录
      *
      * @param dirs
-     * @return
+     * 
      */
-    public boolean chHomeDirs(List<String> dirs) throws InterruptedException {
+    @SneakyThrows
+    public boolean chHomeDirs(List<String> dirs) {
         RpcAutoReconnectClient client = ClientSitePool.getCenterClient();
         RpcRequest rpcRequest = new RpcRequest();
         rpcRequest.setBody(JsonUtil.toJSONString(dirs));
@@ -315,9 +314,9 @@ public class NodeService {
     /**
      * 查询节点的连接情况
      *
-     * @return
      */
-    public List<NodeVo> linkedList(String nodeName) throws InterruptedException {
+    @SneakyThrows
+    public List<NodeVo> linkedList(String nodeName) {
         RpcAutoReconnectClient orConnectClient = ClientSitePool.getOrConnectClient(nodeName);
         RpcRequest rpcRequest = new RpcRequest();
         rpcRequest.setRequestType(RequestTypeEnmu.linkedList.name());
@@ -334,9 +333,10 @@ public class NodeService {
      * @param file
      * @param newName
      * @param
-     * @return
+     * 
      */
-    public boolean renameFile(String nodeName, String file, String newName) throws InterruptedException {
+    @SneakyThrows
+    public boolean renameFile(String nodeName, String file, String newName) {
         RpcAutoReconnectClient orConnectClient = ClientSitePool.getOrConnectClient(nodeName);
         RpcRequest rpcRequest = new RpcRequest();
         rpcRequest.setRequestType(RequestTypeEnmu.renameFile.name());
@@ -369,7 +369,12 @@ public class NodeService {
                 RpcRequest rpcRequest = new RpcRequest();
                 rpcRequest.setRequestType(RequestTypeEnmu.getConf.name());
                 RpcFuture rpcFuture = client.sendSynMsg(rpcRequest);
-                RpcResponse rpcResponse = rpcFuture.get();
+                RpcResponse rpcResponse = null;
+                try {
+                    rpcResponse = rpcFuture.get();
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
                 EnvConfVo confVo = JsonUtil.parseObject(rpcResponse.getBody(), EnvConfVo.class);
                 if (confVo != null) {
                     // 同步家目录信息
@@ -425,8 +430,9 @@ public class NodeService {
 
     /**
      * kb/s
+     *
      * @param rateLimit
-     * @return
+     * 
      */
     @SneakyThrows
     public Boolean chRateLimit(long rateLimit) {

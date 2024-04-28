@@ -1,8 +1,11 @@
 package com.murong.rpc.input;
 
+import lombok.Data;
+
 /**
  * 获取节点的文件信息
  */
+@Data
 public class GetFileOfDirInput {
 
     /**
@@ -15,19 +18,4 @@ public class GetFileOfDirInput {
      */
     private String dir;
 
-    public String getNodeName() {
-        return nodeName;
-    }
-
-    public void setNodeName(String nodeName) {
-        this.nodeName = nodeName;
-    }
-
-    public String getDir() {
-        return dir;
-    }
-
-    public void setDir(String dir) {
-        this.dir = dir;
-    }
 }

@@ -238,7 +238,11 @@ public class RpcMsgService {
         boolean filePathOk = EnvConfig.isFilePathOk(body);
         if (filePathOk) { // 如果文件路径在
             ThreadUtil.execSilentException(() -> {
-                FileUtils.forceDelete(new File(body));
+                try {
+                    FileUtils.forceDelete(new File(body));
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
                 rpcResponse.setBody(String.valueOf(true));
 
             }, e -> {

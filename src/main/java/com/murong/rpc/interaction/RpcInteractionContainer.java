@@ -1,18 +1,18 @@
 package com.murong.rpc.interaction;
 
 import com.alibaba.fastjson.JSON;
+import com.murong.rpc.config.ExecutorPool;
+import lombok.Getter;
 import org.springframework.util.CollectionUtils;
 
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadPoolExecutor;
 
+/**
+ * @author yaochuang
+ */
 public class RpcInteractionContainer {
+    @Getter
     private static final ConcurrentHashMap<String, RpcFuture> futureMap = new ConcurrentHashMap<>();
 
     public static RpcFuture addRequest(RpcRequest rpcRequest) {
@@ -44,9 +44,8 @@ public class RpcInteractionContainer {
         rpcFuture.setDone(true);
         List<RpcResponseListener> listeners = rpcFuture.getListeners();
         if (!CollectionUtils.isEmpty(listeners)) {
-            for (int i = 0; i < listeners.size(); i++) {
-                RpcResponseListener rpcResponseListener = listeners.get(i);
-                RpcThreadPool.getExecutorService().submit(() -> {
+            for (RpcResponseListener rpcResponseListener : listeners) {
+                ExecutorPool.getExecutorService().submit(() -> {
                     rpcResponseListener.handle(rpcResponse);
                 }); // 处理响应事件
             }
@@ -81,14 +80,7 @@ public class RpcInteractionContainer {
     }
 
 
-    public static ConcurrentHashMap<String, RpcFuture> getFutureMap() {
-        return futureMap;
-    }
-
     public static int concurrentSize() {
-        if (futureMap == null) {
-            return 0;
-        }
         return futureMap.size();
     }
 

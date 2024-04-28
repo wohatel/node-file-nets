@@ -1,5 +1,8 @@
 package com.murong.rpc.input;
 
+import lombok.Data;
+
+@Data
 public class RenameFileInput {
 
     /**
@@ -16,28 +19,4 @@ public class RenameFileInput {
      * 目标文件
      */
     private String newName;
-
-    public String getNodeName() {
-        return nodeName;
-    }
-
-    public void setNodeName(String nodeName) {
-        this.nodeName = nodeName;
-    }
-
-    public String getFile() {
-        return file;
-    }
-
-    public void setFile(String file) {
-        this.file = file;
-    }
-
-    public String getNewName() {
-        return newName;
-    }
-
-    public void setNewName(String newName) {
-        this.newName = newName;
-    }
 }

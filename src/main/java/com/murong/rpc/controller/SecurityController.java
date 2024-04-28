@@ -7,13 +7,12 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.crypto.NoSuchPaddingException;
 import java.security.NoSuchAlgorithmException;
 
-
 /**
- * @author yaochuang
- * @ClassName AuthUserController
- * @Desription TODO
- * @Date 2023/5/6 5:00 PM
- * @Version 1.0
+ * <p>
+ * 涉及安全的集群处理 TODO 暂时未实现具体功能
+ * </p>
+ *
+ * @author yaochuang 2024/04/28 17:11
  */
 @RestController
 public class SecurityController {

@@ -6,6 +6,9 @@ import io.netty.channel.nio.NioEventLoopGroup;
 
 import java.util.concurrent.TimeUnit;
 
+/**
+ * @author yaochuang
+ */
 public class RpcAutoReconnectClient extends RpcDefaultClient {
 
     /**
@@ -27,6 +30,7 @@ public class RpcAutoReconnectClient extends RpcDefaultClient {
         }
         ChannelFuture future = this.connect();
         future.addListener(new ChannelFutureListener() {
+            @Override
             public void operationComplete(ChannelFuture futureListener) throws Exception {
                 if (futureListener.isSuccess()) {
                     channel.closeFuture().addListener(new ChannelFutureListener() {

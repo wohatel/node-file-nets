@@ -29,11 +29,11 @@ public final class ThreadUtil {
     /**
      * 获取
      *
-     * @param supplier
+     * @param runnable
      */
-    public static void execSilentVoid(VoidSupplier supplier) {
+    public static void execSilentVoid(Runnable runnable) {
         try {
-            supplier.get();
+            runnable.run();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -42,11 +42,11 @@ public final class ThreadUtil {
     /**
      * 获取
      *
-     * @param supplier
+     * @param runnable
      */
-    public static boolean tryExecSilent(VoidSupplier supplier) {
+    public static boolean tryExecSilent(Runnable runnable) {
         try {
-            supplier.get();
+            runnable.run();
             return true;
         } catch (Exception e) {
             e.printStackTrace();
@@ -84,34 +84,13 @@ public final class ThreadUtil {
     }
 
     /**
-     * 获取
-     *
-     * @param supplier
-     */
-    public static void execSilentVoidFinally(VoidSupplier supplier, VoidSupplier finallySupplier) {
-
-        try {
-            supplier.get();
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                finallySupplier.get();
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
-        }
-    }
-
-    /**
      * 执行异常
      *
-     * @param supplier
-     * @param e
+     * @param runnable 运行方法
      */
-    public static void execSilentException(VoidSupplier supplier, Consumer<Exception> e) {
+    public static void execSilentException(Runnable runnable, Consumer<Exception> e) {
         try {
-            supplier.get();
+            runnable.run();
         } catch (Exception ex) {
             execSilentVoid(() -> e.accept(ex));
         }
@@ -121,12 +100,12 @@ public final class ThreadUtil {
      * '
      * 执行多次
      *
-     * @param supplier
-     * @param times
+     * @param runnable 方法
+     * @param times    次数
      */
-    public static void execSilentVoid(VoidSupplier supplier, int times) {
+    public static void execSilentVoid(Runnable runnable, int times) {
         for (int i = 0; i < times; i++) {
-            execSilentVoid(supplier);
+            execSilentVoid(runnable);
         }
     }
 

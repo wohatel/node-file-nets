@@ -1,0 +1,6 @@
+
+d
+java:S1116"Remove this empty statement.(Åñ­õşÿÿÿÿ8Œµøò1J$d13093fe-ae97-4d76-aad5-a7d939115a54
+‚	java:S899";Do something with the "boolean" value returned by "delete".(²Œ­ûÿÿÿÿ8µøò1J$c46fea23-b827-499d-8749-f3220ad08c6e
+–
+java:S4042"NUse "java.nio.file.Files#delete" here for better messages on error conditions.(²Œ­ûÿÿÿÿ8µøò1J$02aef627-2afc-4559-ba2b-bc056e1da909

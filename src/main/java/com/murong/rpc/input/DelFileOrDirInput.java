@@ -1,8 +1,11 @@
 package com.murong.rpc.input;
 
+import lombok.Data;
+
 /**
  * 获取节点的文件信息
  */
+@Data
 public class DelFileOrDirInput {
 
     /**
@@ -15,19 +18,5 @@ public class DelFileOrDirInput {
      */
     private String fileOrDir;
 
-    public String getNodeName() {
-        return nodeName;
-    }
 
-    public void setNodeName(String nodeName) {
-        this.nodeName = nodeName;
-    }
-
-    public String getFileOrDir() {
-        return fileOrDir;
-    }
-
-    public void setFileOrDir(String fileOrDir) {
-        this.fileOrDir = fileOrDir;
-    }
 }

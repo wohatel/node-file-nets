@@ -1,8 +1,11 @@
 package com.murong.rpc.input;
 
+import lombok.Data;
+
 /**
  * 获取节点的文件信息
  */
+@Data
 public class GetFileInfoInput {
 
     /**
@@ -14,20 +17,5 @@ public class GetFileInfoInput {
      * 目标
      */
     private String file;
-
-    public String getNodeName() {
-        return nodeName;
-    }
-
-    public void setNodeName(String nodeName) {
-        this.nodeName = nodeName;
-    }
-
-    public String getFile() {
-        return file;
-    }
-
-    public void setFile(String file) {
-        this.file = file;
-    }
+    
 }

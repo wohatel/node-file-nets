@@ -1,5 +1,8 @@
 package com.murong.rpc.input;
 
+import lombok.Data;
+
+@Data
 public class CpFileInput {
 
     /**
@@ -22,35 +25,4 @@ public class CpFileInput {
      */
     private String targetFile;
 
-    public String getSourceNode() {
-        return sourceNode;
-    }
-
-    public void setSourceNode(String sourceNode) {
-        this.sourceNode = sourceNode;
-    }
-
-    public String getTargetNode() {
-        return targetNode;
-    }
-
-    public void setTargetNode(String targetNode) {
-        this.targetNode = targetNode;
-    }
-
-    public String getSourceFile() {
-        return sourceFile;
-    }
-
-    public void setSourceFile(String sourceFile) {
-        this.sourceFile = sourceFile;
-    }
-
-    public String getTargetFile() {
-        return targetFile;
-    }
-
-    public void setTargetFile(String targetFile) {
-        this.targetFile = targetFile;
-    }
 }

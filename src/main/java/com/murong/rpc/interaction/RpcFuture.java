@@ -10,7 +10,7 @@ import java.util.concurrent.TimeUnit;
 
 @Data
 public class RpcFuture implements Future<RpcResponse> {
-    private long timeOut = 8000l;
+    private long timeOut = 8000L;
     private long requestTime = System.currentTimeMillis();
     private long reponseTime;
     private String requestId;
@@ -42,14 +42,6 @@ public class RpcFuture implements Future<RpcResponse> {
         return this.isDone;
     }
 
-    public RpcResponse getResponse() {
-        return response;
-    }
-
-    public void setResponse(RpcResponse response) {
-        this.response = response;
-    }
-
     @Override
     public RpcResponse get() throws InterruptedException {
         while (true) {
@@ -77,53 +69,4 @@ public class RpcFuture implements Future<RpcResponse> {
         this.timeOut = l;
         return get();
     }
-
-    public String getRequestId() {
-        return requestId;
-    }
-
-    public void setRequestId(String requestId) {
-        this.requestId = requestId;
-    }
-
-
-    public long getRequestTime() {
-        return requestTime;
-    }
-
-    public void setRequestTime(long requestTime) {
-        this.requestTime = requestTime;
-    }
-
-    public long getTimeOut() {
-        return timeOut;
-    }
-
-    public void setTimeOut(long timeOut) {
-        this.timeOut = timeOut;
-    }
-
-    public void setDone(boolean done) {
-        isDone = done;
-    }
-
-    public long getReponseTime() {
-        return reponseTime;
-    }
-
-    public void setReponseTime(long reponseTime) {
-        this.reponseTime = reponseTime;
-    }
-
-    /**
-     * 添加监听
-     *
-     * @param listener
-     * @return
-     */
-    public RpcFuture addListener(RpcResponseListener listener) {
-        this.listeners.add(listener);
-        return this;
-    }
-
 }

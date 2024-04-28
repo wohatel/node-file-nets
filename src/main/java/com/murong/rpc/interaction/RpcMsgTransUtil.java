@@ -46,11 +46,9 @@ public class RpcMsgTransUtil {
     /**
      * 向服务端写文件
      *
-     * @param channel
-     * @param file
-     * @param targetFile
-     * @param
-     * @throws IOException
+     * @param channel    通道
+     * @param file       文件全限定名
+     * @param targetFile 目标机器文件全限定名
      */
     public static void writeFile(Channel channel, String file, String targetFile, int len) throws IOException, InterruptedException {
         // 传输空文件
@@ -59,7 +57,7 @@ public class RpcMsgTransUtil {
             return;
         }
         String fileName = file.substring(file.lastIndexOf("/"));
-        String hash = DigestUtils.md5Hex(file + System.currentTimeMillis() + new Random().nextInt());
+        String hash = DigestUtils.md5Hex(file + System.currentTimeMillis() + SecureRandomUtil.randomInt());
         // 1尝试发送空包,检测效果是否可以传输
         try (RandomAccessFile randomAccessFile = new RandomAccessFile(file, "r"); FileChannel fileChannel = randomAccessFile.getChannel();) {
             long size = fileChannel.size(); //文件的总长度
@@ -75,7 +73,6 @@ public class RpcMsgTransUtil {
                 }
                 // 实时判断如果超速了,就停100ms
                 if (rateLimiter.refresh(EnvConfig.getRateLimitVo().getRateLimit()).isOverSpeed()) {
-                    System.out.println("当前速度:" + rateLimiter.currentSpeed());
                     Thread.sleep(100);
                     continue;
                 }
@@ -113,15 +110,13 @@ public class RpcMsgTransUtil {
     /**
      * 向服务端写文件
      *
-     * @param channel
-     * @param file
-     * @param targetFile
-     * @param
-     * @throws IOException
+     * @param channel    通道
+     * @param file       孔文件名
+     * @param targetFile 目标文件
      */
     public static void writeVoidFile(Channel channel, String file, String targetFile) {
         String fileName = file.substring(file.lastIndexOf("/"));
-        String hash = DigestUtils.md5Hex(file + System.currentTimeMillis() + new Random().nextInt());
+        String hash = DigestUtils.md5Hex(file + System.currentTimeMillis() + SecureRandomUtil.randomInt());
         // 1尝试发送空包,检测效果是否可以传输
         RpcFileRequest rpcFileRequest = new RpcFileRequest();
         rpcFileRequest.setTargetFilePath(targetFile);

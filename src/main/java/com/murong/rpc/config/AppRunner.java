@@ -24,7 +24,7 @@ public class AppRunner implements ApplicationRunner {
     HomeDirConfig homeDirConfig;
 
     @Override
-    public void run(ApplicationArguments args) throws Exception {
+    public void run(ApplicationArguments args) {
         List<String> homeDirs = homeDirConfig.getList();
         // 安全的工作目录
         if (!CollectionUtils.isEmpty(homeDirs)) {

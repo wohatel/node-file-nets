@@ -1,5 +1,8 @@
 package com.murong.rpc.input;
 
+import lombok.Data;
+
+@Data
 public class CpDirInput {
 
     /**
@@ -22,35 +25,4 @@ public class CpDirInput {
      */
     private String targetDir;
 
-    public String getSourceNode() {
-        return sourceNode;
-    }
-
-    public void setSourceNode(String sourceNode) {
-        this.sourceNode = sourceNode;
-    }
-
-    public String getTargetNode() {
-        return targetNode;
-    }
-
-    public void setTargetNode(String targetNode) {
-        this.targetNode = targetNode;
-    }
-
-    public String getSourceDir() {
-        return sourceDir;
-    }
-
-    public void setSourceDir(String sourceDir) {
-        this.sourceDir = sourceDir;
-    }
-
-    public String getTargetDir() {
-        return targetDir;
-    }
-
-    public void setTargetDir(String targetDir) {
-        this.targetDir = targetDir;
-    }
 }

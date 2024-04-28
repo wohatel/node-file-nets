@@ -5,5 +5,3 @@ java:S6813"BRemove this field injection and use constructor injection instead.
 java:S6813"BRemove this field injection and use constructor injection instead.(êæÄŞ8¡–¥Œí1J$4f27de49-cea1-4d6b-9276-4117da015fd7
 t
 java:S1602 ",Remove useless curly braces around statement(åüŠâùÿÿÿÿ8 ¡Ô‘×1J$31db8fd9-0a4a-4097-90b5-5fc319665262
-–
-java:S1612$"NReplace this lambda with method reference 'ClientSitePool::monitorAndDestory'.(ã‚Îÿÿÿÿÿ8ú¯ÙÆè1J$28d04740-8a05-4f7d-ab76-d13d64893f9a

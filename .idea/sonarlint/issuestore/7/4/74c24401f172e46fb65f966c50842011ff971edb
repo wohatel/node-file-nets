@@ -1,46 +1,22 @@
 
-ˆ	java:S112K"FDefine and throw a dedicated exception instead of using a generic one.(¶×Ü8û†óúå1J$57fd7c4f-d586-4835-aea4-9f8544beb0a0
-	java:S112P"FDefine and throw a dedicated exception instead of using a generic one.(ß·÷üÿÿÿÿ8û†óúå1J$b891adb5-e0e3-4b6d-8871-cb7d5603fe77
-	java:S112V"FDefine and throw a dedicated exception instead of using a generic one.(Ò‚Òéüÿÿÿÿ8û†óúå1J$15423f39-039f-45d2-8bb5-2da96c22c00c
-	java:S112]"FDefine and throw a dedicated exception instead of using a generic one.(ò—üÑşÿÿÿÿ8û†óúå1J$0d18eebb-d4c9-4263-882e-9fb4188b9bd0
-ˆ	java:S112}"FDefine and throw a dedicated exception instead of using a generic one.(¶×Ü8û†óúå1J$bd2f6401-3493-4d74-99d7-acc3530d2868
-	java:S112€"FDefine and throw a dedicated exception instead of using a generic one.(Õ¦Ò¢ıÿÿÿÿ8û†óúå1J$46742c76-0726-4473-a7c7-e6036d418188
-‰	java:S112‡"FDefine and throw a dedicated exception instead of using a generic one.(’¶’8û†óúå1J$c6d31434-7564-48e7-8009-acb081844c1a
-	java:S112"FDefine and throw a dedicated exception instead of using a generic one.(Ò‚Òéüÿÿÿÿ8û†óúå1J$3aae489a-9a02-46cc-acb2-b7934b812189
-	java:S112–"FDefine and throw a dedicated exception instead of using a generic one.(ŞÓèûÿÿÿÿ8û†óúå1J$a497ccfa-bb5c-4d14-a63b-90952946d538
-‰	java:S112¾"FDefine and throw a dedicated exception instead of using a generic one.(±¬û¯8†«é„æ1J$92efc68d-9919-4dac-a63c-2b03af6a64da
-	java:S112Ú"FDefine and throw a dedicated exception instead of using a generic one.(ÿßãûûÿÿÿÿ8†«é„æ1J$d7fbf3ef-3098-44c6-b544-03c100c6d556
+ˆ	java:S112I"FDefine and throw a dedicated exception instead of using a generic one.(¶×Ü8û†óúå1J$418ee042-6db1-49f0-abf9-f4b343d901e8
+	java:S112N"FDefine and throw a dedicated exception instead of using a generic one.(ß·÷üÿÿÿÿ8û†óúå1J$f9e86592-7c8e-4f6d-8acb-c24dddd3d891
+	java:S112["FDefine and throw a dedicated exception instead of using a generic one.(ò—üÑşÿÿÿÿ8û†óúå1J$d2386910-2750-4d6d-83d3-12fbf7cfd9ed
+ˆ	java:S112{"FDefine and throw a dedicated exception instead of using a generic one.(¶×Ü8ÿ‰ÛŸò1J$5d926252-4b32-4bbf-89df-674055008ea9
+	java:S112~"FDefine and throw a dedicated exception instead of using a generic one.(Õ¦Ò¢ıÿÿÿÿ8ÿ‰ÛŸò1J$1a6e4d2d-bf4f-4b7c-824a-8471454c088c
+‰	java:S112…"FDefine and throw a dedicated exception instead of using a generic one.(’¶’8ÿ‰ÛŸò1J$ff148af9-b4ae-4bdf-8a61-6b49082176c2
+	java:S112”"FDefine and throw a dedicated exception instead of using a generic one.(ŞÓèûÿÿÿÿ8ÿ‰ÛŸò1J$fd756255-d19f-405c-a294-23d1e62a44c2
+‰	java:S112½"FDefine and throw a dedicated exception instead of using a generic one.(±¬û¯8€ŠÛŸò1J$88f1ae17-36bc-432b-9182-1f91adcea9dc
+	java:S112Ø"FDefine and throw a dedicated exception instead of using a generic one.(ÿßãûûÿÿÿÿ8€ŠÛŸò1J$15284ab9-efe5-45c0-9917-d4fd6b7fcb45
 l
-java:S5411Ù"(Use a primitive boolean expression here.(ò›ß˜8ş†óúå1J$879f6021-b545-47cf-9372-5343a6232941
-
-java:S3516t"9Refactor this method to not always return the same value.(•÷îşÿÿÿÿÿ8ª«é„æ1J$3165efee-5d8c-4de5-9671-f04d063ff1f8
-|
-java:S3516H"9Refactor this method to not always return the same value.(ÒÇ¿Š8ª«é„æ1J$2fdc2871-c452-404d-a45d-d8a357a7f584
+java:S5411×"(Use a primitive boolean expression here.(ò›ß˜8‚ŠÛŸò1J$edccfa59-af5e-403b-8127-7a1565be19ce
 …
-java:S6813'"BRemove this field injection and use constructor injection instead.(êæÄŞ8 “¥Œí1J$ca7a8963-0935-40b2-bfa3-006b2ce2ba42
-¡
-java:S2142U"^Either re-interrupt this method or rethrow the "InterruptedException" that can be caught here.(”ı¾8°«é„æ1J$f1e288e9-3ab4-4cf2-8ec1-9d0e94b93785
+java:S6813'"BRemove this field injection and use constructor injection instead.(êæÄŞ8 “¥Œí1J$5fdd724a-f846-4a94-b865-22c480c88b3f
 š
-java:S3776t"RRefactor this method to reduce its Cognitive Complexity from 16 to the 15 allowed.(•÷îşÿÿÿÿÿ8‘‡óúå1J$b8880068-0036-494a-ae47-f42ba8b9c821
-¿
-java:S1130t"wRemove the declaration of thrown exception 'java.lang.InterruptedException', as it cannot be thrown from method's body.(•÷îşÿÿÿÿÿ8±«é„æ1J$4e0fba1c-886b-4019-a40b-10f1c25b30f9
-¢
-java:S2142"^Either re-interrupt this method or rethrow the "InterruptedException" that can be caught here.(”ı¾8²«é„æ1J$1a657f7a-f768-4f04-adf5-421cb353a3eb
-…
-java:S3457Š"AFormat specifiers should be used instead of string concatenation.(Èõ×ç8¶«é„æ1J$17b572a3-0c1c-4930-ba68-2d439da0d78b
-Š
-java:S3457–"AFormat specifiers should be used instead of string concatenation.(¹…ƒşÿÿÿÿ8·«é„æ1J$3f014dac-1346-48dc-ab81-557ff5e774bc
-†
-java:S1612¨"=Replace this lambda with method reference 'Boolean::valueOf'.(µµ‚ÿüÿÿÿÿ8¸«é„æ1J$83f58059-7d8d-4799-8955-634ac38c5d1e
+java:S3776r"RRefactor this method to reduce its Cognitive Complexity from 16 to the 15 allowed.(÷˜¡¹ıÿÿÿÿ8ŠÛŸò1J$9f86f6d8-96ef-42be-9262-51bf6d81ce19
 p
-java:S1602²",Remove useless curly braces around statement(Ô‘“8˜‡óúå1J$67220b5f-1c5e-45cc-bbd4-cbc02d7bd4ba
+java:S1602±",Remove useless curly braces around statement(Ô‘“8¤ŠÛŸò1J$9a8c9d2b-b98c-4cd2-80c0-15839ae74c6b
 u
-java:S1602³",Remove useless curly braces around statement(€ğòÇúÿÿÿÿ8˜‡óúå1J$95f87be5-c070-417c-adb1-5928f2f8801e
-†
-java:S1612ß"=Replace this lambda with method reference 'Boolean::valueOf'.(µµ‚ÿüÿÿÿÿ8º«é„æ1J$bb8382a4-67f7-4aff-b6d4-3e7104606a4f
-€
-java:S1612é"<Replace this lambda with method reference 'NodeVo::getName'.(Ã¸¬ú8»«é„æ1J$2481b165-e8fd-48a5-9c70-5efa38ef579c
-€
-java:S1612"<Replace this lambda with method reference 'NodeVo::getName'.(Ã¸¬ú8½«é„æ1J$8d14affd-6074-4708-a7de-0c66b26dee48
-†
-java:S1612·"=Replace this lambda with method reference 'Boolean::valueOf'.(µµ‚ÿüÿÿÿÿ8À«é„æ1J$7475abd5-fdd1-49f2-897f-635ba356794e
+java:S1602²",Remove useless curly braces around statement(€ğòÇúÿÿÿÿ8¤ŠÛŸò1J$624fd00c-d252-4afd-a918-3b9c07ce318e
+u
+java:S3776ç"RRefactor this method to reduce its Cognitive Complexity from 16 to the 15 allowed.(Ä™û“üÿÿÿÿ8Îú ò1

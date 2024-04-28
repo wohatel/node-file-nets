@@ -96,9 +96,7 @@ public class SimpleRpcClient {
      *
      * @param fromDir   本机环境的dir
      * @param targetDir 目标机器的dir
-     * @param buffer
-     * @throws IOException
-     * @throws InterruptedException
+     * @param buffer    一次发送的块大小
      */
     public void sendDir(String fromDir, String targetDir, int buffer) throws IOException, InterruptedException {
         File localDir = new File(fromDir);

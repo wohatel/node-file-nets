@@ -1,10 +1,9 @@
 package com.murong.rpc.input;
 
 
-import com.murong.rpc.util.MD5Util;
+import lombok.Data;
 
-import java.security.MessageDigest;
-
+@Data
 public class InitAdminPassword {
     /**
      * 节点的leader的host
@@ -21,28 +20,4 @@ public class InitAdminPassword {
      */
     private String password;
 
-
-    public String getLeaderHost() {
-        return leaderHost;
-    }
-
-    public void setLeaderHost(String leaderHost) {
-        this.leaderHost = leaderHost;
-    }
-
-    public Integer getLeaderPort() {
-        return leaderPort;
-    }
-
-    public void setLeaderPort(Integer leaderPort) {
-        this.leaderPort = leaderPort;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
 }

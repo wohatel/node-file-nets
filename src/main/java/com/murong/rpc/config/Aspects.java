@@ -37,9 +37,7 @@ public class Aspects {
     /**
      * 环绕
      *
-     * @param proceedingJoinPoint
-     * @return
-     * @throws Throwable
+     * @param proceedingJoinPoint 切入点
      */
     @Around("logPrint()")
     public Object doAround(ProceedingJoinPoint proceedingJoinPoint) throws Throwable {

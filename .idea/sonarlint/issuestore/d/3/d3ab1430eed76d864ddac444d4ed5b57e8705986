@@ -1,15 +1,7 @@
 
-	java:S112V"FDefine and throw a dedicated exception instead of using a generic one.(Ò‚Òéüÿÿÿÿ8™ÿÍ®ì1J$81525874-9276-4513-a828-9e17f5d8586d
-	java:S112s"FDefine and throw a dedicated exception instead of using a generic one.(Ò‚Òéüÿÿÿÿ8šÿÍ®ì1J$8b0717ea-a790-4793-8fae-86f2713e9435
 x
-java:S1066Õ"/Merge this if statement with the enclosing one.(ÂÔÆ®şÿÿÿÿ8ö½–ùå1J$06fcaa88-870e-4c1c-90fc-a6ad85d284b1
+java:S1066Õ"/Merge this if statement with the enclosing one.(ÂÔÆ®şÿÿÿÿ8ö½–ùå1J$9429603e-48a4-4a4b-a517-e9022c0f3ff1
 n
-java:S2201<"+The return value of "collect" must be used.(œçÖß8ş½–ùå1J$a318aa0b-1f9f-48a5-a2fd-52b38840bece
+java:S2201<"+The return value of "collect" must be used.(œçÖß8ş½–ùå1J$7b0e88e0-657d-42dd-ba3f-8ccdbf70428a
 d
-java:S38648"!Remove this use of "Stream.peek".(¹åš8ş½–ùå1J$12d4af0c-19fc-4673-bdbb-426babf33ea3
-¡
-java:S2142U"^Either re-interrupt this method or rethrow the "InterruptedException" that can be caught here.(”ı¾8¾ÿÍ®ì1J$4ee48fc8-5482-45c4-9d07-dbe960c29fb9
-¡
-java:S2142r"^Either re-interrupt this method or rethrow the "InterruptedException" that can be caught here.(”ı¾8ÀÿÍ®ì1J$342f7c1a-2fc5-4d41-acc4-4538f2692f71
-›
-java:S1128"SRemove this unused import 'org.springframework.beans.factory.annotation.Autowired'.(¡¸Îùÿÿÿÿ8ÌÿÍ®ì1J$bb367bb3-d05d-43c2-be05-1b78f3d51f37
+java:S38648"!Remove this use of "Stream.peek".(¹åš8ş½–ùå1J$db2c53eb-3afd-462f-b54d-a23cdecc2287

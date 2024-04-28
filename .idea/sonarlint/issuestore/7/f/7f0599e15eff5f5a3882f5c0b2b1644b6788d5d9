@@ -1,5 +1,5 @@
 
-W
-java:S1161":Add the "@Override" annotation above this method signature(Ü’ı«8î§æöÜ1
-^
-java:S11264"AReplace this if-then-else statement by a single return statement.(É¦Ğ8’ÁÄ•×1
+s
+java:S2160"+Override the "equals" method in this class.(ôæª€ùÿÿÿÿ8ÃÜŸò1J$fb0bc4ba-c8f7-45d2-81e0-de2c43507a0f
+„
+java:S11265"AReplace this if-then-else statement by a single return statement.(É¦Ğ8’ÁÄ•×1J$bd0f2e64-998b-40c9-82da-0d7f80328945

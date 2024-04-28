@@ -1,7 +1,6 @@
 package com.murong.rpc.vo;
 
 import com.murong.rpc.config.CodeConfig;
-import com.murong.rpc.util.ResultSupplier;
 
 import java.util.function.Supplier;
 
@@ -58,13 +57,10 @@ public class ResultVo<T> {
      * @param <T>
      * @return
      */
-    public static <T> ResultVo<T> supplier(ResultSupplier<T> supplier) {
-        try {
-            ResultVo<T> resultVo = new ResultVo<>();
-            resultVo.setData(supplier.get());
-            return resultVo;
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+    public static <T> ResultVo<T> supplier(Supplier<T> supplier) {
+        ResultVo<T> resultVo = new ResultVo<>();
+        resultVo.setData(supplier.get());
+        return resultVo;
     }
 }
+

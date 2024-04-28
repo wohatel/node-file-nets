@@ -22,6 +22,7 @@ public class RpcHeartClient extends RpcDefaultClient {
         this(host, port, new NioEventLoopGroup());
     }
 
+    @Override
     public ChannelFuture connect() {
         ChannelFuture connect = super.connect();
         connect.channel().pipeline().addLast(new IdleStateHandler(30, 5, 0, TimeUnit.SECONDS)).addLast(new RpcClientHeartHandler(this));

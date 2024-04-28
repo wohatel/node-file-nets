@@ -82,9 +82,7 @@ public class ClientSitePool {
         List<RpcAutoReconnectClient> key = remove.getKey();
         for (int i = 0; i < key.size(); i++) {
             RpcAutoReconnectClient client = key.get(i);
-            ThreadUtil.execSilentVoid(() -> {
-                client.closeChannel();
-            });
+            ThreadUtil.execSilentVoid(() -> client.closeChannel());
         }
     }
 
