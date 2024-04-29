@@ -11,6 +11,8 @@ public class KeyValue<K, V, D> {
     private V value;
     private D data;
 
+    private String other;
+
     public KeyValue() {
 
     }
@@ -24,6 +26,13 @@ public class KeyValue<K, V, D> {
         this.key = key;
         this.value = value;
         this.data = data;
+    }
+
+    public KeyValue(K key, V value, D data, String other) {
+        this.key = key;
+        this.value = value;
+        this.data = data;
+        this.other = other;
     }
 
 }

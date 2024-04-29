@@ -11,6 +11,7 @@ import com.murong.nets.input.RenameFileInput;
 import com.murong.nets.interaction.RpcMsgTransUtil;
 import com.murong.nets.interaction.RpcRequest;
 import com.murong.nets.interaction.RpcResponse;
+import com.murong.nets.util.FileUtil;
 import com.murong.nets.util.JsonUtil;
 import com.murong.nets.util.OperationMsg;
 import com.murong.nets.util.RpcException;
@@ -367,6 +368,16 @@ public class RpcMsgService {
         RpcResponse rpcResponse = request.toResponse();
         rpcResponse.setCode(CodeConfig.SUCCESS);
         rpcResponse.setBody(JsonUtil.toJSONString(RunTimeUtil.gainProcessList(finalNumber)));
+        RpcMsgTransUtil.write(ctx.channel(), rpcResponse);
+    }
+
+    @RpcMethod("operabitilyCheck")
+    public void operabitilyCheck(ChannelHandlerContext ctx, RpcRequest request) {
+        String targetFile = request.getBody();
+        RpcResponse rpcResponse = request.toResponse();
+        rpcResponse.setCode(CodeConfig.SUCCESS);
+        boolean checked = FileUtil.operabitilyCheck(targetFile);
+        rpcResponse.setBody(String.valueOf(checked));
         RpcMsgTransUtil.write(ctx.channel(), rpcResponse);
     }
 

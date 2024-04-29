@@ -103,5 +103,10 @@ public enum RequestTypeEnmu {
     /**
      * 进程情况
      */
-    processList;
+    processList,
+
+    /**
+     * 可操作检查
+     */
+    operabitilyCheck;
 }

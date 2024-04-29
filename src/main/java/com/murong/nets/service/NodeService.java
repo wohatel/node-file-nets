@@ -489,4 +489,21 @@ public class NodeService {
         RpcResponse rpcResponse = rpcFuture.get();
         return RpcResponseHandler.handler(rpcResponse, t -> JsonUtil.parseArray(t, ProcessActiveVo.class));
     }
+
+    /**
+     * 判断文件是否正在接收
+     *
+     * @param targetNode 目标节点
+     * @param targetFile 目标文件
+     */
+    @SneakyThrows
+    public boolean operabitilyCheck(String targetNode, String targetFile) {
+        RpcAutoReconnectClient client = ClientSitePool.getOrConnectClient(targetNode);
+        RpcRequest rpcRequest = new RpcRequest();
+        rpcRequest.setBody(targetFile);
+        rpcRequest.setRequestType(RequestTypeEnmu.operabitilyCheck.name());
+        RpcFuture rpcFuture = client.sendSynMsg(rpcRequest);
+        RpcResponse rpcResponse = rpcFuture.get();
+        return RpcResponseHandler.handler(rpcResponse, Boolean::valueOf);
+    }
 }

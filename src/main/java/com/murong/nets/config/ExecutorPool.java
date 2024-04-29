@@ -10,6 +10,6 @@ import java.util.concurrent.TimeUnit;
 public class ExecutorPool {
 
     @Getter
-    private static ExecutorService executorService = new ThreadPoolExecutor(15, 100, 10L, TimeUnit.SECONDS, new LinkedBlockingQueue<>(1000));
+    private static ExecutorService executorService = new ThreadPoolExecutor(20, 100, 10L, TimeUnit.SECONDS, new LinkedBlockingQueue<>(1000));
 
 }

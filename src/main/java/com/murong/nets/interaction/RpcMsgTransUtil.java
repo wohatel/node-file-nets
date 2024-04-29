@@ -59,6 +59,9 @@ public class RpcMsgTransUtil {
             return;
         }
         String fileName = file.substring(file.lastIndexOf("/"));
+        if (fileName.startsWith("/")) {
+            fileName = fileName.substring(1);
+        }
         String hash = DigestUtils.md5Hex(file + System.currentTimeMillis() + SecureRandomUtil.randomInt());
         // 1尝试发送空包,检测效果是否可以传输
         try (RandomAccessFile randomAccessFile = new RandomAccessFile(file, "r"); FileChannel fileChannel = randomAccessFile.getChannel();) {

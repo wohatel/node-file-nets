@@ -62,6 +62,16 @@ public class NodeController {
     }
 
     /**
+     * 节点cp文件内容
+     */
+    @PostMapping("/node/operabitilyCheck")
+    public ResultVo<Boolean> operabitilyCheck(@RequestBody FileIsOpenInput input) {
+        Assert.isTrue(EnvConfig.isFilePathOk(input.getTargetFile()), "文件名不能为空");
+        Assert.isTrue(FileVerify.isFileNameOk(input.getTargetNode()), "节点名称不能为空");
+        return ResultVo.supplier(() -> nodeService.operabitilyCheck(input.getTargetNode(), input.getTargetFile()));
+    }
+
+    /**
      * 节点cp文件到目录
      */
     @PostMapping("/node/cpFileToDir")

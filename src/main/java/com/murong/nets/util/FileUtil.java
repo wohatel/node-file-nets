@@ -7,7 +7,6 @@ import com.murong.nets.interaction.RpcFileRequest;
 import com.murong.nets.interaction.RpcResponse;
 import lombok.SneakyThrows;
 import org.apache.commons.codec.digest.DigestUtils;
-import org.apache.commons.io.FileUtils;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -20,6 +19,7 @@ import java.nio.file.StandardOpenOption;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicLong;
 
 public class FileUtil {
 
@@ -27,7 +27,7 @@ public class FileUtil {
      * 文件处理
      * node2 keyValue: 1文件传输的大小, FileChannel 文件打开的通道, Long当前时间
      */
-    public static Map<String, KeyValue<Long, FileChannel, Long>> channelMap = new ConcurrentHashMap<>();
+    private static Map<String, KeyValue<AtomicLong, FileChannel, Long>> channelMap = new ConcurrentHashMap<>();
 
     /**
      * 默认处于关闭中,上下文可见
@@ -78,39 +78,27 @@ public class FileUtil {
         return null;
     }
 
-    public static void appendFile(RpcFileRequest rpcFileRequest) throws IOException {
-        String path = rpcFileRequest.getTargetFilePath() + ".ok";
-        File okfile = new File(path);
-        if (okfile.exists()) {
-            FileUtils.delete(okfile);
-        }
+    public static boolean appendFile(RpcFileRequest rpcFileRequest) throws IOException {
+        // 说明是首次上传,则应该是先删除
         boolean contains = channelMap.containsKey(rpcFileRequest.getHash());
-        // 1尝试创建文件夹
-        String targetFilePath = rpcFileRequest.getTargetFilePath();
-        int i = targetFilePath.lastIndexOf("/");
-        String substring = targetFilePath.substring(0, i);
-        File file = new File(substring);
-        if (!file.exists()) {
-            file.mkdirs();
-        }
-        KeyValue<Long, FileChannel, Long> keyValue = null;
+        KeyValue<AtomicLong, FileChannel, Long> keyValue = null;
         if (contains) {
             keyValue = channelMap.get(rpcFileRequest.getHash());
             keyValue.setData(System.currentTimeMillis()); // 设置时间
             // 总数
-            keyValue.setKey(keyValue.getKey() + rpcFileRequest.getBytes().length); //以前读取的 + 本次读取的文件块大小 = 一共读取了多少字节
+            AtomicLong key = keyValue.getKey();
+            key.addAndGet(rpcFileRequest.getBytes().length);
         } else {
+            reCreateFile(rpcFileRequest.getTargetFilePath());
+            // 尝试创建父目录
             FileChannel fileChannel = FileChannel.open(Paths.get(rpcFileRequest.getTargetFilePath()), StandardOpenOption.CREATE, StandardOpenOption.WRITE, StandardOpenOption.APPEND);
-            keyValue = new KeyValue<>(Long.valueOf(rpcFileRequest.getBytes().length), fileChannel, System.currentTimeMillis());
+            keyValue = new KeyValue<>(new AtomicLong(rpcFileRequest.getBytes().length), fileChannel, System.currentTimeMillis(), rpcFileRequest.getTargetFilePath());
             channelMap.put(rpcFileRequest.getHash(), keyValue);
         }
         FileChannel fileChannel = keyValue.getValue();
         ByteBuffer byteBuffer = ByteBuffer.wrap(rpcFileRequest.getBytes());
         fileChannel.write(byteBuffer);
-        if (keyValue.getKey() >= rpcFileRequest.getLength()) {// 如果当前读取的文件大小 > 源文件的大小 认为是读取完毕
-            Files.createFile(okfile.toPath());
-
-        }
+        return keyValue.getKey().get() >= rpcFileRequest.getLength();
     }
 
     public static RpcResponse dealRpcFileRequest(RpcFileRequest rpcFileRequest) throws IOException {
@@ -122,7 +110,13 @@ public class FileUtil {
                 reCreateFile(rpcFileRequest.getFileName());
                 reCreateFile(rpcFileRequest.getFileName() + ".ok");
             } else {
-                appendFile(rpcFileRequest);
+                File okfile = new File(rpcFileRequest.getTargetFilePath() + ".ok");
+                Files.deleteIfExists(okfile.toPath());
+                boolean isOver = appendFile(rpcFileRequest);
+                if (isOver) {
+                    FileUtil.release(rpcFileRequest.getHash());
+                    Files.createFile(okfile.toPath());
+                }
             }
         } catch (Exception e) {
             rpcResponse.setMsg(e.getMessage());
@@ -148,10 +142,10 @@ public class FileUtil {
             clearing = true; // 占位
             try {
                 TimeUtil.execDapByFunction(() -> {
-                    Iterator<Map.Entry<String, KeyValue<Long, FileChannel, Long>>> iterator = channelMap.entrySet().iterator();
+                    Iterator<Map.Entry<String, KeyValue<AtomicLong, FileChannel, Long>>> iterator = channelMap.entrySet().iterator();
                     while (iterator.hasNext()) {
-                        Map.Entry<String, KeyValue<Long, FileChannel, Long>> next = iterator.next();
-                        KeyValue<Long, FileChannel, Long> value = next.getValue();
+                        Map.Entry<String, KeyValue<AtomicLong, FileChannel, Long>> next = iterator.next();
+                        KeyValue<AtomicLong, FileChannel, Long> value = next.getValue();
                         Long time = value.getData();
                         long current = System.currentTimeMillis();
                         if (current - time > 20 * 1000) { // 如果超过20s的时间没有活动,则认为文件已处理完成
@@ -171,6 +165,24 @@ public class FileUtil {
         });
 
     }
+
+    /**
+     * 关闭流
+     *
+     * @param fileHash 文件hash
+     */
+    public static void release(String fileHash) {
+        KeyValue<AtomicLong, FileChannel, Long> keyValue = channelMap.remove(fileHash);
+        if (keyValue == null) {
+            return;
+        }
+        try {
+            FileChannel fileChannel = keyValue.getValue();
+            fileChannel.close();
+        } catch (Exception e) {
+        }
+    }
+
 
     /**
      * @param fromPath       本机文件的path
@@ -197,10 +209,17 @@ public class FileUtil {
     @SneakyThrows
     public static void reCreateFile(String file) {
         File oldFile = new File(file);
-        oldFile.deleteOnExit();
-        // 创建新file
-        oldFile.createNewFile();
+        // 如果存在就删除
+        Files.deleteIfExists(oldFile.toPath());
+        // 创建父类目
+        Files.createDirectories(oldFile.getParentFile().toPath());
+        // 重建文件
+        Files.createFile(oldFile.toPath());
     }
 
-
+    public static boolean operabitilyCheck(String targetFile) {
+        boolean match = channelMap.entrySet().stream().anyMatch(t -> t.getValue().getOther().equals(targetFile));
+        // 如果match,说明当前文件不可用
+        return !match;
+    }
 }
