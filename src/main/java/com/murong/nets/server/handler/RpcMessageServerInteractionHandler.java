@@ -8,8 +8,10 @@ import com.murong.nets.util.JsonUtil;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
+import lombok.extern.java.Log;
 
 @ChannelHandler.Sharable
+@Log
 public class RpcMessageServerInteractionHandler extends ChannelInboundHandlerAdapter {
 
     @Override
@@ -20,13 +22,13 @@ public class RpcMessageServerInteractionHandler extends ChannelInboundHandlerAda
         } else if (rpcMsg.getRpcCommandType() == RpcCommandType.request) {
             ctx.fireChannelRead(rpcMsg.getRequest());
         } else if (rpcMsg.getRpcCommandType() == RpcCommandType.file) {
-            FileChannelUtil.readFileRequest(ctx.channel(),rpcMsg.getRpcFileRequest());
+            FileChannelUtil.readFileRequest(ctx.channel(), rpcMsg.getRpcFileRequest());
         }
     }
 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
-        cause.printStackTrace();
+        log.warning(cause.getMessage());
     }
 
 }

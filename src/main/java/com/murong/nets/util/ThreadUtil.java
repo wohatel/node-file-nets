@@ -1,11 +1,14 @@
 package com.murong.nets.util;
 
+import lombok.extern.java.Log;
+
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 /**
  * 解析工具
  */
+@Log
 public final class ThreadUtil {
 
     /**
@@ -21,7 +24,7 @@ public final class ThreadUtil {
         try {
             return supplier.get();
         } catch (Exception e) {
-            e.printStackTrace();
+            log.warning(e.getMessage());
         }
         return null;
     }
@@ -35,7 +38,7 @@ public final class ThreadUtil {
         try {
             runnable.run();
         } catch (Exception e) {
-            e.printStackTrace();
+            log.warning(e.getMessage());
         }
     }
 
@@ -49,7 +52,7 @@ public final class ThreadUtil {
             runnable.run();
             return true;
         } catch (Exception e) {
-            e.printStackTrace();
+            log.warning(e.getMessage());
             return false;
         }
     }
@@ -64,7 +67,7 @@ public final class ThreadUtil {
         try {
             t = supplier.get();
         } catch (Exception e) {
-            e.printStackTrace();
+            log.warning(e.getMessage());
         } finally {
             consumer.accept(t);
         }

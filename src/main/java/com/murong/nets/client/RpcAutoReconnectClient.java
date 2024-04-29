@@ -5,6 +5,7 @@ import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.nio.NioEventLoopGroup;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.extern.java.Log;
 
 import java.util.concurrent.TimeUnit;
 
@@ -13,6 +14,7 @@ import java.util.concurrent.TimeUnit;
  */
 @Getter
 @Setter
+@Log
 public class RpcAutoReconnectClient extends RpcDefaultClient {
 
     /**
@@ -48,7 +50,7 @@ public class RpcAutoReconnectClient extends RpcDefaultClient {
                         try {
                             reConnect();
                         } catch (Exception e) {
-                            e.printStackTrace();
+                            log.warning(e.getMessage());
                         }
                     }, 10, TimeUnit.SECONDS);
                 }

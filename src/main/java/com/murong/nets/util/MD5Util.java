@@ -1,6 +1,8 @@
 package com.murong.nets.util;
 
 
+import lombok.extern.java.Log;
+
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
@@ -13,6 +15,7 @@ import java.security.NoSuchAlgorithmException;
  * version  v1.0 <p>
  * CreateDate  2021/3/23 16:36 <p>
  */
+@Log
 public class MD5Util {
 
     /**
@@ -38,7 +41,7 @@ public class MD5Util {
             }
             result = sb.toString();
         } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
+            log.warning(e.getMessage());
         }
         return result;
     }

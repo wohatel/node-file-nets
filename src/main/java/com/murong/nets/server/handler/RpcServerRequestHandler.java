@@ -6,9 +6,11 @@ import com.murong.nets.util.SpringContextHolder;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
+import lombok.extern.java.Log;
 
 
 @ChannelHandler.Sharable
+@Log
 public class RpcServerRequestHandler extends ChannelInboundHandlerAdapter {
 
     @Override
@@ -20,7 +22,7 @@ public class RpcServerRequestHandler extends ChannelInboundHandlerAdapter {
 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
-        cause.printStackTrace();
+        log.warning(cause.getMessage());
     }
 
     @Override
