@@ -51,7 +51,7 @@ public class PoolManagerRunner implements ApplicationRunner {
 
                 log.info("初始化完毕...");
                 return false;
-            }, 10000);
+            }, 15000);
         });
     }
 
