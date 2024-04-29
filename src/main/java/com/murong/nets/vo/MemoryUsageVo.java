@@ -24,4 +24,8 @@ public class MemoryUsageVo {
      */
     private Long freeMemory;
 
+    /**
+     * 交换负载
+     */
+    private Long totalSwapSpace;
 }

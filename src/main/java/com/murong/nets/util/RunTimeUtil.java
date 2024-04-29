@@ -4,6 +4,7 @@ import com.murong.nets.vo.CpuUsageVo;
 import com.murong.nets.vo.HardUsageVo;
 import com.murong.nets.vo.MemoryUsageVo;
 import com.murong.nets.vo.ProcessActiveVo;
+import com.sun.management.OperatingSystemMXBean;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.SneakyThrows;
@@ -12,6 +13,7 @@ import oshi.hardware.CentralProcessor;
 import oshi.hardware.HardwareAbstractionLayer;
 
 import java.io.File;
+import java.lang.management.ManagementFactory;
 import java.time.Duration;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -32,14 +34,12 @@ public class RunTimeUtil {
      * 获取系统内存
      */
     public static MemoryUsageVo gainMemoryUsage() {
-        Runtime runtime = Runtime.getRuntime();
-        // 获取总内存量
-        long totalMemory = runtime.totalMemory();
-        // 获取空闲内存量
-        long freeMemory = runtime.freeMemory();
-        return new MemoryUsageVo(totalMemory, freeMemory);
+        OperatingSystemMXBean osBean = (OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean();
+        long totalMemorySize = osBean.getTotalMemorySize();
+        long freeMemorySize = osBean.getFreeMemorySize();
+        long totalSwapSpaceSize = osBean.getTotalSwapSpaceSize();
+        return new MemoryUsageVo(totalMemorySize, freeMemorySize, totalSwapSpaceSize);
     }
-
 
     /**
      * cpu使用率
@@ -92,6 +92,5 @@ public class RunTimeUtil {
             return activeVo;
         }).toList();
     }
-
 
 }
