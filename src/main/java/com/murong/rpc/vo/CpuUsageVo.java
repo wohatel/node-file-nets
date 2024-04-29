@@ -4,8 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
 /**
  * 应用系统内存
  *
@@ -14,8 +12,16 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ProcessActiveGroupVo {
+public class CpuUsageVo {
 
-   private List<ProcessActiveVo> processActiveList;
+    /**
+     * cpu核心数
+     */
+    private int coreCount;
+
+    /**
+     * cpu采样使用率
+     */
+    private double cpuUsage;
 
 }

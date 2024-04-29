@@ -1,10 +1,13 @@
 package com.murong.rpc.interaction;
 
-import com.alibaba.fastjson.JSON;
-import com.murong.rpc.config.CodeConfig;
+
 import com.murong.rpc.config.EnvConfig;
-import com.murong.rpc.util.*;
-import com.murong.rpc.util.ThreadUtil;
+import com.murong.rpc.util.ArrayUtil;
+import com.murong.rpc.util.JsonUtil;
+import com.murong.rpc.util.RateLimiter;
+import com.murong.rpc.util.RpcException;
+import com.murong.rpc.util.SecureRandomUtil;
+import com.murong.rpc.util.TimeUtil;
 import io.netty.channel.Channel;
 import org.apache.commons.codec.digest.DigestUtils;
 
@@ -13,7 +16,6 @@ import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
-import java.util.Random;
 
 public class RpcMsgTransUtil {
 
@@ -24,7 +26,7 @@ public class RpcMsgTransUtil {
         if (rpcResponse == null) {
             return;
         }
-        channel.writeAndFlush(JSON.toJSONString(RpcMsg.build(rpcResponse)));
+        channel.writeAndFlush(JsonUtil.toJSONString(RpcMsg.build(rpcResponse)));
     }
 
     public static void sendMsg(Channel channel, RpcRequest rpcRequest) {
@@ -34,7 +36,7 @@ public class RpcMsgTransUtil {
         if (channel == null || !channel.isActive()) {
             throw new RpcException("连接不可用");
         }
-        channel.writeAndFlush(JSON.toJSONString(RpcMsg.build(rpcRequest)));
+        channel.writeAndFlush(JsonUtil.toJSONString(RpcMsg.build(rpcRequest)));
     }
 
     public static RpcFuture sendSynMsg(Channel channel, RpcRequest rpcRequest) {

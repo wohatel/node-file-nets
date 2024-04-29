@@ -84,7 +84,24 @@ public enum RequestTypeEnmu {
     /**
      * 限速
      */
-    chRateLimit
+    chRateLimit,
 
-    ;
+
+    /**
+     * cpu使用率
+     */
+    cpuUsage,
+
+    /**
+     * 内存使用率
+     */
+    memoryUsage,
+    /**
+     * 硬盘使用
+     */
+    hardUsage,
+    /**
+     * 进程情况
+     */
+    processList;
 }

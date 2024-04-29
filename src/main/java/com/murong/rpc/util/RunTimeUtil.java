@@ -1,10 +1,8 @@
 package com.murong.rpc.util;
 
-import com.murong.rpc.vo.CpuInfoUsageVo;
-import com.murong.rpc.vo.HardUsageGroupVo;
+import com.murong.rpc.vo.CpuUsageVo;
 import com.murong.rpc.vo.HardUsageVo;
 import com.murong.rpc.vo.MemoryUsageVo;
-import com.murong.rpc.vo.ProcessActiveGroupVo;
 import com.murong.rpc.vo.ProcessActiveVo;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -33,7 +31,7 @@ public class RunTimeUtil {
     /**
      * 获取系统内存
      */
-    public static MemoryUsageVo gainSystemMemory() {
+    public static MemoryUsageVo gainMemoryUsage() {
         Runtime runtime = Runtime.getRuntime();
         // 获取总内存量
         long totalMemory = runtime.totalMemory();
@@ -47,7 +45,7 @@ public class RunTimeUtil {
      * cpu使用率
      */
     @SneakyThrows
-    public static CpuInfoUsageVo gainCpuUsage() {
+    public static CpuUsageVo gainCpuUsage() {
         SystemInfo systemInfo = new SystemInfo();
         HardwareAbstractionLayer hardware = systemInfo.getHardware();
         CentralProcessor processor = hardware.getProcessor();
@@ -57,22 +55,21 @@ public class RunTimeUtil {
         long[] systemCpuLoadTicks = processor.getSystemCpuLoadTicks();
         Thread.sleep(800);
         double cpuUsage = processor.getSystemCpuLoadBetweenTicks(systemCpuLoadTicks) * 100;
-        return new CpuInfoUsageVo(coreCount, cpuUsage);
+        return new CpuUsageVo(coreCount, cpuUsage);
     }
 
     /**
      * 硬盘使用情况
      */
     @SneakyThrows
-    public static HardUsageGroupVo gainHardUsage() {
-        List<HardUsageVo> collect = Arrays.stream(File.listRoots()).map(t -> new HardUsageVo(t.getAbsolutePath(), t.getTotalSpace(), t.getFreeSpace(), t.getUsableSpace())).collect(Collectors.toList());
-        return new HardUsageGroupVo(collect);
+    public static List<HardUsageVo> gainHardUsage() {
+        return Arrays.stream(File.listRoots()).map(t -> new HardUsageVo(t.getAbsolutePath(), t.getTotalSpace(), t.getFreeSpace(), t.getUsableSpace())).collect(Collectors.toList());
     }
 
     /**
      * 查询进程信息
      */
-    public static ProcessActiveGroupVo processActiveGroup(int number) {
+    public static List<ProcessActiveVo> gainProcessList(int number) {
         ToLongFunction<ProcessHandle> function = process -> {
             Optional<Duration> duration = process.info().totalCpuDuration();
             if (duration.isPresent()) {
@@ -81,7 +78,7 @@ public class RunTimeUtil {
             return 0L;
         };
         List<ProcessHandle> processes = ProcessHandle.allProcesses().sorted(Comparator.comparingLong(function)).limit(number).toList();
-        List<ProcessActiveVo> list = processes.stream().map(process -> {
+        return processes.stream().map(process -> {
             ProcessActiveVo activeVo = new ProcessActiveVo();
             activeVo.setPid(process.pid());
             Optional<ProcessHandle> parent = process.parent();
@@ -94,7 +91,6 @@ public class RunTimeUtil {
             info.commandLine().ifPresent(activeVo::setCommandLine);
             return activeVo;
         }).toList();
-        return new ProcessActiveGroupVo(list);
     }
 
 

@@ -1,7 +1,7 @@
 package com.murong.rpc.interaction;
 
-import com.alibaba.fastjson.JSON;
 import com.murong.rpc.config.ExecutorPool;
+import com.murong.rpc.util.JsonUtil;
 import lombok.Getter;
 import org.springframework.util.CollectionUtils;
 
@@ -56,7 +56,7 @@ public class RpcInteractionContainer {
         if (rpcResponseString == null) {
             return;
         }
-        addResponse(JSON.parseObject(rpcResponseString, RpcResponse.class));
+        addResponse(JsonUtil.parseObject(rpcResponseString, RpcResponse.class));
     }
 
     public static RpcFuture addRequest(RpcRequest rpcRequest, long timeOut) {

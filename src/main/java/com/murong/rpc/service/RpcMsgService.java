@@ -1,6 +1,5 @@
 package com.murong.rpc.service;
 
-import com.alibaba.fastjson.JSON;
 import com.murong.rpc.annotation.RpcMethod;
 import com.murong.rpc.client.ClientSitePool;
 import com.murong.rpc.client.RpcAutoReconnectClient;
@@ -15,6 +14,7 @@ import com.murong.rpc.interaction.RpcResponse;
 import com.murong.rpc.util.JsonUtil;
 import com.murong.rpc.util.OperationMsg;
 import com.murong.rpc.util.RpcException;
+import com.murong.rpc.util.RunTimeUtil;
 import com.murong.rpc.util.ThreadUtil;
 import com.murong.rpc.vo.EnvConfVo;
 import com.murong.rpc.vo.FileVo;
@@ -139,7 +139,7 @@ public class RpcMsgService {
         RpcResponse rpcResponse = request.toResponse();
         rpcResponse.setCode(CodeConfig.SUCCESS);
         rpcResponse.setSuccess(true);
-        rpcResponse.setBody(JSON.toJSONString(nodeVos));
+        rpcResponse.setBody(JsonUtil.toJSONString(nodeVos));
         RpcMsgTransUtil.write(ctx.channel(), rpcResponse);
 
     }
@@ -165,7 +165,7 @@ public class RpcMsgService {
                 nodeVo.setHost(client.getHost());
                 nodeVo.setName(request.getBody());
                 nodeVo.setPort(client.getPort());
-                rpcResponse.setBody(JSON.toJSONString(nodeVo));
+                rpcResponse.setBody(JsonUtil.toJSONString(nodeVo));
             }
             RpcMsgTransUtil.write(ctx.channel(), rpcResponse);
         }
@@ -332,4 +332,43 @@ public class RpcMsgService {
             RpcMsgTransUtil.write(ctx.channel(), rpcResponse);
         }
     }
+
+
+    @RpcMethod("cpuUsage")
+    public void cpuUsage(ChannelHandlerContext ctx, RpcRequest request) {
+        RpcResponse rpcResponse = request.toResponse();
+        rpcResponse.setCode(CodeConfig.SUCCESS);
+        rpcResponse.setBody(JsonUtil.toJSONString(RunTimeUtil.gainCpuUsage()));
+        RpcMsgTransUtil.write(ctx.channel(), rpcResponse);
+    }
+
+    @RpcMethod("memoryUsage")
+    public void memoryUsage(ChannelHandlerContext ctx, RpcRequest request) {
+        RpcResponse rpcResponse = request.toResponse();
+        rpcResponse.setCode(CodeConfig.SUCCESS);
+        rpcResponse.setBody(JsonUtil.toJSONString(RunTimeUtil.gainMemoryUsage()));
+        RpcMsgTransUtil.write(ctx.channel(), rpcResponse);
+    }
+
+
+    @RpcMethod("hardUsage")
+    public void hardUsage(ChannelHandlerContext ctx, RpcRequest request) {
+        RpcResponse rpcResponse = request.toResponse();
+        rpcResponse.setCode(CodeConfig.SUCCESS);
+        rpcResponse.setBody(JsonUtil.toJSONString(RunTimeUtil.gainHardUsage()));
+        RpcMsgTransUtil.write(ctx.channel(), rpcResponse);
+    }
+
+    @RpcMethod("processList")
+    public void processList(ChannelHandlerContext ctx, RpcRequest request) {
+        String topNumber = request.getBody();
+        int number = Integer.parseInt(topNumber);
+        int finalNumber = number <= 0 ? 100 : number;
+        RpcResponse rpcResponse = request.toResponse();
+        rpcResponse.setCode(CodeConfig.SUCCESS);
+        rpcResponse.setBody(JsonUtil.toJSONString(RunTimeUtil.gainProcessList(finalNumber)));
+        RpcMsgTransUtil.write(ctx.channel(), rpcResponse);
+    }
+
+
 }

@@ -16,10 +16,14 @@ import com.murong.rpc.util.RpcException;
 import com.murong.rpc.util.RpcResponseHandler;
 import com.murong.rpc.util.StringUtil;
 import com.murong.rpc.util.ThreadUtil;
+import com.murong.rpc.vo.CpuUsageVo;
 import com.murong.rpc.vo.DirsVo;
 import com.murong.rpc.vo.EnvConfVo;
 import com.murong.rpc.vo.FileVo;
+import com.murong.rpc.vo.HardUsageVo;
+import com.murong.rpc.vo.MemoryUsageVo;
 import com.murong.rpc.vo.NodeVo;
+import com.murong.rpc.vo.ProcessActiveVo;
 import com.murong.rpc.vo.RateLimitVo;
 import lombok.SneakyThrows;
 import org.slf4j.Logger;
@@ -424,12 +428,10 @@ public class NodeService {
 
     }
 
-    // 发送限速命令
 
     /**
+     * 限速命令
      * kb/s
-     *
-     * @param rateLimit
      */
     @SneakyThrows
     public Boolean chRateLimit(long rateLimit) {
@@ -440,5 +442,51 @@ public class NodeService {
         RpcFuture rpcFuture = client.sendSynMsg(rpcRequest);
         RpcResponse rpcResponse = rpcFuture.get();
         return RpcResponseHandler.handler(rpcResponse, t -> Boolean.valueOf(t));
+    }
+
+    /**
+     * 获取cpu的使用情况
+     *
+     * @param nodeName 节点名称
+     */
+    @SneakyThrows
+    public CpuUsageVo cpuUsage(String nodeName) {
+        RpcAutoReconnectClient client = ClientSitePool.getOrConnectClient(nodeName);
+        RpcRequest rpcRequest = new RpcRequest();
+        rpcRequest.setRequestType(RequestTypeEnmu.cpuUsage.name());
+        RpcFuture rpcFuture = client.sendSynMsg(rpcRequest);
+        RpcResponse rpcResponse = rpcFuture.get();
+        return RpcResponseHandler.handler(rpcResponse, t -> JsonUtil.parseObject(t, CpuUsageVo.class));
+    }
+
+    @SneakyThrows
+    public MemoryUsageVo memoryUsage(String nodeName) {
+        RpcAutoReconnectClient client = ClientSitePool.getOrConnectClient(nodeName);
+        RpcRequest rpcRequest = new RpcRequest();
+        rpcRequest.setRequestType(RequestTypeEnmu.memoryUsage.name());
+        RpcFuture rpcFuture = client.sendSynMsg(rpcRequest);
+        RpcResponse rpcResponse = rpcFuture.get();
+        return RpcResponseHandler.handler(rpcResponse, t -> JsonUtil.parseObject(t, MemoryUsageVo.class));
+    }
+
+    @SneakyThrows
+    public List<HardUsageVo> hardUsage(String nodeName) {
+        RpcAutoReconnectClient client = ClientSitePool.getOrConnectClient(nodeName);
+        RpcRequest rpcRequest = new RpcRequest();
+        rpcRequest.setRequestType(RequestTypeEnmu.hardUsage.name());
+        RpcFuture rpcFuture = client.sendSynMsg(rpcRequest);
+        RpcResponse rpcResponse = rpcFuture.get();
+        return RpcResponseHandler.handler(rpcResponse, t -> JsonUtil.parseArray(t, HardUsageVo.class));
+    }
+
+    @SneakyThrows
+    public List<ProcessActiveVo> processList(String nodeName, int topNumber) {
+        RpcAutoReconnectClient client = ClientSitePool.getOrConnectClient(nodeName);
+        RpcRequest rpcRequest = new RpcRequest();
+        rpcRequest.setBody(String.valueOf(topNumber));
+        rpcRequest.setRequestType(RequestTypeEnmu.processList.name());
+        RpcFuture rpcFuture = client.sendSynMsg(rpcRequest);
+        RpcResponse rpcResponse = rpcFuture.get();
+        return RpcResponseHandler.handler(rpcResponse, t -> JsonUtil.parseArray(t, ProcessActiveVo.class));
     }
 }

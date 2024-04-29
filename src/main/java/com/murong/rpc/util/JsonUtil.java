@@ -1,7 +1,7 @@
 package com.murong.rpc.util;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson2.JSON;
+import com.alibaba.fastjson2.JSONArray;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
@@ -15,8 +15,8 @@ public class JsonUtil {
         if (obj == null) {
             return null;
         }
-        if (obj instanceof String) {
-            return JSON.parseObject((String) obj, clazz);
+        if (obj instanceof String objcont) {
+            return JSON.parseObject(objcont, clazz);
         }
         return JSON.parseObject(JSON.toJSONString(obj), clazz);
     }
@@ -25,7 +25,7 @@ public class JsonUtil {
         if (collection == null) {
             return null;
         }
-        return parseArray(JSONArray.toJSONString(collection), clazz);
+        return parseArray(JSON.toJSONString(collection), clazz);
     }
 
     public static <T> List<T> parseArray(String jsonArry, Class<T> clazz) {
