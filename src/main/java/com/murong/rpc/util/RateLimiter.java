@@ -9,24 +9,31 @@ import java.util.concurrent.atomic.AtomicLong;
  */
 public class RateLimiter {
 
-    public RateLimiter(long rateLimit) {
-        this.rateLimit = rateLimit;
-    }
+    /**
+     * 限制的速度
+     * 单位 kb
+     */
+    private long rateLimit;
 
     /**
      * 开始时间
      */
-    private long startTime = System.currentTimeMillis();
+    private long lastStaticTime = System.currentTimeMillis();
+
+    /**
+     * 上次统计发送的数据量,最少间隔5s
+     */
+    private long lastStaticSent = 0;
 
     /**
      * 已经发送的字节
      */
     private AtomicLong hasBeenSent = new AtomicLong(0);
 
-    /**
-     * 限制的速度
-     */
-    private long rateLimit;
+
+    public RateLimiter(long rateLimit) {
+        this.rateLimit = rateLimit;
+    }
 
     /**
      * 判断是否超速
@@ -35,7 +42,9 @@ public class RateLimiter {
         if (rateLimit <= 0) {
             return false;
         }
-        return currentSpeed() > rateLimit;
+        // 为了防止速度过慢,导致文件不再传输问题
+        long currentRate = rateLimit > 32 ? rateLimit : 32;
+        return currentSpeed() > currentRate;
     }
 
 
@@ -59,11 +68,18 @@ public class RateLimiter {
      * 获取实时速度
      */
     public double currentSpeed() {
+        long interval = 5000L;
         long current = System.currentTimeMillis();
         // 开始到现在消耗的时间
-        long time = current - startTime;
+        long time = current - lastStaticTime;
+        long send = hasBeenSent.get();
         long expendTime = time > 0 ? time : 1;
-        return hasBeenSent.get() / (expendTime + 0.0);
+        // 如果时间间隔足够
+        if (time > interval) {
+            lastStaticTime = System.currentTimeMillis();
+            lastStaticSent = send;
+        }
+        return (send - lastStaticSent) / (expendTime + 0.0);
     }
 
 }

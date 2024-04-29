@@ -110,7 +110,7 @@ public class NodeService {
      * @param targetNode 目标节点
      * @param sourceDir  源节点文件夹
      * @param targetDir  目标节点文件夹
-     *  响应结果
+     *                   响应结果
      */
     public boolean cpDir(String sourceNode, String targetNode, String sourceDir, String targetDir) {
         if (!sourceDir.endsWith("/")) {
@@ -137,7 +137,7 @@ public class NodeService {
             final String targetDirF = targetDir;
             ExecutorPool.getExecutorService().submit(() -> {
                 try {
-                    rpcDefaultClient.sendDir(sourceDirF, targetDirF, 1024 * 1024);
+                    rpcDefaultClient.sendDir(sourceDirF, targetDirF, 64 * 1024);
                 } catch (Exception e) {
                     throw new RpcException(e);
                 }
@@ -165,7 +165,7 @@ public class NodeService {
      *
      * @param sourceNode 源节点
      * @param file       文件全路径
-     *  文件信息
+     *                   文件信息
      */
     @SneakyThrows
     public FileVo fileInfo(String sourceNode, String file) {
@@ -283,7 +283,6 @@ public class NodeService {
      * 变更工作目录
      *
      * @param dirs
-     * 
      */
     @SneakyThrows
     public boolean chHomeDirs(List<String> dirs) {
@@ -314,7 +313,6 @@ public class NodeService {
 
     /**
      * 查询节点的连接情况
-     *
      */
     @SneakyThrows
     public List<NodeVo> linkedList(String nodeName) {
@@ -334,7 +332,6 @@ public class NodeService {
      * @param file
      * @param newName
      * @param
-     * 
      */
     @SneakyThrows
     public boolean renameFile(String nodeName, String file, String newName) {
@@ -433,7 +430,6 @@ public class NodeService {
      * kb/s
      *
      * @param rateLimit
-     * 
      */
     @SneakyThrows
     public Boolean chRateLimit(long rateLimit) {

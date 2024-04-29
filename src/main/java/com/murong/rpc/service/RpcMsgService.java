@@ -110,7 +110,7 @@ public class RpcMsgService {
         }
         ExecutorPool.getExecutorService().submit(() -> {
             try {
-                rpcDefaultClient.sendDir(bodyCmd.get(1), bodyCmd.get(2), 1024 * 1024);
+                rpcDefaultClient.sendDir(bodyCmd.get(1), bodyCmd.get(2), 64 * 1024);
             } catch (Exception e) {
                 throw new RpcException(e);
             }

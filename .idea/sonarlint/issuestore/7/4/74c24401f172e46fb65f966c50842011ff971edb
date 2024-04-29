@@ -1,37 +1,37 @@
 
 l
-java:S5411Ø"(Use a primitive boolean expression here.(ò›ß˜8Å ó¡ò1J$c1a017f9-0019-418a-be65-4d2b6fb172ab
+java:S5411Ø"(Use a primitive boolean expression here.(ò›ß˜8Å ó¡ò1J$48c053e8-f1f5-477e-98b4-e8d0fb39206b
 |
-java:S3516G"9Refactor this method to not always return the same value.(ÒÇ¿Š8¼Ğú¿ò1J$ba5a195b-136b-4ff0-82b8-a57beda40e58
+java:S3516G"9Refactor this method to not always return the same value.(ÒÇ¿Š8¼Ğú¿ò1J$02b94d99-6248-438d-9bd1-6ffa04ca5085
 
-java:S3516s"9Refactor this method to not always return the same value.(÷˜¡¹ıÿÿÿÿ8¼Ğú¿ò1J$1baeb0a2-6df2-473b-b44b-fd19d2f82245
+java:S3516s"9Refactor this method to not always return the same value.(÷˜¡¹ıÿÿÿÿ8¼Ğú¿ò1J$452bf8b5-dc86-4413-bb0f-2be9cc8b750e
 …
-java:S6813("BRemove this field injection and use constructor injection instead.(êæÄŞ8 “¥Œí1J$5b4f25b6-097a-45ad-a25b-1f5dbd9b1dad
+java:S6813("BRemove this field injection and use constructor injection instead.(êæÄŞ8 “¥Œí1J$84d609ba-0709-4a89-83e4-0f8522e2616b
 ¡
-java:S2142T"^Either re-interrupt this method or rethrow the "InterruptedException" that can be caught here.(”ı¾8ÂĞú¿ò1J$99822e2b-1703-4691-8ebd-a27007be0d2f
+java:S2142T"^Either re-interrupt this method or rethrow the "InterruptedException" that can be caught here.(”ı¾8ÂĞú¿ò1J$e0424183-d42a-4388-bcd5-9a980daeeaae
 š
-java:S3776s"RRefactor this method to reduce its Cognitive Complexity from 16 to the 15 allowed.(÷˜¡¹ıÿÿÿÿ8Í ó¡ò1J$89fecf3c-1ff8-41c6-99b7-b8050772530b
+java:S3776s"RRefactor this method to reduce its Cognitive Complexity from 16 to the 15 allowed.(÷˜¡¹ıÿÿÿÿ8Í ó¡ò1J$8b1d0958-32cc-46be-bd45-1074e5f29165
 ¢
-java:S2142"^Either re-interrupt this method or rethrow the "InterruptedException" that can be caught here.(”ı¾8ÄĞú¿ò1J$66d691c6-199d-4f08-8965-c76942c99ead
+java:S2142"^Either re-interrupt this method or rethrow the "InterruptedException" that can be caught here.(”ı¾8ÄĞú¿ò1J$8000303c-7146-4833-aa36-a8837f011680
 …
-java:S3457‰"AFormat specifiers should be used instead of string concatenation.(Èõ×ç8ÈĞú¿ò1J$011f8b03-1643-41e5-898b-b10fcd050d9f
+java:S3457‰"AFormat specifiers should be used instead of string concatenation.(Èõ×ç8ÈĞú¿ò1J$071414a2-ea22-4a01-9efc-2bb914a30f72
 Š
-java:S3457•"AFormat specifiers should be used instead of string concatenation.(¹…ƒşÿÿÿÿ8ÉĞú¿ò1J$98684666-30a4-4155-adcf-803c23240f59
+java:S3457•"AFormat specifiers should be used instead of string concatenation.(¹…ƒşÿÿÿÿ8ÉĞú¿ò1J$6cb40d4c-cde9-45a8-bc8a-c667705d3337
 †
-java:S1612¨"=Replace this lambda with method reference 'Boolean::valueOf'.(µµ‚ÿüÿÿÿÿ8ÊĞú¿ò1J$6513a62e-4a62-424e-9f78-5dd405170ec5
+java:S1612§"=Replace this lambda with method reference 'Boolean::valueOf'.(µµ‚ÿüÿÿÿÿ8ÊĞú¿ò1J$9d8d19ef-e7b1-43f7-a951-a8cabe64a383
 p
-java:S1602²",Remove useless curly braces around statement(Ô‘“8¤ŠÛŸò1J$5d64d312-b27c-4948-981a-d181b1169ea3
+java:S1602±",Remove useless curly braces around statement(Ô‘“8¤ŠÛŸò1J$1ff4a70c-09cc-4df9-80c6-211db9c6a030
 u
-java:S1602³",Remove useless curly braces around statement(€ğòÇúÿÿÿÿ8Ò ó¡ò1J$08ceb611-97ee-4fa3-8bf5-8332ae6a98ec
+java:S1602²",Remove useless curly braces around statement(€ğòÇúÿÿÿÿ8Ò ó¡ò1J$d429fc06-e6ff-4558-b255-ea63350f10f5
 †
-java:S1612à"=Replace this lambda with method reference 'Boolean::valueOf'.(µµ‚ÿüÿÿÿÿ8ÌĞú¿ò1J$176f0d71-dbe9-49d8-804e-8dd52ba245b3
+java:S1612İ"=Replace this lambda with method reference 'Boolean::valueOf'.(µµ‚ÿüÿÿÿÿ8ÌĞú¿ò1J$811e3b29-99a8-45a6-9431-bcb76f953268
 ›
-java:S3776è"RRefactor this method to reduce its Cognitive Complexity from 16 to the 15 allowed.(Ä™û“üÿÿÿÿ8Ó ó¡ò1J$cd27ea3d-afb8-4879-878c-0310803ca331
+java:S3776å"RRefactor this method to reduce its Cognitive Complexity from 16 to the 15 allowed.(Ä™û“üÿÿÿÿ8Ó ó¡ò1J$d36e995f-8f12-4691-ac39-2aae958655da
 €
-java:S1612ê"<Replace this lambda with method reference 'NodeVo::getName'.(Ã¸¬ú8ÍĞú¿ò1J$c978c3a6-47db-4af8-adb4-ceccad60d45f
+java:S1612ç"<Replace this lambda with method reference 'NodeVo::getName'.(Ã¸¬ú8ÍĞú¿ò1J$2f60d1bc-8af9-49aa-8175-143bcf3c0890
 ¢
-java:S2142ø"^Either re-interrupt this method or rethrow the "InterruptedException" that can be caught here.(ä ¹€8ÍĞú¿ò1J$4bf09d1f-c409-47e8-9869-e6aa859bb5a0
+java:S2142õ"^Either re-interrupt this method or rethrow the "InterruptedException" that can be caught here.(ä ¹€8ÍĞú¿ò1J$28bbcca2-67c6-4626-bb95-8fc151229a33
 €
-java:S1612•"<Replace this lambda with method reference 'NodeVo::getName'.(Ã¸¬ú8ÏĞú¿ò1J$f2f0af2d-96db-4378-a0bf-2178a109d640
+java:S1612’"<Replace this lambda with method reference 'NodeVo::getName'.(Ã¸¬ú8ÏĞú¿ò1J$10dddf04-1269-4ea9-a7f4-92896a25c13a
 †
-java:S1612¾"=Replace this lambda with method reference 'Boolean::valueOf'.(µµ‚ÿüÿÿÿÿ8ÑĞú¿ò1J$30de03ad-a65b-4566-9d14-d63544e70216
+java:S1612º"=Replace this lambda with method reference 'Boolean::valueOf'.(µµ‚ÿüÿÿÿÿ8ÑĞú¿ò1J$244e6f88-e121-4a4c-bc94-c08f32de52d3

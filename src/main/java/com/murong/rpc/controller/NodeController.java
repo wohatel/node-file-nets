@@ -135,6 +135,7 @@ public class NodeController {
 
     /**
      * 变更文件传输速度
+     * 单位kb
      */
     @PostMapping("/node/chRateLimit")
     public ResultVo<Boolean> chRateLimit(@RequestBody ChRateLimitInput input) {
