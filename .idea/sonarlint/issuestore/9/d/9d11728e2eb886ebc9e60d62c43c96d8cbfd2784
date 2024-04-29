@@ -1,24 +1,0 @@
-
-˜
-java:S1104#"VMake channelMap a static final constant or non-public and provide accessors if needed.(Ä’¥|8Â ¡Àò1J$ea7bb4a4-3129-4b1d-85f3-0c64a19ebaa4
-r
-java:S1444#"0Make this "public static channelMap" field final(Ä’¥|8Â ¡Àò1J$3f08bbe0-9c0f-42d2-87e7-684c17ccca3a
-_
-java:S2386#"Make this member "protected".(Ä’¥|8Ğ ¡Àò1J$44f900b4-b9eb-4b36-8591-1a62ad759ce2
-‚
-java:S1118":Add a private constructor to hide the implicit public one.(‡ÛŸÚıÿÿÿÿ8Ğ ¡Àò1J$c5be6a7f-99fd-4a31-b901-0fc42eb458d7
-ˆ
-java:S1124("EReorder the modifiers to comply with the Java Language Specification.(èæóÔ8Ó ¡Àò1J$3d23c5c2-4f54-41aa-9666-e1bdc31216cb
-k	java:S108Q")Either remove or fill this block of code.(ï­£Ä8Õ ¡Àò1J$ac0fe8ce-105a-4566-94dd-2df45f82bd57
-l	java:S108¦")Either remove or fill this block of code.(”ı¾8Ù ¡Àò1J$f71e5ac6-4464-48aa-8f39-784680d8e0df
-…	java:S899Ï"BDo something with the "boolean" value returned by "createNewFile".(Ü•¿8Û ¡Àò1J$d6b850e3-c00a-4abb-b195-859300c4d066
-„
-java:S1128"<Remove this unused import 'com.murong.rpc.config.EnvConfig'.(ÿÌ‚øÿÿÿÿ8ÙÚ¢Àò1J$462e3fa4-a4b9-46dc-81ee-66134db69672
-
-java:S1128	">Remove this unused import 'io.netty.util.internal.StringUtil'.(‡ÛÖ†8ÙÚ¢Àò1J$55227789-5d40-4029-b863-577be0e2cc25
-l
-java:S1128")Remove this unused import 'java.net.URI'.(Ö¦¨°8ÙÚ¢Àò1J$d103950b-f9c8-4e70-974b-19829620a281
-r
-java:S1128"/Remove this unused import 'java.nio.file.Path'.(×²êÂ8ÙÚ¢Àò1J$fedc87c4-a0fb-4bf8-a466-7929bab45cd8
-s
-java:S1128"+Remove this unused import 'java.util.List'.(Õë±Äøÿÿÿÿ8ÙÚ¢Àò1J$3a75f0b9-4dfa-478f-a632-57fdf6a7c753

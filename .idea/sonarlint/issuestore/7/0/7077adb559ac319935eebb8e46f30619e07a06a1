@@ -1,15 +1,0 @@
-
-	java:S112*"FDefine and throw a dedicated exception instead of using a generic one.(Ò‚Òéüÿÿÿÿ8Ê†’í1J$1b05a1b5-0e9d-4def-b898-c2cfb6662e72
-k
-java:S5411"(Use a primitive boolean expression here.(€‘¨Ä8Ê†’í1J$00afb2b1-8df3-40a5-bc77-56b681414009
-k
-java:S5411$"(Use a primitive boolean expression here.(Ë¿à8Ê†’í1J$1f89f505-98f6-45f9-90cd-7986bc95cc44
-}
-java:S1118":Add a private constructor to hide the implicit public one.(íÍ´¤8Î†’í1J$437c3235-a928-47a6-99e8-ba929b59787d
-—
-java:S4276"URefactor this code to use the more specialised Functional Interface 'BooleanSupplier'(×Åº:8Ï†’í1J$ff4b2789-ae0a-46f1-9e11-42e09585a0c2
-¡
-java:S2142"^Either re-interrupt this method or rethrow the "InterruptedException" that can be caught here.(”ı¾8Ğ†’í1J$48d37ad0-d249-44d5-9fbf-d561eda161d6
-k	java:S108")Either remove or fill this block of code.(”ı¾8Ğ†’í1J$8e1772a7-c40f-44bb-ac1a-f0a8ba014fb6
-¡
-java:S2142)"^Either re-interrupt this method or rethrow the "InterruptedException" that can be caught here.(ä ¹€8Ñ†’í1J$c3ce7ec6-8866-4513-ab71-71aa90f1e3aa
