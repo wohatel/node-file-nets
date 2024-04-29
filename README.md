@@ -43,7 +43,30 @@
 ```
 
 
+## 如果不想自己源码打包,可以从maven中央仓库下载jar包
+```angular2html
+        <dependency>
+            <groupId>io.github.wohatel</groupId>
+            <artifactId>node-file-nets</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+```
+用maven下载上述jar后一般在自己的本地仓库内
 
+1. 找到该jar包,拷贝到一个目录中
+2. 在同目录,创建一个配置文件
+3. 配置文件内容:
+   server.port=****
+   node.dir.list[0]=*****可以配置多个目录
+
+   node.base.main-nodes[0]=****
+   node.base.main-nodes[1]=****可配置多个主节点
+   node.base.local-node-port=***
+   node.base.local-node-host=****
+4. 将这jar和配置文件分发到不同的linux主机上,这些主机网络需要相通哦
+5. 我们可以从这些主机中选出1-3个主机作为主节点配置在node.base.main-nodes中(ip:port的形式)
+6. 分别java -jar 启动即可
+7. node.dir.list... 可以不配置, 通过web服务修改,详情请看源码
 
 
 
