@@ -1,5 +1,6 @@
 package com.murong.rpc.interaction;
 
+import com.murong.rpc.util.RpcException;
 import lombok.Data;
 
 import java.util.Objects;
@@ -20,7 +21,7 @@ public class RpcMsg {
         } else if (object instanceof RpcResponse) {
             return new RpcMsg((RpcResponse) object);
         }
-        throw new RuntimeException("类型不支持");
+        throw new RpcException("类型不支持");
     }
 
     public RpcMsg(RpcRequest request) {

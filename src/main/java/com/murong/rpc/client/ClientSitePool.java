@@ -7,9 +7,12 @@ import com.murong.rpc.interaction.RpcRequest;
 import com.murong.rpc.interaction.RpcResponse;
 import com.murong.rpc.util.JsonUtil;
 import com.murong.rpc.util.KeyValue;
+import com.murong.rpc.util.RpcException;
 import com.murong.rpc.util.ThreadUtil;
 import com.murong.rpc.vo.NodeVo;
 import io.netty.channel.nio.NioEventLoopGroup;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.CollectionUtils;
@@ -22,6 +25,10 @@ import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
 
+/**
+ * @author yaochuang
+ */
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class ClientSitePool {
 
     static Logger logger = LoggerFactory.getLogger(ClientSitePool.class);
@@ -80,9 +87,8 @@ public class ClientSitePool {
             return;
         }
         List<RpcAutoReconnectClient> key = remove.getKey();
-        for (int i = 0; i < key.size(); i++) {
-            RpcAutoReconnectClient client = key.get(i);
-            ThreadUtil.execSilentVoid(() -> client.closeChannel());
+        for (RpcAutoReconnectClient client : key) {
+            ThreadUtil.execSilentVoid(client::closeChannel);
         }
     }
 
@@ -101,9 +107,7 @@ public class ClientSitePool {
                 RpcHeartClient rpcHeartClient = value.getValue();
                 if (!rpcHeartClient.isActive()) {
                     for (RpcAutoReconnectClient autoReconnectClient : clients) {
-                        ThreadUtil.execSilentVoid(() -> {
-                            autoReconnectClient.closeChannel();
-                        });
+                        ThreadUtil.execSilentVoid(autoReconnectClient::closeChannel);
                     }
                     NodeVo data = value.getData();
                     logger.info("清理链接:{}:{}", data.getHost(), data.getPort());
@@ -115,9 +119,6 @@ public class ClientSitePool {
 
     /**
      * 根据名称获取连接
-     *
-     * @param nodeName
-     * @return
      */
     public static RpcAutoReconnectClient get(String nodeName) {
         KeyValue<List<RpcAutoReconnectClient>, RpcHeartClient, NodeVo> kv = clientPool.get(nodeName);
@@ -130,9 +131,6 @@ public class ClientSitePool {
 
     /**
      * 根据名称获取连接
-     *
-     * @param
-     * @return
      */
     public static List<NodeVo> nodeList() {
         List<NodeVo> result = new ArrayList<>();
@@ -148,9 +146,6 @@ public class ClientSitePool {
 
     /**
      * 获取连接
-     *
-     * @param nodeName
-     * @return
      */
     public static RpcAutoReconnectClient getOrConnectClient(String nodeName) {
         RpcAutoReconnectClient rpcDefaultClient = ClientSitePool.get(nodeName);
@@ -159,7 +154,7 @@ public class ClientSitePool {
         }
         RpcAutoReconnectClient centerClient = getCenterClient();
         if (centerClient == null) {
-            throw new RuntimeException("未获取到中心节点有效连接:" + nodeName);
+            throw new RpcException("未获取到中心节点有效连接:" + nodeName);
         }
         RpcRequest request = new RpcRequest();
         request.setRequestType(RequestTypeEnmu.getNode.name());
@@ -169,16 +164,16 @@ public class ClientSitePool {
         try {
             rpcResponse = rpcFuture.get();
         } catch (InterruptedException e) {
-            throw new RuntimeException(e);
+            throw new RpcException(e);
         }
         if (rpcResponse == null) {
-            throw new RuntimeException("未查询到接目标:" + nodeName + " 节点信息");
+            throw new RpcException("未查询到接目标:" + nodeName + " 节点信息");
         }
         String body = rpcResponse.getBody();
         NodeVo nodeVo = JsonUtil.parseObject(body, NodeVo.class);
 
         if (nodeVo == null) {
-            throw new RuntimeException("未查询到接目标:" + nodeName + " 节点信息");
+            throw new RpcException("未查询到接目标:" + nodeName + " 节点信息");
         }
 
         ClientSitePool.accept(nodeVo);
@@ -187,11 +182,9 @@ public class ClientSitePool {
 
     /**
      * 获取注册节点连接
-     *
-     * @return
      */
     public static RpcAutoReconnectClient getCenterClient() {
-        List<NodeVo> nodeVos = EnvConfig.centerNodes();
+        List<NodeVo> nodeVos = EnvConfig.getCenterNodes();
         List<NodeVo> newList = new ArrayList<>(nodeVos);
         Collections.shuffle(newList);
         for (int i = 0; i < newList.size(); i++) {

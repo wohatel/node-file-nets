@@ -1,5 +1,6 @@
 package com.murong.rpc.client.handler;
 
+import com.murong.rpc.client.ClientSitePool;
 import com.murong.rpc.interaction.RpcCommandType;
 import com.murong.rpc.interaction.RpcInteractionContainer;
 import com.murong.rpc.interaction.RpcMsg;
@@ -7,9 +8,13 @@ import com.murong.rpc.util.JsonUtil;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @ChannelHandler.Sharable
 public class RpcMessageClientInteractionHandler extends ChannelInboundHandlerAdapter {
+
+    Logger logger = LoggerFactory.getLogger(RpcMessageClientInteractionHandler.class);
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
@@ -25,7 +30,7 @@ public class RpcMessageClientInteractionHandler extends ChannelInboundHandlerAda
 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
-        cause.printStackTrace();
+        logger.error("rpc信息异常:", cause);
     }
 
 }

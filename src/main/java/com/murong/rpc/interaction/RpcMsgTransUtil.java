@@ -32,7 +32,7 @@ public class RpcMsgTransUtil {
             return;
         }
         if (channel == null || !channel.isActive()) {
-            throw new RuntimeException("连接不可用");
+            throw new RpcException("连接不可用");
         }
         channel.writeAndFlush(JSON.toJSONString(RpcMsg.build(rpcRequest)));
     }

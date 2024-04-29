@@ -28,6 +28,7 @@ public class EnvConfig {
     private static final RateLimitVo rateLimitVo = new RateLimitVo();
 
 
+    @Getter
     private static final List<NodeVo> centerNodes = new ArrayList<>();
 
 
@@ -37,54 +38,32 @@ public class EnvConfig {
 
     /**
      * 获取dirs路径
-     *
-     * @return
      */
     public static DirsVo homeDirs() {
         return homeDirs;
     }
 
     /**
-     * 获取中心节点名称
-     *
-     * @return
-     */
-    public static List<NodeVo> centerNodes() {
-        return centerNodes;
-    }
-
-    /**
      * 清理并添加dir路径,线程间要隔离
-     *
-     * @param homeDirs
-     * @return
      */
-    public static synchronized List<String> clearHomeDirsAndAddAll(List<String> homeDirs, Long time) {
+    public static synchronized void clearHomeDirsAndAddAll(List<String> homeDirs, Long time) {
         Long localTime = EnvConfig.homeDirs.getTime();
         if (time > localTime) {
             EnvConfig.homeDirs.getDirs().clear();
             EnvConfig.homeDirs.getDirs().addAll(homeDirs);
             EnvConfig.homeDirs.setTime(time);
         }
-        return homeDirs;
     }
 
     /**
      * 添加nodeName路径
-     *
-     * @param nodeVo
-     * @return
      */
-    public static List<NodeVo> addCenterNode(NodeVo nodeVo) {
+    public static void addCenterNode(NodeVo nodeVo) {
         centerNodes.add(nodeVo);
-        return centerNodes;
     }
 
     /**
      * 判断路径是否在工作目录中
-     *
-     * @param file
-     * @return
      */
     public static boolean isFilePathOk(String file) {
         if (file == null) {
@@ -105,9 +84,6 @@ public class EnvConfig {
 
     /**
      * 设置限速
-     *
-     * @param rateLimit
-     * @param time
      */
     public static void casRateLimit(long rateLimit, long time) {
         if (time > rateLimitVo.getTime()) {

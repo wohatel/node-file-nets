@@ -4,6 +4,7 @@ import com.murong.rpc.client.handler.RpcClientRequestHandler;
 import com.murong.rpc.client.handler.RpcMessageClientInteractionHandler;
 import com.murong.rpc.interaction.*;
 import com.murong.rpc.util.FileUtil;
+import com.murong.rpc.util.RpcException;
 import io.netty.channel.Channel;
 
 import java.io.File;
@@ -56,7 +57,7 @@ public class SimpleRpcClient {
             return;
         }
         if (this.channel == null || !this.channel.isActive()) {
-            throw new RuntimeException("连接不可用");
+            throw new RpcException("连接不可用");
         }
         RpcMsgTransUtil.sendMsg(channel, rpcRequest);
     }
@@ -78,12 +79,12 @@ public class SimpleRpcClient {
     public void sendFile(String file, String targetFile) throws IOException, InterruptedException {
         File realFile = new File(file);
         if (!realFile.exists()) {
-            throw new RuntimeException("文件不存在");
+            throw new RpcException("文件不存在");
         }
         if (!realFile.isFile()) {
-            throw new RuntimeException("非文件传输,请检查");
+            throw new RpcException("非文件传输,请检查");
         }
-        RpcMsgTransUtil.writeFile(channel, file, targetFile, 512 * 1024);
+        RpcMsgTransUtil.writeFile(channel, file, targetFile, 128 * 1024);
     }
 
     public void sendFile(String file, String targetFile, int buffer) throws IOException, InterruptedException {
@@ -101,10 +102,10 @@ public class SimpleRpcClient {
     public void sendDir(String fromDir, String targetDir, int buffer) throws IOException, InterruptedException {
         File localDir = new File(fromDir);
         if (!localDir.exists()) {
-            throw new RuntimeException("源目录不存在");
+            throw new RpcException("源目录不存在");
         }
         if (!localDir.isDirectory()) {
-            throw new RuntimeException("源目录路径错误,注意是目录");
+            throw new RpcException("源目录路径错误,注意是目录");
         }
         File[] files = localDir.listFiles();
         for (File file : files) {

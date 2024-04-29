@@ -3,12 +3,16 @@ package com.murong.rpc.client;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.nio.NioEventLoopGroup;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.concurrent.TimeUnit;
 
 /**
  * @author yaochuang
  */
+@Getter
+@Setter
 public class RpcAutoReconnectClient extends RpcDefaultClient {
 
     /**
@@ -50,14 +54,6 @@ public class RpcAutoReconnectClient extends RpcDefaultClient {
                 }
             }
         });
-    }
-
-    public boolean isAllowAutoConnect() {
-        return allowAutoConnect;
-    }
-
-    public void setAllowAutoConnect(boolean allowAutoConnect) {
-        this.allowAutoConnect = allowAutoConnect;
     }
 
     @Override

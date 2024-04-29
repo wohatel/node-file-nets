@@ -14,6 +14,7 @@ import com.murong.rpc.interaction.RpcRequest;
 import com.murong.rpc.interaction.RpcResponse;
 import com.murong.rpc.util.JsonUtil;
 import com.murong.rpc.util.OperationMsg;
+import com.murong.rpc.util.RpcException;
 import com.murong.rpc.util.ThreadUtil;
 import com.murong.rpc.vo.EnvConfVo;
 import com.murong.rpc.vo.FileVo;
@@ -22,7 +23,6 @@ import io.netty.channel.ChannelHandlerContext;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
@@ -45,19 +45,19 @@ public class RpcMsgService {
     private static final Map<String, Method> methods = new ConcurrentHashMap<>();
 
     /**
-     * 调用rpcmsg
+     * 初始化接口
      *
-     * @param request
+     * @param request 请求实体
      */
     public void exec(ChannelHandlerContext ctx, RpcRequest request) throws InvocationTargetException, IllegalAccessException {
         if (methods.isEmpty()) {
             List<Method> innserMethods = Arrays.stream(RpcMsgService.class.getDeclaredMethods()).filter(m -> m.isAnnotationPresent(RpcMethod.class)).collect(Collectors.toList());
 
-            innserMethods.stream().peek(m -> {
+            innserMethods.forEach(m -> {
                 RpcMethod annotation = m.getAnnotation(RpcMethod.class);
                 String value = annotation.value();
                 methods.put(value, m);
-            }).collect(Collectors.toList());
+            });
         }
         Method method = methods.get(request.getRequestType());
         if (method == null) {
@@ -77,16 +77,16 @@ public class RpcMsgService {
             vo.setCode(CodeConfig.ERROR);
             vo.setMsg("无效的命令: 目标机器链接不存在");
             vo.setOperateStatus(false);
+        } else {
+            ExecutorPool.getExecutorService().submit(() -> {
+                try {
+                    logger.info("开始发送:{}", body);
+                    rpcDefaultClient.sendFile(bodyCmd.get(1), bodyCmd.get(2));
+                } catch (Exception e) {
+                    throw new RpcException(e);
+                }
+            });
         }
-        ExecutorPool.getExecutorService().submit(() -> {
-            try {
-                logger.info("开始发送:{}", body);
-                rpcDefaultClient.sendFile(bodyCmd.get(1), bodyCmd.get(2));
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
-        });
-
         if (request.isNeedResponse()) {
             RpcResponse rpcResponse = request.toResponse();
             rpcResponse.setCode(vo.getCode());
@@ -112,7 +112,7 @@ public class RpcMsgService {
             try {
                 rpcDefaultClient.sendDir(bodyCmd.get(1), bodyCmd.get(2), 1024 * 1024);
             } catch (Exception e) {
-                throw new RuntimeException(e);
+                throw new RpcException(e);
             }
         });
 
@@ -147,8 +147,8 @@ public class RpcMsgService {
     /**
      * 获取节点信息
      *
-     * @param ctx
-     * @param request
+     * @param ctx     上下文
+     * @param request 请求体
      */
     @RpcMethod("getNode")
     public void getNode(ChannelHandlerContext ctx, RpcRequest request) {
@@ -241,12 +241,12 @@ public class RpcMsgService {
                 try {
                     FileUtils.forceDelete(new File(body));
                 } catch (IOException e) {
-                    throw new RuntimeException(e);
+                    throw new RpcException(e);
                 }
                 rpcResponse.setBody(String.valueOf(true));
 
             }, e -> {
-                e.printStackTrace();
+                logger.error("执行错误:", e);
                 rpcResponse.setBody(String.valueOf(false));
                 rpcResponse.setMsg(e.getMessage());
             });
@@ -309,8 +309,8 @@ public class RpcMsgService {
     /**
      * 重命名文件
      *
-     * @param ctx
-     * @param request
+     * @param ctx     上下文
+     * @param request 请求体
      */
     @RpcMethod("renameFile")
     public void renameFile(ChannelHandlerContext ctx, RpcRequest request) {

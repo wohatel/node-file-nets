@@ -2,6 +2,7 @@ package com.murong.rpc;
 
 import com.murong.rpc.client.RpcHeartClient;
 import com.murong.rpc.interaction.ThreadUtil;
+import com.murong.rpc.util.RpcException;
 
 public class HeartBeat {
 
@@ -11,7 +12,7 @@ public class HeartBeat {
             try {
                 Thread.sleep(100);
             } catch (InterruptedException e) {
-                throw new RuntimeException(e);
+                throw new RpcException(e);
             }
         });
     }

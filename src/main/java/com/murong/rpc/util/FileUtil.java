@@ -9,12 +9,16 @@ import com.murong.rpc.interaction.RpcResponse;
 import io.netty.util.internal.StringUtil;
 import lombok.SneakyThrows;
 import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.commons.io.FileUtils;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.net.URI;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.Iterator;
@@ -80,9 +84,11 @@ public class FileUtil {
     }
 
     public static void appendFile(RpcFileRequest rpcFileRequest) throws IOException {
-        String s = rpcFileRequest.getTargetFilePath() + ".ok";
-        File file1 = new File(s);
-        file1.deleteOnExit();
+        String path = rpcFileRequest.getTargetFilePath() + ".ok";
+        File okfile = new File(path);
+        if (okfile.exists()) {
+            FileUtils.delete(okfile);
+        }
         boolean contains = channelMap.containsKey(rpcFileRequest.getHash());
         // 1尝试创建文件夹
         String targetFilePath = rpcFileRequest.getTargetFilePath();
@@ -106,12 +112,9 @@ public class FileUtil {
         FileChannel fileChannel = keyValue.getValue();
         ByteBuffer byteBuffer = ByteBuffer.wrap(rpcFileRequest.getBytes());
         fileChannel.write(byteBuffer);
-
         if (keyValue.getKey() >= rpcFileRequest.getLength()) {// 如果当前读取的文件大小 > 源文件的大小 认为是读取完毕
-            // ---- 建个.ok
-            System.out.println(rpcFileRequest.getTargetFilePath());
-            file1.createNewFile();
-            // 可以考虑直接释放连接
+            Files.createFile(okfile.toPath());
+
         }
     }
 
@@ -169,7 +172,6 @@ public class FileUtil {
                 }, 10 * 1000L, 500); // 这就要求文件不能太大了
             } finally {
                 clearing = false; // 释放
-                System.out.println("释放链接");
             }
         });
 

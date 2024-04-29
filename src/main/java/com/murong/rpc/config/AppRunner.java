@@ -2,9 +2,9 @@ package com.murong.rpc.config;
 
 import com.murong.rpc.util.MD5Util;
 import com.murong.rpc.vo.NodeVo;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
@@ -13,15 +13,14 @@ import org.springframework.util.CollectionUtils;
 import java.util.List;
 
 @Component
+@RequiredArgsConstructor
 public class AppRunner implements ApplicationRunner {
 
     Logger logger = LoggerFactory.getLogger(AppRunner.class);
 
-    @Autowired
-    NodeConfig nodeConfig;
+    private final NodeConfig nodeConfig;
 
-    @Autowired
-    HomeDirConfig homeDirConfig;
+    private final HomeDirConfig homeDirConfig;
 
     @Override
     public void run(ApplicationArguments args) {
@@ -34,7 +33,7 @@ public class AppRunner implements ApplicationRunner {
         // 设置本机节点名称
         EnvConfig.setLocalNodeName(nodeConfig.getLocalNodeName());
         // 中心节点
-        List<String> list = nodeConfig.getList();
+        List<String> list = nodeConfig.getMainNodes();
         if (!CollectionUtils.isEmpty(list)) {
             for (int i = 0; i < list.size(); i++) {
                 String ipPort = list.get(i);

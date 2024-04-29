@@ -1,21 +1,18 @@
 
-{	java:S115"ZRename this constant name to match the regular expression '^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$'.(ùˆÑ½ÿÿÿÿÿ8«¨‚×·1
-{	java:S115"ZRename this constant name to match the regular expression '^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$'.(ƒ‹œëùÿÿÿÿ8¬¨‚×·1
-{	java:S115"ZRename this constant name to match the regular expression '^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$'.(‹«î§ûÿÿÿÿ8¬¨‚×·1
-{	java:S115"ZRename this constant name to match the regular expression '^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$'.(ÊãËÿøÿÿÿÿ8šâ–÷å1
-v	java:S115$"ZRename this constant name to match the regular expression '^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$'.(¹ˆş‡8¬¨‚×·1
-{	java:S115*"ZRename this constant name to match the regular expression '^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$'.(óÜ¨ëùÿÿÿÿ8¬¨‚×·1
-v	java:S115/"ZRename this constant name to match the regular expression '^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$'.(ğº¢”8¬¨‚×·1
-{	java:S1154"ZRename this constant name to match the regular expression '^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$'.(…ƒòáıÿÿÿÿ8¬¨‚×·1
-{	java:S1159"ZRename this constant name to match the regular expression '^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$'.(¼¶ÿÿÿÿÿ8¬¨‚×·1
-{	java:S115>"ZRename this constant name to match the regular expression '^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$'.(ÿçœ›ùÿÿÿÿ8¬¨‚×·1
-{	java:S115C"ZRename this constant name to match the regular expression '^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$'.(Ì©ªÎşÿÿÿÿ8¬¨‚×·1
-{	java:S115H"ZRename this constant name to match the regular expression '^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$'.(Âøù˜ùÿÿÿÿ8Ì‡˜Õå1
-v	java:S115M"ZRename this constant name to match the regular expression '^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$'.(á©€ì8¬¨‚×·1
-v	java:S115Q"ZRename this constant name to match the regular expression '^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$'.(î—­ê8¬¨‚×·1
-v	java:S115V"ZRename this constant name to match the regular expression '^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$'.(â×ì–8¬¨‚×·1
-{	java:S115["ZRename this constant name to match the regular expression '^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$'.(íÂÇ‡üÿÿÿÿ8½Â‰ùå1
-l
-java:S1128"JRemove this unused import 'com.fasterxml.jackson.annotation.JsonSubTypes'.( ™ÎÄûÿÿÿÿ8æã‰ùå1
-S
-java:S1128"6Remove this unused import 'javax.annotation.Resource'.(î¾Ì—8æã‰ùå1
+¡	java:S115
+"ZRename this constant name to match the regular expression '^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$'.(ùˆÑ½ÿÿÿÿÿ8«¨‚×·1J$80b038f9-2bad-45d5-9856-3ac728df4711
+¡	java:S115"ZRename this constant name to match the regular expression '^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$'.(ƒ‹œëùÿÿÿÿ8¬¨‚×·1J$bee88e34-ccf3-4d9f-92f9-9859af93bc3e
+¡	java:S115"ZRename this constant name to match the regular expression '^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$'.(‹«î§ûÿÿÿÿ8¬¨‚×·1J$b84620ba-b161-4276-8c55-ee446843c0b7
+¡	java:S115"ZRename this constant name to match the regular expression '^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$'.(ÊãËÿøÿÿÿÿ8šâ–÷å1J$cad5a338-948b-46fc-8bdd-5171c8e6cab1
+œ	java:S115 "ZRename this constant name to match the regular expression '^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$'.(¹ˆş‡8¬¨‚×·1J$ade48410-1d8f-4e10-be9f-14811019343c
+¡	java:S115&"ZRename this constant name to match the regular expression '^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$'.(óÜ¨ëùÿÿÿÿ8¬¨‚×·1J$40d52cb0-a217-4482-b950-a2a6ee03aa9d
+œ	java:S115+"ZRename this constant name to match the regular expression '^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$'.(ğº¢”8¬¨‚×·1J$f2ac5bd7-ce7d-48fc-890e-0d11c5c7fa7a
+¡	java:S1150"ZRename this constant name to match the regular expression '^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$'.(…ƒòáıÿÿÿÿ8¬¨‚×·1J$ecf5ea64-a89a-470d-8126-6a049298e689
+¡	java:S1155"ZRename this constant name to match the regular expression '^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$'.(¼¶ÿÿÿÿÿ8¬¨‚×·1J$e63fc226-10ef-4d42-9fe1-ce3834799842
+¡	java:S115:"ZRename this constant name to match the regular expression '^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$'.(ÿçœ›ùÿÿÿÿ8¬¨‚×·1J$733f8e09-03e5-4b84-afcc-c9992c7d9bd9
+¡	java:S115?"ZRename this constant name to match the regular expression '^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$'.(Ì©ªÎşÿÿÿÿ8¬¨‚×·1J$0ba7953e-754f-497b-9180-eb392e94d60f
+¡	java:S115D"ZRename this constant name to match the regular expression '^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$'.(Âøù˜ùÿÿÿÿ8Ì‡˜Õå1J$e03be7c3-b1c1-4889-9f3f-619fe63219bd
+œ	java:S115I"ZRename this constant name to match the regular expression '^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$'.(á©€ì8¬¨‚×·1J$a33d3d28-6716-4471-9361-b4ca6709da37
+œ	java:S115M"ZRename this constant name to match the regular expression '^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$'.(î—­ê8¬¨‚×·1J$11785bd0-86bd-4e72-a29d-68171e9ef7e0
+œ	java:S115R"ZRename this constant name to match the regular expression '^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$'.(â×ì–8¬¨‚×·1J$772d059b-8e82-4c4a-981e-4713aeae7b5b
+¡	java:S115W"ZRename this constant name to match the regular expression '^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$'.(íÂÇ‡üÿÿÿÿ8½Â‰ùå1J$b2a420ee-dd4a-47ca-942a-80621165328f

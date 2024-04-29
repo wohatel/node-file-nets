@@ -17,10 +17,7 @@ import java.util.List;
 
 /**
  * @author yaochuang
- * @ClassName AuthUserController
- * @Desription TODO
  * @Date 2023/5/6 5:00 PM
- * @Version 1.0
  */
 @RestController
 public class NodeController {

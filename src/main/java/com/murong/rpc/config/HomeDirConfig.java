@@ -6,7 +6,7 @@ import org.springframework.context.annotation.Configuration;
 import java.util.List;
 
 @Configuration
-@ConfigurationProperties(prefix = "home.dir")
+@ConfigurationProperties(prefix = "node.dir")
 public class HomeDirConfig {
     private List<String> list;
 

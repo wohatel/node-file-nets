@@ -39,7 +39,7 @@ public class TimeUtil {
             try {
                 Thread.sleep(timeMillis);
             } catch (InterruptedException e) {
-                throw new RuntimeException(e);
+                throw new RpcException(e);
             }
         }
     }

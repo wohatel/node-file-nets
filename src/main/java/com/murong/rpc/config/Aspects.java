@@ -1,6 +1,7 @@
 package com.murong.rpc.config;
 
 
+import lombok.extern.java.Log;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -21,9 +22,8 @@ import java.util.Map;
  */
 @Aspect
 @Component
+@Log
 public class Aspects {
-
-    Logger logger = LoggerFactory.getLogger(Aspects.class);
 
     /**
      * 以自定义 @LogPrint 注解为切点
@@ -55,12 +55,9 @@ public class Aspects {
             for (int i = 0; i < parameterNames.length; i++) {
                 paramMap.put(parameterNames[i], args[i]);
             }
-            logger.info("{}.{}请求参数:{}", clazzName, methodName, paramMap);
+            log.info(clazzName + "." + methodName + "." + paramMap);
         }
-
-        long startTime = System.currentTimeMillis();
         Object result = proceedingJoinPoint.proceed();
-        logger.info("接口耗时统计: {}.{}耗时:{} ms", clazzName, methodName, System.currentTimeMillis() - startTime);
         return result;
     }
 

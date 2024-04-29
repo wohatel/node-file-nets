@@ -1,13 +1,5 @@
 
-‰	java:S112¢"FDefine and throw a dedicated exception instead of using a generic one.(ÕïÊ8Ø„ ò1J$f625eed3-6fae-4536-9036-0cdf53486c59
-	java:S112¬"FDefine and throw a dedicated exception instead of using a generic one.(Ò‚Òéüÿÿÿÿ8Ø„ ò1J$031085c4-26f4-4871-8e33-d5b90172c989
-‰	java:S112¯"FDefine and throw a dedicated exception instead of using a generic one.(³ØÂÅ8Ø„ ò1J$75472cb4-d241-472d-bce5-0fea10f3fc5c
-‰	java:S112µ"FDefine and throw a dedicated exception instead of using a generic one.(³ØÂÅ8Ø„ ò1J$5e86d79f-122a-4918-8284-f03f98f2fe30
-‚
-java:S1118":Add a private constructor to hide the implicit public one.(Ò©´õşÿÿÿÿ8æ„ ò1J$6fcf3d4e-b904-4976-82b3-e0af1ac9a6a6
-t
-java:S1602h",Remove useless curly braces around statement(€ğòÇúÿÿÿÿ8ì„ ò1J$13c84932-f84f-4c19-9675-3f625d0b3e48
 g
-java:S2119€"Save and re-use this "Random".(‡ ïÛıÿÿÿÿ8í„ ò1J$661b39a7-6a48-4280-83f3-d49443681d27
+java:S2119"Save and re-use this "Random".(‡ ïÛıÿÿÿÿ8í„ ò1J$7ee69640-c3a2-41d0-ae51-08230e9a9ab1
 ¢
-java:S2142«"^Either re-interrupt this method or rethrow the "InterruptedException" that can be caught here.(ä ¹€8î„ ò1J$1b8d0a8c-7158-4e0a-9c6f-6319f8adf1bd
+java:S2142¦"^Either re-interrupt this method or rethrow the "InterruptedException" that can be caught here.(ä ¹€8î„ ò1J$8b70a834-acd6-45d1-bd62-d7e19818f6c4

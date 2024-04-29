@@ -14,6 +14,7 @@ import io.netty.util.CharsetUtil;
 import java.util.Arrays;
 import java.util.List;
 
+
 public class StringChannelInitializer extends ChannelInitializer<SocketChannel> {
 
     private List<ChannelHandler> channelHandlers;
@@ -34,8 +35,8 @@ public class StringChannelInitializer extends ChannelInitializer<SocketChannel> 
         pipeline.addLast("decoder", new StringDecoder(CharsetUtil.UTF_8));
 
         if (channelHandlers != null) {
-            for (int i = 0; i < channelHandlers.size(); i++) {
-                pipeline.addLast(channelHandlers.get(i));
+            for (ChannelHandler channelHandler : channelHandlers) {
+                pipeline.addLast(channelHandler);
             }
         }
     }

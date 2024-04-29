@@ -18,7 +18,7 @@ public class RestExceptionHandler {
     @ExceptionHandler(Exception.class)
     @ResponseBody
     public Object catched(Exception ex) {
-        ResultVo vo = new ResultVo();
+        ResultVo<String> vo = new ResultVo<>();
         vo.setCode(CodeConfig.ERROR);
         vo.setSuccess(false);
         vo.setMsg(ex.getMessage());

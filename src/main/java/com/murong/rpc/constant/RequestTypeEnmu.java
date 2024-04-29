@@ -1,9 +1,5 @@
 package com.murong.rpc.constant;
 
-import com.fasterxml.jackson.annotation.JsonSubTypes;
-
-import javax.annotation.Resource;
-
 /**
  * tag的分类
  */

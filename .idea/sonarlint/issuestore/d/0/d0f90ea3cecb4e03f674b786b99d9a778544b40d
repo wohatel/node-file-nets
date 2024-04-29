@@ -1,7 +1,9 @@
 
 …
-java:S6813"BRemove this field injection and use constructor injection instead.(êæÄŞ8¡–¥Œí1J$36781cfa-8d02-44a1-a886-480569b3fe96
+java:S6813"BRemove this field injection and use constructor injection instead.(êæÄŞ8À–ú¡ò1J$e6a74f2b-9362-44c1-a291-d079cca8259a
 …
-java:S6813"BRemove this field injection and use constructor injection instead.(êæÄŞ8¡–¥Œí1J$4f27de49-cea1-4d6b-9276-4117da015fd7
+java:S6813"BRemove this field injection and use constructor injection instead.(êæÄŞ8À–ú¡ò1J$18ebc47d-5d88-4c9c-81c3-3035fa4449be
 t
-java:S1602 ",Remove useless curly braces around statement(åüŠâùÿÿÿÿ8 ¡Ô‘×1J$31db8fd9-0a4a-4097-90b5-5fc319665262
+java:S1602",Remove useless curly braces around statement(åüŠâùÿÿÿÿ8Ã–ú¡ò1J$c308d420-963f-4978-87da-aa41355f835a
+p
+java:S1612""NReplace this lambda with method reference 'ClientSitePool::monitorAndDestory'.(ã‚Îÿÿÿÿÿ8ğıúÀò1

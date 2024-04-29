@@ -13,7 +13,7 @@ public class RpcResponseHandler {
 
     public static <T> T handler(RpcResponse response, Function<String, T> function) {
         if (!StringUtil.isBlank(response.getMsg())) {
-            throw new RuntimeException(response.getMsg());
+            throw new RpcException(response.getMsg());
         }
         return function.apply(response.getBody());
     }

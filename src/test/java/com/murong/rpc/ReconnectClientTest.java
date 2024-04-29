@@ -3,6 +3,7 @@ package com.murong.rpc;
 
 import com.murong.rpc.client.RpcAutoReconnectClient;
 import com.murong.rpc.interaction.*;
+import com.murong.rpc.util.RpcException;
 import io.netty.util.internal.PlatformDependent;
 import org.springframework.util.ReflectionUtils;
 
@@ -47,7 +48,7 @@ public class ReconnectClientTest {
                         AtomicLong directMemory = ((AtomicLong) field.get(PlatformDependent.class));
                         System.out.println("文件大小:" + directMemory);
                     } catch (IllegalAccessException e) {
-                        throw new RuntimeException(e);
+                        throw new RpcException(e);
                     }
 
                 } catch (Exception e) {
