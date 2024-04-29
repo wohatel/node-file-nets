@@ -3,17 +3,18 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>io.github.wohatel</groupId>
-    <artifactId>node-file-nets</artifactId>
-    <version>1.0.0</version>
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
         <version>2.7.11</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
+
+    <groupId>io.github.wohatel</groupId>
+    <artifactId>node-file-nets</artifactId>
+    <version>1.0.0</version>
     <name>node-file-nets</name>
-    <packaging>jar</packaging>
+
     <description>
         a useful tool for node cluster service for linux
         it can transfer file to all nodes in the cluster
@@ -116,6 +117,11 @@
 
     <build>
         <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
