@@ -92,4 +92,11 @@ public class EnvConfig {
         }
     }
 
+
+    /**
+     * 判断是否是中心节点
+     */
+    public static boolean isCenterNode() {
+        return centerNodes.stream().anyMatch(t -> t.getName().equals(localNodeName));
+    }
 }

@@ -149,9 +149,14 @@ public class ClientSitePool {
      * 获取连接
      */
     public static RpcAutoReconnectClient getOrConnectClient(String nodeName) {
+        // 优先在自己连接池里面找
         RpcAutoReconnectClient rpcDefaultClient = ClientSitePool.get(nodeName);
         if (rpcDefaultClient != null) {
             return rpcDefaultClient;
+        }
+        // 找不到就向中心节点找,如果自己是中心节点,就不要再找了
+        if (EnvConfig.isCenterNode()) {
+            throw new RpcException("未查询到接目标:" + nodeName + " 节点信息");
         }
         RpcAutoReconnectClient centerClient = getCenterClient();
         RpcRequest request = new RpcRequest();
