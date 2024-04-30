@@ -25,7 +25,7 @@ public class SystemController {
     private final NodeService nodeService;
 
     /**
-     * 查询所有的节点
+     * cpu使用率
      */
     @GetMapping("/system/cpuUsage")
     public ResultVo<CpuUsageVo> cpuUsage(@RequestParam String nodeName) {
@@ -33,7 +33,7 @@ public class SystemController {
     }
 
     /**
-     * 查询所有的节点
+     * 内存使用情况
      */
     @GetMapping("/system/memoryUsage")
     public ResultVo<MemoryUsageVo> memoryUsage(@RequestParam String nodeName) {
@@ -41,7 +41,7 @@ public class SystemController {
     }
 
     /**
-     * 查询所有的节点
+     * 硬盘使用情况
      */
     @GetMapping("/system/hardUsage")
     public ResultVo<List<HardUsageVo>> hardUsage(@RequestParam String nodeName) {
@@ -49,7 +49,7 @@ public class SystemController {
     }
 
     /**
-     * 查询所有的节点
+     * 进程实时情况
      */
     @GetMapping("/system/processList")
     public ResultVo<List<ProcessActiveVo>> processList(@RequestParam String nodeName, @RequestParam(defaultValue = "100") Integer topNumber) {
