@@ -63,13 +63,24 @@ public class NodeController {
     }
 
     /**
-     * 节点cp文件内容
+     * 文件是否空闲
+     * 文件如果正被其他线程写操作,会返回false
      */
     @PostMapping("/node/file/isFree")
     public ResultVo<Boolean> operabitilyCheck(@RequestBody FileIsOpenInput input) {
         Assert.isTrue(EnvConfig.isFilePathOk(input.getTargetFile()), "文件名不能为空");
         Assert.isTrue(FileVerify.isFileNameOk(input.getTargetNode()), "节点名称不能为空");
         return ResultVo.supplier(() -> nodeService.operabitilyCheck(input.getTargetNode(), input.getTargetFile()));
+    }
+
+    /**
+     * 递归清空文件夹下 .ok结尾的文件
+     */
+    @PostMapping("/node/file/clearOk")
+    public ResultVo<Boolean> clearOk(@RequestBody FileIsOpenInput input) {
+        Assert.isTrue(FileVerify.isFileNameOk(input.getTargetNode()), "节点名称不能为空");
+        Assert.isTrue(EnvConfig.isFilePathOk(input.getTargetFile()), "目标文件或文件夹没有匹配工作目录");
+        return ResultVo.supplier(() -> nodeService.clearOk(input.getTargetNode(), input.getTargetFile()));
     }
 
     /**

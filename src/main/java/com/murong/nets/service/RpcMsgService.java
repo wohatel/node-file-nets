@@ -375,5 +375,14 @@ public class RpcMsgService {
         RpcMsgTransUtil.write(ctx.channel(), rpcResponse);
     }
 
+    @RpcMethod("clearOk")
+    public void clearOk(ChannelHandlerContext ctx, RpcRequest request) {
+        String targetFile = request.getBody();
+        RpcResponse rpcResponse = request.toResponse();
+        rpcResponse.setCode(CodeConfig.SUCCESS);
+        boolean clear = FileUtil.clearOk(new File(targetFile));
+        rpcResponse.setBody(String.valueOf(clear));
+        RpcMsgTransUtil.write(ctx.channel(), rpcResponse);
+    }
 
 }

@@ -222,4 +222,30 @@ public class FileUtil {
         // 如果match,说明当前文件不可用
         return !match;
     }
+
+    /**
+     * 递归清空.ok结尾的文件
+     *
+     * @param file 目标目录或文件夹
+     * @return 清空结果
+     */
+    public static boolean clearOk(File file) {
+        if (!file.exists()) {
+            return false;
+        }
+        if (file.isFile() && file.getName().endsWith(".ok")) {
+            return file.delete();
+        }
+        if (file.isDirectory()) {
+            // 子文件文件
+            File[] files = file.listFiles();
+            if (files != null) {
+                for (File innerFile : files) {
+                    clearOk(innerFile);
+                }
+            }
+        }
+        return true;
+    }
+
 }

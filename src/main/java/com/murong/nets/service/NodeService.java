@@ -453,4 +453,20 @@ public class NodeService {
         RpcResponse rpcResponse = rpcFuture.get();
         return RpcResponseHandler.handler(rpcResponse, Boolean::valueOf);
     }
+
+    /**
+     * 清理ok文件
+     *
+     * @param targetNode 目标节点
+     * @param targetFile 目标文件
+     */
+    public Boolean clearOk(String targetNode, String targetFile) {
+        RpcAutoReconnectClient client = ClientSitePool.getOrConnectClient(targetNode);
+        RpcRequest rpcRequest = new RpcRequest();
+        rpcRequest.setBody(targetFile);
+        rpcRequest.setRequestType(RequestTypeEnmu.clearOk.name());
+        RpcFuture rpcFuture = client.sendSynMsg(rpcRequest);
+        RpcResponse rpcResponse = rpcFuture.get();
+        return RpcResponseHandler.handler(rpcResponse, Boolean::valueOf);
+    }
 }

@@ -108,5 +108,10 @@ public enum RequestTypeEnmu {
     /**
      * 可操作检查
      */
-    operabitilyCheck;
+    operabitilyCheck,
+
+    /**
+     * 递归清空clear文件
+     */
+    clearOk;
 }
