@@ -74,12 +74,12 @@ public class RateLimiter {
         long time = current - lastStaticTime;
         long send = hasBeenSent.get();
         long expendTime = time > 0 ? time : 1;
-        // 如果时间间隔足够
-        if (time > interval) {
-            lastStaticTime = System.currentTimeMillis();
-            lastStaticSent = send;
+        double currentSpeed = (send - lastStaticSent) / (expendTime + 0.0);
+        if (time > interval) { //记录上个时间段段
+            lastStaticTime = System.currentTimeMillis(); // 上一次统计的时间
+            lastStaticSent = send; // 上一次统计时候,发送的总数
         }
-        return (send - lastStaticSent) / (expendTime + 0.0);
+        return currentSpeed;
     }
 
 }
