@@ -44,8 +44,6 @@ public class SimpleRpcClient {
 
     /**
      * 设置channel
-     *
-     * @param channel
      */
     public void setChannel(Channel channel) {
         this.channel = channel;

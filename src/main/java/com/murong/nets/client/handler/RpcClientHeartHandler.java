@@ -22,7 +22,7 @@ import io.netty.handler.timeout.IdleStateEvent;
  */
 public class RpcClientHeartHandler extends ChannelInboundHandlerAdapter {
 
-    private RpcHeartClient rpcHeartClient;
+    private final RpcHeartClient rpcHeartClient;
 
     public RpcClientHeartHandler(RpcHeartClient rpcHeartClient) {
         this.rpcHeartClient = rpcHeartClient;

@@ -350,7 +350,7 @@ public class NodeService {
     @SneakyThrows
     public void syncConf() {
         List<NodeVo> nodeVos = EnvConfig.getCenterNodes();
-        List<String> nodeNames = nodeVos.stream().map(NodeVo::getName).collect(Collectors.toList());
+        List<String> nodeNames = nodeVos.stream().map(NodeVo::getName).toList();
         if (nodeNames.contains(nodeConfig.getLocalNodeName())) { // 如果自己是中心节点直接不需要再获取
             return;
         }

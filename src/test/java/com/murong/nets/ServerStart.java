@@ -11,9 +11,4 @@ public class ServerStart {
         rpcServer.start();
     }
 
-
-    public static void main(String[] args) throws Exception {
-        start();
-    }
-
 }

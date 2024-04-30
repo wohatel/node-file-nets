@@ -41,7 +41,7 @@ public class ClientSitePool {
     /**
      * 连接配置三个
      */
-    private static int poolSize = 3;
+    private final static int poolSize = 3;
 
     /**
      * 默认配置
@@ -54,6 +54,7 @@ public class ClientSitePool {
      * 接收配置
      */
     public static void accept(NodeVo nodeVo) {
+        // 如果已经链接了节点池,就不再继续链接
         if (clientPool.containsKey(nodeVo.getName())) {
             if (EnvConfig.getLocalNodeName().equals(nodeVo.getName())) {// 说明是中心节点自己向自己注册
                 clientPool.get(nodeVo.getName()).setData(nodeVo);

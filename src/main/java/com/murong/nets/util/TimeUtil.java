@@ -4,7 +4,6 @@ import lombok.SneakyThrows;
 import lombok.extern.java.Log;
 
 import java.util.function.BooleanSupplier;
-import java.util.function.Supplier;
 
 @Log
 public class TimeUtil {
@@ -13,20 +12,18 @@ public class TimeUtil {
      * 每隔一段时间执行一次,supplier结果为true
      */
     @SneakyThrows
-    public static void execDapByFunction(Supplier<Boolean> supplier, long timeMillis) {
+    public static void execDapByFunction(BooleanSupplier supplier, long timeMillis) {
         while (true) {
-            Boolean result = false;
+            boolean result = false;
             try {
-                result = supplier.get();
+                result = supplier.getAsBoolean();
             } catch (Exception e) {
                 log.warning(e.getMessage());
             }
             if (result) {
                 break;
             }
-
             Thread.sleep(timeMillis);
-
         }
     }
 

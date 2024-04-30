@@ -20,9 +20,9 @@ import java.net.InetSocketAddress;
 public class RpcServer {
 
     private Channel channel;
-    private int port;
-    private EventLoopGroup group;
-    private EventLoopGroup childGroup;
+    private final int port;
+    private final EventLoopGroup group;
+    private final EventLoopGroup childGroup;
 
     public RpcServer(int port, EventLoopGroup group, EventLoopGroup childGroup) {
         this.port = port;
@@ -32,10 +32,8 @@ public class RpcServer {
 
     /**
      * 开启nettyServer
-     *
-     * @throws Exception
      */
-    public void start() throws Exception {
+    public void start() throws InterruptedException {
         StringChannelInitializer stringChannelInitializer = new StringChannelInitializer(new RpcMessageServerInteractionHandler(), new RpcServerRequestHandler());
         this.start(stringChannelInitializer);
     }
@@ -43,14 +41,10 @@ public class RpcServer {
     /**
      * 开启nettyServer
      *
-     * @throws Exception
      */
-    public void start(ChannelInitializer<SocketChannel> channelChannelInitializer) throws Exception {
+    public void start(ChannelInitializer<SocketChannel> channelChannelInitializer) throws InterruptedException {
         ServerBootstrap b = new ServerBootstrap();
-        b.group(group, childGroup)
-                .channel(NioServerSocketChannel.class)
-                .localAddress(new InetSocketAddress(port))
-                .childHandler(channelChannelInitializer);
+        b.group(group, childGroup).channel(NioServerSocketChannel.class).localAddress(new InetSocketAddress(port)).childHandler(channelChannelInitializer);
         ChannelFuture future = b.bind().sync();
         this.channel = future.channel(); // 用于关闭server
         RpcGc.callWake(); // 唤醒gc处理请求数据
