@@ -48,7 +48,7 @@
         <dependency>
             <groupId>io.github.wohatel</groupId>
             <artifactId>node-file-nets</artifactId>
-            <version>1.0.0</version>
+            <version>1.2.0</version>
         </dependency>
 ```
 用maven下载上述jar后一般在自己的本地仓库内
