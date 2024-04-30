@@ -136,7 +136,7 @@ public class ClientSitePool {
     public static List<NodeVo> nodeList() {
         List<NodeVo> result = new ArrayList<>();
         clientPool.forEach((k, v) -> {
-            NodeVo data = JsonUtil.parseObject(v.getData(), NodeVo.class);
+            NodeVo data = v.getData();
             RpcHeartClient value = v.getValue();
             data.setActive(value.isActive());
             result.add(data);
@@ -153,10 +153,6 @@ public class ClientSitePool {
         RpcAutoReconnectClient rpcDefaultClient = ClientSitePool.get(nodeName);
         if (rpcDefaultClient != null) {
             return rpcDefaultClient;
-        }
-        // 找不到就向中心节点找,如果自己是中心节点,就不要再找了
-        if (EnvConfig.isCenterNode()) {
-            throw new RpcException("未查询到接目标:" + nodeName + " 节点信息");
         }
         RpcAutoReconnectClient centerClient = getCenterClient();
         RpcRequest request = new RpcRequest();
@@ -198,4 +194,5 @@ public class ClientSitePool {
         }
         throw new RpcException("getCenterClient: 未获取到中心链接");
     }
+
 }

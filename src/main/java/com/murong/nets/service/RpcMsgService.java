@@ -2,7 +2,6 @@ package com.murong.nets.service;
 
 import com.murong.nets.annotation.RpcMethod;
 import com.murong.nets.client.ClientSitePool;
-import com.murong.nets.client.RpcAutoReconnectClient;
 import com.murong.nets.client.RpcDefaultClient;
 import com.murong.nets.config.CodeConfig;
 import com.murong.nets.config.EnvConfig;
@@ -148,18 +147,14 @@ public class RpcMsgService {
     @RpcMethod("getNode")
     public void getNode(ChannelHandlerContext ctx, RpcRequest request) {
         OperationMsg vo = new OperationMsg();
-        RpcAutoReconnectClient client = ClientSitePool.getOrConnectClient(request.getBody());
+        List<NodeVo> nodeVos = ClientSitePool.nodeList();
+        NodeVo nodeVo = nodeVos.stream().filter(t -> t.getName().equals(request.getBody())).findFirst().orElse(null);
         if (request.isNeedResponse()) {
             RpcResponse rpcResponse = request.toResponse();
             rpcResponse.setCode(vo.getCode());
             rpcResponse.setSuccess(vo.isOperateStatus());
             rpcResponse.setMsg(vo.getMsg());
-
-            if (client != null) {
-                NodeVo nodeVo = new NodeVo();
-                nodeVo.setHost(client.getHost());
-                nodeVo.setName(request.getBody());
-                nodeVo.setPort(client.getPort());
+            if (nodeVo != null) {
                 rpcResponse.setBody(JsonUtil.toJSONString(nodeVo));
             }
             RpcMsgTransUtil.write(ctx.channel(), rpcResponse);
