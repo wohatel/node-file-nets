@@ -52,7 +52,7 @@ public class RpcMsgTransUtil {
      * @param file       文件全限定名
      * @param targetFile 目标机器文件全限定名
      */
-    public static void writeFile(Channel channel, String file, String targetFile, int len) throws IOException, InterruptedException {
+    public static void writeFile(Channel channel, String file, String targetFile, int len) throws IOException {
         // 传输空文件
         if (new File(file).length() == 0L) {
             writeVoidFile(channel, file, targetFile);
@@ -78,10 +78,10 @@ public class RpcMsgTransUtil {
                 }
                 // 实时判断如果超速了,就停100ms
                 if (rateLimiter.refresh(EnvConfig.getRateLimitVo().getRateLimit()).isOverSpeed()) {
-                    Thread.sleep(100);
+                    TimeUtil.sleep(100);
                     continue;
                 }
-                TimeUtil.execDapByFunction(() -> channel.isWritable(), 100, 100);
+                TimeUtil.execDapByFunction(channel::isWritable, 100, 100);
                 int read = fileChannel.read(byteBuffer);
                 if (read > 0) {
                     byteBuffer.flip();

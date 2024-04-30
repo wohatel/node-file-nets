@@ -43,4 +43,12 @@ public class TimeUtil {
             Thread.sleep(timeMillis);
         }
     }
+
+    /**
+     * 现成sleep
+     */
+    @SneakyThrows
+    public static void sleep(long timeMillis) {
+        Thread.sleep(timeMillis);
+    }
 }

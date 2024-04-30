@@ -8,6 +8,7 @@ import com.murong.nets.interaction.RpcResponse;
 import com.murong.nets.util.JsonUtil;
 import com.murong.nets.util.KeyValue;
 import com.murong.nets.util.RpcException;
+import com.murong.nets.util.SecureRandomUtil;
 import com.murong.nets.util.ThreadUtil;
 import com.murong.nets.vo.NodeVo;
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -22,7 +23,6 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -126,7 +126,7 @@ public class ClientSitePool {
             return null;
         }
         List<RpcAutoReconnectClient> key = kv.getKey();
-        return key.get(new Random().nextInt(key.size()));
+        return SecureRandomUtil.randomOf(key);
     }
 
     /**
@@ -153,19 +153,11 @@ public class ClientSitePool {
             return rpcDefaultClient;
         }
         RpcAutoReconnectClient centerClient = getCenterClient();
-        if (centerClient == null) {
-            throw new RpcException("未获取到中心节点有效连接:" + nodeName);
-        }
         RpcRequest request = new RpcRequest();
         request.setRequestType(RequestTypeEnmu.getNode.name());
         request.setBody(nodeName);
         RpcFuture rpcFuture = centerClient.sendSynMsg(request);
-        RpcResponse rpcResponse = null;
-        try {
-            rpcResponse = rpcFuture.get();
-        } catch (InterruptedException e) {
-            throw new RpcException(e);
-        }
+        RpcResponse rpcResponse = rpcFuture.get();
         if (rpcResponse == null) {
             throw new RpcException("未查询到接目标:" + nodeName + " 节点信息");
         }
@@ -177,7 +169,11 @@ public class ClientSitePool {
         }
 
         ClientSitePool.accept(nodeVo);
-        return ClientSitePool.get(nodeVo.getName());
+        RpcAutoReconnectClient rpcAutoReconnectClient = ClientSitePool.get(nodeVo.getName());
+        if (rpcAutoReconnectClient == null) {
+            throw new RpcException("未链接到目标节点:" + nodeName);
+        }
+        return rpcAutoReconnectClient;
     }
 
     /**
@@ -194,6 +190,6 @@ public class ClientSitePool {
                 return client;
             }
         }
-        return null;
+        throw new RpcException("getCenterClient: 未获取到中心链接");
     }
 }

@@ -76,7 +76,7 @@ public class SimpleRpcClient {
         return rpcFuture;
     }
 
-    public void sendFile(String file, String targetFile) throws IOException, InterruptedException {
+    public void sendFile(String file, String targetFile) throws IOException {
         File realFile = new File(file);
         if (!realFile.exists()) {
             throw new RpcException("文件不存在");
@@ -87,7 +87,7 @@ public class SimpleRpcClient {
         RpcMsgTransUtil.writeFile(channel, file, targetFile, 64 * 1024);
     }
 
-    public void sendFile(String file, String targetFile, int buffer) throws IOException, InterruptedException {
+    public void sendFile(String file, String targetFile, int buffer) throws IOException {
         RpcMsgTransUtil.writeFile(channel, file, targetFile, buffer);
     }
 

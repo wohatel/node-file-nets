@@ -55,8 +55,7 @@ public class Aspects {
             }
             log.info(clazzName + "." + methodName + "." + paramMap);
         }
-        Object result = proceedingJoinPoint.proceed();
-        return result;
+        return proceedingJoinPoint.proceed();
     }
 
 }

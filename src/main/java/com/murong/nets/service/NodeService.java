@@ -25,24 +25,26 @@ import com.murong.nets.vo.MemoryUsageVo;
 import com.murong.nets.vo.NodeVo;
 import com.murong.nets.vo.ProcessActiveVo;
 import com.murong.nets.vo.RateLimitVo;
+import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class NodeService {
 
     Logger logger = LoggerFactory.getLogger(NodeService.class);
 
-    @Autowired
-    NodeConfig nodeConfig;
+
+    private final NodeConfig nodeConfig;
 
     /**
      * 从注册节点获取所有的节点
@@ -51,12 +53,9 @@ public class NodeService {
     public List<NodeVo> nodeList() {
         List<NodeVo> nodeVos = EnvConfig.getCenterNodes();
         if (CollectionUtils.isEmpty(nodeVos)) {
-            return new ArrayList<>();
+            throw new RpcException("未查询到中心节点");
         }
         RpcAutoReconnectClient client = ClientSitePool.getCenterClient();
-        if (client == null) {
-            return new ArrayList<>();
-        }
         RpcRequest rpcRequest = new RpcRequest();
         rpcRequest.setRequestType(RequestTypeEnmu.getNodes.name());
         RpcFuture rpcFuture = client.sendSynMsg(rpcRequest);
@@ -79,22 +78,16 @@ public class NodeService {
         }
         if (sourceNode.equals(nodeConfig.getLocalNodeName())) {
             RpcAutoReconnectClient client = ClientSitePool.getOrConnectClient(targetNode);
-            if (client == null) {
-                throw new RpcException("无指向目标节点的");
-            }
             ExecutorPool.getExecutorService().submit(() -> {
                 try {
                     client.sendFile(sourceFile, targetFile);
-                } catch (Exception e) {
+                } catch (IOException e) {
                     throw new RpcException(e);
                 }
             });
             return true;
         } else {
             RpcDefaultClient rpcDefaultClient = ClientSitePool.getOrConnectClient(sourceNode);
-            if (rpcDefaultClient == null) {
-                throw new RpcException("未发现源节点的连接");
-            }
             RpcRequest rpcRequest = new RpcRequest();
             rpcRequest.setRequestType(RequestTypeEnmu.sendFile.name());
             List<String> body = new ArrayList<>(); // 此body是需要告诉sourceNode
@@ -134,9 +127,6 @@ public class NodeService {
         // 如果本机是来源节点
         if (sourceNode.equals(nodeConfig.getLocalNodeName())) {
             RpcDefaultClient rpcDefaultClient = ClientSitePool.getOrConnectClient(targetNode);
-            if (rpcDefaultClient == null) {
-                throw new RpcException("未发现目标节点的连接:" + targetNode);
-            }
             final String sourceDirF = sourceDir;
             final String targetDirF = targetDir;
             ExecutorPool.getExecutorService().submit(() -> {
@@ -149,9 +139,6 @@ public class NodeService {
             return true;
         } else {
             RpcDefaultClient rpcDefaultClient = ClientSitePool.getOrConnectClient(sourceNode);
-            if (rpcDefaultClient == null) {
-                throw new RpcException("无指向来源节点的连接");
-            }
             RpcRequest rpcRequest = new RpcRequest();
             rpcRequest.setRequestType(RequestTypeEnmu.sendDir.name());
             List<String> body = new ArrayList<>(); // 此body是需要告诉sourceNode
@@ -216,7 +203,7 @@ public class NodeService {
         rpcRequest.setRequestType(RequestTypeEnmu.fileDelete.name());
         RpcFuture rpcFuture = client.sendSynMsg(rpcRequest);
         RpcResponse rpcResponse = rpcFuture.get();
-        Boolean aBoolean = Boolean.valueOf(rpcResponse.getBody());
+        boolean aBoolean = Boolean.parseBoolean(rpcResponse.getBody());
         if (!aBoolean) {
             throw new RpcException(rpcResponse.getMsg());
         }
@@ -231,8 +218,7 @@ public class NodeService {
         List<NodeVo> centerNodeVos = EnvConfig.getCenterNodes();
         String format = "本机%s:%s向中心节点%s:%s注册";
         if (!CollectionUtils.isEmpty(centerNodeVos)) {
-            for (int i = 0; i < centerNodeVos.size(); i++) {
-                NodeVo nodeVo = centerNodeVos.get(i);
+            for (NodeVo nodeVo : centerNodeVos) {
                 String name = nodeVo.getName();
 
                 NodeVo localNode = new NodeVo();
@@ -244,12 +230,10 @@ public class NodeService {
                 ThreadUtil.execSilentVoid(() -> {
                     logger.info(String.format(format, nodeConfig.getLocalNodeHost(), nodeConfig.getLocalNodePort(), nodeVo.getHost(), nodeVo.getPort()));
                     RpcDefaultClient orConnectClient = ClientSitePool.getOrConnectClient(name);
-                    if (orConnectClient != null) {
-                        RpcRequest request = new RpcRequest();
-                        request.setRequestType(RequestTypeEnmu.registerNode.name());
-                        request.setBody(JsonUtil.toJSONString(localNode)); // 将本地节点注册给中心节点
-                        orConnectClient.sendMsg(request);
-                    }
+                    RpcRequest request = new RpcRequest();
+                    request.setRequestType(RequestTypeEnmu.registerNode.name());
+                    request.setBody(JsonUtil.toJSONString(localNode)); // 将本地节点注册给中心节点
+                    orConnectClient.sendMsg(request);
                 });
 
             }
@@ -257,36 +241,9 @@ public class NodeService {
     }
 
     /**
-     * 获取中心节点的工作目录并同步
-     */
-    @SneakyThrows
-    public void syncCenterHomeDirs() {
-        RpcAutoReconnectClient centerClient = ClientSitePool.getCenterClient();
-        RpcRequest request = new RpcRequest();
-        request.setRequestType(RequestTypeEnmu.getHomeDirs.name());
-        RpcFuture rpcFuture = centerClient.sendSynMsg(request);
-        RpcResponse rpcResponse = rpcFuture.get();
-        logger.info("ack家目录:" + rpcResponse.getBody());
-        DirsVo dirsVo = JsonUtil.parseObject(rpcResponse.getBody(), DirsVo.class);
-        EnvConfig.clearHomeDirsAndAddAll(dirsVo.getDirs(), dirsVo.getTime());
-    }
-
-    @SneakyThrows
-    public void getRateLimit() {
-        RpcAutoReconnectClient centerClient = ClientSitePool.getCenterClient();
-        RpcRequest request = new RpcRequest();
-        request.setRequestType(RequestTypeEnmu.getRateLimit.name());
-        RpcFuture rpcFuture = centerClient.sendSynMsg(request);
-        RpcResponse rpcResponse = rpcFuture.get();
-        logger.info("ack限速策略:" + rpcResponse.getBody());
-        RateLimitVo reteLimitVo = JsonUtil.parseObject(rpcResponse.getBody(), RateLimitVo.class);
-        EnvConfig.casRateLimit(reteLimitVo.getRateLimit(), reteLimitVo.getTime());
-    }
-
-    /**
      * 变更工作目录
      *
-     * @param dirs
+     * @param dirs 新的工作目录
      */
     @SneakyThrows
     public boolean chHomeDirs(List<String> dirs) {
@@ -296,7 +253,7 @@ public class NodeService {
         rpcRequest.setRequestType(RequestTypeEnmu.chHomeDirs.name());
         RpcFuture rpcFuture = client.sendSynMsg(rpcRequest);
         RpcResponse rpcResponse = rpcFuture.get();
-        return RpcResponseHandler.handler(rpcResponse, t -> Boolean.valueOf(t));
+        return RpcResponseHandler.handler(rpcResponse, Boolean::valueOf);
     }
 
     /**
@@ -306,11 +263,7 @@ public class NodeService {
         List<NodeVo> nodeVos = EnvConfig.getCenterNodes();
         if (!CollectionUtils.isEmpty(nodeVos)) {
             for (NodeVo nodeVo : nodeVos) {
-                ThreadUtil.execSilentException(() -> {
-                    ThreadUtil.execSilentVoid(() -> {
-                        ClientSitePool.accept(nodeVo);
-                    });
-                }, e -> e.printStackTrace());
+                ThreadUtil.execSilentException(() -> ClientSitePool.accept(nodeVo), e -> logger.error("acceptCenter", e));
             }
         }
     }
@@ -332,10 +285,9 @@ public class NodeService {
     /**
      * 给文件重命名
      *
-     * @param nodeName
-     * @param file
-     * @param newName
-     * @param
+     * @param nodeName 节点名称
+     * @param file     文件全限定名
+     * @param newName  文件新名称
      */
     @SneakyThrows
     public boolean renameFile(String nodeName, String file, String newName) {
@@ -350,7 +302,7 @@ public class NodeService {
         rpcRequest.setBody(JsonUtil.toJSONString(input));
         RpcFuture rpcFuture = orConnectClient.sendSynMsg(rpcRequest);
         RpcResponse rpcResponse = rpcFuture.get();
-        return RpcResponseHandler.handler(rpcResponse, t -> Boolean.valueOf(t));
+        return RpcResponseHandler.handler(rpcResponse, Boolean::valueOf);
     }
 
     /**
@@ -360,38 +312,33 @@ public class NodeService {
      */
     public void syncCenterConf() {
         List<NodeVo> nodeVos = EnvConfig.getCenterNodes(); //所有的中心节点,包括自己
-        List<String> nodeNames = nodeVos.stream().map(t -> t.getName()).collect(Collectors.toList());
+        List<String> nodeNames = nodeVos.stream().map(NodeVo::getName).collect(Collectors.toList());
         if (!nodeNames.contains(nodeConfig.getLocalNodeName())) { // 如果不是中心节点,不需要同步
             return;
         }
-        for (int i = 0; i < nodeVos.size(); i++) {
-            NodeVo nodeVo = nodeVos.get(i);
+        for (NodeVo nodeVo : nodeVos) {
             ThreadUtil.execSilentException(() -> {
                 RpcAutoReconnectClient client = ClientSitePool.get(nodeVo.getName());
-                RpcRequest rpcRequest = new RpcRequest();
-                rpcRequest.setRequestType(RequestTypeEnmu.getConf.name());
-                RpcFuture rpcFuture = client.sendSynMsg(rpcRequest);
-                RpcResponse rpcResponse = null;
-                try {
-                    rpcResponse = rpcFuture.get();
-                } catch (InterruptedException e) {
-                    throw new RpcException(e);
-                }
-                EnvConfVo confVo = JsonUtil.parseObject(rpcResponse.getBody(), EnvConfVo.class);
-                if (confVo != null) {
-                    // 同步家目录信息
-                    DirsVo dirsVo = confVo.getDirsVo();
-                    if (!CollectionUtils.isEmpty(dirsVo.getDirs())) {// 如果非空
-                        EnvConfig.clearHomeDirsAndAddAll(dirsVo.getDirs(), dirsVo.getTime());
-                    }
-                    // 同步限速策略
-                    RateLimitVo rateLimitVo = confVo.getRateLimitVo();
-                    if (rateLimitVo != null) {// 如果非空
-                        EnvConfig.casRateLimit(rateLimitVo.getRateLimit(), rateLimitVo.getTime());
+                if (client != null) {
+                    RpcRequest rpcRequest = new RpcRequest();
+                    rpcRequest.setRequestType(RequestTypeEnmu.getConf.name());
+                    RpcFuture rpcFuture = client.sendSynMsg(rpcRequest);
+                    RpcResponse rpcResponse = rpcFuture.get();
+                    EnvConfVo confVo = JsonUtil.parseObject(rpcResponse.getBody(), EnvConfVo.class);
+                    if (confVo != null) {
+                        // 同步家目录信息
+                        DirsVo dirsVo = confVo.getDirsVo();
+                        if (!CollectionUtils.isEmpty(dirsVo.getDirs())) {// 如果非空
+                            EnvConfig.clearHomeDirsAndAddAll(dirsVo.getDirs(), dirsVo.getTime());
+                        }
+                        // 同步限速策略
+                        RateLimitVo rateLimitVo = confVo.getRateLimitVo();
+                        if (rateLimitVo != null) {// 如果非空
+                            EnvConfig.casRateLimit(rateLimitVo.getRateLimit(), rateLimitVo.getTime());
+                        }
                     }
                 }
-
-            }, e -> e.printStackTrace());
+            }, e -> logger.error("syncCenterConf:", e));
         }
     }
 
@@ -403,7 +350,7 @@ public class NodeService {
     @SneakyThrows
     public void syncConf() {
         List<NodeVo> nodeVos = EnvConfig.getCenterNodes();
-        List<String> nodeNames = nodeVos.stream().map(t -> t.getName()).collect(Collectors.toList());
+        List<String> nodeNames = nodeVos.stream().map(NodeVo::getName).collect(Collectors.toList());
         if (nodeNames.contains(nodeConfig.getLocalNodeName())) { // 如果自己是中心节点直接不需要再获取
             return;
         }
@@ -441,7 +388,7 @@ public class NodeService {
         rpcRequest.setRequestType(RequestTypeEnmu.chRateLimit.name());
         RpcFuture rpcFuture = client.sendSynMsg(rpcRequest);
         RpcResponse rpcResponse = rpcFuture.get();
-        return RpcResponseHandler.handler(rpcResponse, t -> Boolean.valueOf(t));
+        return RpcResponseHandler.handler(rpcResponse, Boolean::valueOf);
     }
 
     /**

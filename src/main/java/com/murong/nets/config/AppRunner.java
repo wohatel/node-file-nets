@@ -35,8 +35,7 @@ public class AppRunner implements ApplicationRunner {
         // 中心节点
         List<String> list = nodeConfig.getMainNodes();
         if (!CollectionUtils.isEmpty(list)) {
-            for (int i = 0; i < list.size(); i++) {
-                String ipPort = list.get(i);
+            for (String ipPort : list) {
                 String[] split = ipPort.split(":");
                 NodeVo nodeVo = new NodeVo();
                 nodeVo.setPort(Integer.parseInt(split[1]));

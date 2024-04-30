@@ -1,7 +1,9 @@
 package com.murong.nets.interaction;
 
 
+import com.murong.nets.util.RpcException;
 import lombok.Data;
+import lombok.SneakyThrows;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,15 +44,16 @@ public class RpcFuture implements Future<RpcResponse> {
         return this.isDone;
     }
 
+    @SneakyThrows
     @Override
-    public RpcResponse get() throws InterruptedException {
+    public RpcResponse get() {
         while (true) {
             if (isDone) {
                 return response;
             }
             if (isCanceled) {
                 if (mayInterruptIfRunning) {
-                    throw new InterruptedException("is canceled");
+                    throw new RpcException("is canceled");
                 }
                 break;
             }
@@ -65,8 +68,7 @@ public class RpcFuture implements Future<RpcResponse> {
 
     @Override
     public RpcResponse get(long timeout, TimeUnit unit) throws InterruptedException {
-        long l = unit.toMillis(timeout);
-        this.timeOut = l;
+        this.timeOut = unit.toMillis(timeout);
         return get();
     }
 }

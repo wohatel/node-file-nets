@@ -74,20 +74,14 @@ public class RpcMsgService {
         OperationMsg vo = new OperationMsg();
         List<String> bodyCmd = JsonUtil.parseArray(body, String.class);
         RpcDefaultClient rpcDefaultClient = ClientSitePool.getOrConnectClient(bodyCmd.get(0));
-        if (rpcDefaultClient == null) {
-            vo.setCode(CodeConfig.ERROR);
-            vo.setMsg("无效的命令: 目标机器链接不存在");
-            vo.setOperateStatus(false);
-        } else {
-            ExecutorPool.getExecutorService().submit(() -> {
-                try {
-                    logger.info("开始发送:{}", body);
-                    rpcDefaultClient.sendFile(bodyCmd.get(1), bodyCmd.get(2));
-                } catch (Exception e) {
-                    throw new RpcException(e);
-                }
-            });
-        }
+        ExecutorPool.getExecutorService().submit(() -> {
+            try {
+                logger.info("开始发送:{}", body);
+                rpcDefaultClient.sendFile(bodyCmd.get(1), bodyCmd.get(2));
+            } catch (Exception e) {
+                throw new RpcException(e);
+            }
+        });
         if (request.isNeedResponse()) {
             RpcResponse rpcResponse = request.toResponse();
             rpcResponse.setCode(vo.getCode());

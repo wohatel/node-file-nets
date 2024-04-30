@@ -58,13 +58,14 @@ public class NodeController {
     public ResultVo<Boolean> renameFile(@RequestBody RenameFileInput input) {
         Assert.isTrue(EnvConfig.isFilePathOk(input.getNewName()), "新文件名不能为空");
         Assert.isTrue(FileVerify.isFileNameOk(input.getNewName()), "新文件名不能包含特殊字符");
+        Assert.isTrue(!input.getNewName().contains("/"), "新文件名不能包含'/'等路径符号");
         return ResultVo.supplier(() -> nodeService.renameFile(input.getNodeName(), input.getFile(), input.getNewName()));
     }
 
     /**
      * 节点cp文件内容
      */
-    @PostMapping("/node/operabitilyCheck")
+    @PostMapping("/node/file/isFree")
     public ResultVo<Boolean> operabitilyCheck(@RequestBody FileIsOpenInput input) {
         Assert.isTrue(EnvConfig.isFilePathOk(input.getTargetFile()), "文件名不能为空");
         Assert.isTrue(FileVerify.isFileNameOk(input.getTargetNode()), "节点名称不能为空");

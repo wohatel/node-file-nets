@@ -5,6 +5,7 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
 import java.security.SecureRandom;
+import java.util.List;
 
 /**
  * <p>
@@ -31,6 +32,13 @@ public class SecureRandomUtil {
 
     public static long randomLong(long origin, long bound) {
         return SECURE_RANDOM.nextLong(origin, bound);
+    }
+
+    public static <T> T randomOf(List<T> list) {
+        if (list == null || list.isEmpty()) {
+            return null;
+        }
+        return list.get(randomInt(0, list.size()));
     }
 
     /**

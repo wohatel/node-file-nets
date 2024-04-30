@@ -45,9 +45,7 @@ public class RpcInteractionContainer {
         List<RpcResponseListener> listeners = rpcFuture.getListeners();
         if (!CollectionUtils.isEmpty(listeners)) {
             for (RpcResponseListener rpcResponseListener : listeners) {
-                ExecutorPool.getExecutorService().submit(() -> {
-                    rpcResponseListener.handle(rpcResponse);
-                }); // 处理响应事件
+                ExecutorPool.getExecutorService().submit(() -> rpcResponseListener.handle(rpcResponse)); // 处理响应事件
             }
         }
     }
