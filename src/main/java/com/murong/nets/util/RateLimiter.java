@@ -16,19 +16,19 @@ public class RateLimiter {
     private long rateLimit;
 
     /**
-     * 开始时间
+     * 开始记录
      */
-    private long lastStaticTime = System.currentTimeMillis();
+    private KeyValue<Long, Long, Long> firstRecord = new KeyValue<>(0L, System.currentTimeMillis());
 
     /**
-     * 上次统计发送的数据量,最少间隔5s
+     * 第二记录
      */
-    private long lastStaticSent = 0;
+    private KeyValue<Long, Long, Long> secondRecord = new KeyValue<>(0L, System.currentTimeMillis());
 
     /**
      * 已经发送的字节
      */
-    private AtomicLong hasBeenSent = new AtomicLong(0);
+    private final AtomicLong hasBeenSent = new AtomicLong(0);
 
 
     public RateLimiter(long rateLimit) {
@@ -52,7 +52,15 @@ public class RateLimiter {
      * 发送的数据叠加
      */
     public RateLimiter increaseSent(long delta) {
-        hasBeenSent.addAndGet(delta);
+        long send = hasBeenSent.addAndGet(delta);
+        long currentTime = System.currentTimeMillis();
+        if (System.currentTimeMillis() - secondRecord.getValue() > 3000L) {
+            firstRecord.setKey(secondRecord.getKey());
+            firstRecord.setValue(secondRecord.getValue());
+
+            secondRecord.setKey(send);
+            secondRecord.setValue(currentTime);
+        }
         return this;
     }
 
@@ -68,18 +76,15 @@ public class RateLimiter {
      * 获取实时速度
      */
     public double currentSpeed() {
-        long interval = 5000L;
-        long current = System.currentTimeMillis();
-        // 开始到现在消耗的时间
-        long time = current - lastStaticTime;
-        long send = hasBeenSent.get();
-        long expendTime = time > 0 ? time : 1;
-        double currentSpeed = (send - lastStaticSent) / (expendTime + 0.0);
-        if (time > interval) { //记录上个时间段段
-            this.lastStaticTime = System.currentTimeMillis(); // 上一次统计的时间
-            this.lastStaticSent = send; // 上一次统计时候,发送的总数
-        }
-        return currentSpeed;
+        long currentTime = System.currentTimeMillis();
+        long lastTime = firstRecord.getValue();
+
+        long intervalTime = currentTime - lastTime;
+        long expendTime = intervalTime > 0 ? intervalTime : 1;
+
+        long currentSend = hasBeenSent.get();
+        long lastSend = firstRecord.getKey();
+        return (currentSend - lastSend) / (expendTime + 0.0);
     }
 
 }
