@@ -23,9 +23,11 @@
 
 ## 外部配置文件
     server.port=8080
+    ##默认的工作目录,可以不配置,但是需要项目启动后配置
     node.dir.list[0]=/Users/yaochuang/Desktop/test
     node.base.main-nodes[0]=127.0.0.1:8000
     node.base.local-node-port=8000
+    ## 本机的ip,可以不填写由程序自动获取
     node.base.local-node-host=127.0.0.1
         
 ```angular2html
@@ -35,11 +37,12 @@
     node.dir.list:
         可以配置多个,整个集群所有主机的工作目录,在这些目录中,文件是可以被读写的
         未在该目录下的文件,不能够写(但可以被删请注意)
+        默认的工作目录,如果不配置,则项目启动后一定要配置
     node.base.local-node-port:
         本机的节点rpc端口,用于节点之间的信息交互
     node.base.local-node-host:
         本机节点的ip, 单机测试可以用127.0.0.1代替,但是集群千万不要用127.0.0.1,否则别的主机无法找到该节点
-        
+        如果配置文件不配置,则会有程序自动获取
 ```
 
 
@@ -62,7 +65,7 @@
    node.base.main-nodes[0]=****
    node.base.main-nodes[1]=****可配置多个主节点
    node.base.local-node-port=***
-   node.base.local-node-host=****
+   node.base.local-node-host=****(可不配)
 4. 将这jar和配置文件分发到不同的linux主机上,这些主机网络需要相通哦
 5. 我们可以从这些主机中选出1-3个主机作为主节点配置在node.base.main-nodes中(ip:port的形式)
 6. 分别java -jar 启动即可
