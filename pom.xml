@@ -12,13 +12,13 @@
 
     <groupId>io.github.wohatel</groupId>
     <artifactId>node-file-nets</artifactId>
-    <version>2.0.2</version>
+    <version>3.0.0</version>
     <name>node-file-nets</name>
 
     <description>
-        a useful tool for node cluster service for linux
+        a useful tool for node cluster service of linux
         it can transfer file to all nodes in the cluster
-        it also can get info like memory ,hardware ,cpu info of all nodes in the cluster
+        also can get infomation of node like memory ,hardware ,cpu info of all nodes in the cluster
     </description>
 
 
