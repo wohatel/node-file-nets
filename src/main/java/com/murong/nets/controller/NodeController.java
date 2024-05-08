@@ -3,15 +3,14 @@ package com.murong.nets.controller;
 import com.murong.nets.config.EnvConfig;
 import com.murong.nets.input.ChHomeDirInput;
 import com.murong.nets.input.ChRateLimitInput;
+import com.murong.nets.input.ClearOkFileInput;
 import com.murong.nets.input.CpDirInput;
 import com.murong.nets.input.CpFileInput;
 import com.murong.nets.input.CpFileToDirInput;
 import com.murong.nets.input.DelFileOrDirInput;
-import com.murong.nets.input.ClearOkFileInput;
 import com.murong.nets.input.RenameFileInput;
 import com.murong.nets.service.NodeService;
 import com.murong.nets.util.FileVerify;
-import com.murong.nets.util.StringUtil;
 import com.murong.nets.vo.FileVo;
 import com.murong.nets.vo.NodeVo;
 import com.murong.nets.vo.ResultVo;
@@ -48,7 +47,7 @@ public class NodeController {
      */
     @GetMapping("/node/linkedList")
     public ResultVo<List<NodeVo>> nodeList(String nodeName) {
-        Assert.isTrue(!StringUtil.isBlank(nodeName), "节点名参数有误");
+        Assert.hasLength(nodeName, "节点名参数有误");
         return ResultVo.supplier(() -> nodeService.linkedList(nodeName));
     }
 
@@ -79,7 +78,7 @@ public class NodeController {
     @GetMapping("/node/file/isFree")
     public ResultVo<Boolean> operabitilyCheck(String nodeName, String file) {
         Assert.isTrue(EnvConfig.isFilePathOk(file), "文件名不能为空");
-        Assert.isTrue(FileVerify.isFileNameOk(nodeName), "节点名称不能为空");
+        Assert.hasLength(nodeName, "节点名参数有误");
         return ResultVo.supplier(() -> nodeService.operabitilyCheck(nodeName, file));
     }
 
@@ -88,7 +87,7 @@ public class NodeController {
      */
     @PostMapping("/node/file/clearOk")
     public ResultVo<Boolean> clearOk(@RequestBody ClearOkFileInput input) {
-        Assert.isTrue(FileVerify.isFileNameOk(input.getNodeName()), "节点名称不能为空");
+        Assert.hasLength(input.getNodeName(), "节点名参数有误");
         Assert.isTrue(EnvConfig.isFilePathOk(input.getFile()), "目标文件或文件夹没有匹配工作目录");
         return ResultVo.supplier(() -> nodeService.clearOk(input.getNodeName(), input.getFile()));
     }
@@ -123,8 +122,8 @@ public class NodeController {
      */
     @GetMapping("/node/fileInfo")
     public ResultVo<FileVo> fileInfo(String nodeName, String file) {
-        Assert.isTrue(!StringUtil.isBlank(file), "文件路径参数错误");
-        Assert.isTrue(!StringUtil.isBlank(nodeName), "节点名参数错误");
+        Assert.hasLength(file, "文件路径参数错误");
+        Assert.hasLength(nodeName, "节点名参数有误");
         return ResultVo.supplier(() -> nodeService.fileInfo(nodeName, file));
     }
 
@@ -133,8 +132,8 @@ public class NodeController {
      */
     @GetMapping("/node/filesOfDir")
     public ResultVo<List<FileVo>> filesOfDir(String nodeName, String dir) {
-        Assert.isTrue(!StringUtil.isBlank(dir), "文件夹路径参数错误");
-        Assert.isTrue(!StringUtil.isBlank(nodeName), "节点名参数错误");
+        Assert.hasLength(dir, "文件夹路径参数错误");
+        Assert.hasLength(nodeName, "节点名参数有误");
         Assert.isTrue(EnvConfig.isFilePathOk(dir), "目标文件夹没有匹配工作目录");
         return ResultVo.supplier(() -> nodeService.filesOfDir(nodeName, dir));
     }
@@ -144,8 +143,8 @@ public class NodeController {
      */
     @PostMapping("/node/fileDelete")
     public ResultVo<Boolean> fileDelete(@RequestBody DelFileOrDirInput input) {
-        Assert.isTrue(!StringUtil.isBlank(input.getFileOrDir()), "文件路径参数错误");
-        Assert.isTrue(!StringUtil.isBlank(input.getNodeName()), "节点名参数错误");
+        Assert.hasLength(input.getFileOrDir(), "文件路径参数错误");
+        Assert.hasLength(input.getNodeName(), "节点名参数有误");
         return ResultVo.supplier(() -> nodeService.fileDelete(input.getNodeName(), input.getFileOrDir()));
     }
 

@@ -8,6 +8,7 @@ import com.murong.nets.vo.OperateSystemVo;
 import com.murong.nets.vo.ProcessActiveVo;
 import com.murong.nets.vo.ResultVo;
 import lombok.RequiredArgsConstructor;
+import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -30,6 +31,7 @@ public class SystemController {
      */
     @GetMapping("/system/cpuUsage")
     public ResultVo<CpuUsageVo> cpuUsage(@RequestParam String nodeName) {
+        Assert.hasLength(nodeName, "节点名参数有误");
         return ResultVo.supplier(() -> nodeService.cpuUsage(nodeName));
     }
 
@@ -38,6 +40,7 @@ public class SystemController {
      */
     @GetMapping("/system/memoryUsage")
     public ResultVo<MemoryUsageVo> memoryUsage(@RequestParam String nodeName) {
+        Assert.hasLength(nodeName, "节点名参数有误");
         return ResultVo.supplier(() -> nodeService.memoryUsage(nodeName));
     }
 
@@ -46,6 +49,7 @@ public class SystemController {
      */
     @GetMapping("/system/hardUsage")
     public ResultVo<List<HardUsageVo>> hardUsage(@RequestParam String nodeName) {
+        Assert.hasLength(nodeName, "节点名参数有误");
         return ResultVo.supplier(() -> nodeService.hardUsage(nodeName));
     }
 
@@ -54,6 +58,7 @@ public class SystemController {
      */
     @GetMapping("/system/processList")
     public ResultVo<List<ProcessActiveVo>> processList(@RequestParam String nodeName, @RequestParam(defaultValue = "100") Integer topNumber) {
+        Assert.hasLength(nodeName, "节点名参数有误");
         return ResultVo.supplier(() -> nodeService.processList(nodeName, topNumber));
     }
 
@@ -62,6 +67,7 @@ public class SystemController {
      */
     @GetMapping("/system/info")
     public ResultVo<OperateSystemVo> operateSystemInfo(@RequestParam String nodeName) {
+        Assert.hasLength(nodeName, "节点名参数有误");
         return ResultVo.supplier(() -> nodeService.operateSystemInfo(nodeName));
     }
 
