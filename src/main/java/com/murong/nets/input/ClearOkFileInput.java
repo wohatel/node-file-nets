@@ -2,20 +2,17 @@ package com.murong.nets.input;
 
 import lombok.Data;
 
-/**
- * 获取节点的文件信息
- */
 @Data
-public class GetFileInfoInput {
+public class ClearOkFileInput {
 
     /**
-     * 源节点
+     * 目标节点
      */
     private String nodeName;
 
     /**
-     * 目标
+     * 目标文件
      */
     private String file;
-    
+
 }

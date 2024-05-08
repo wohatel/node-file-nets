@@ -4,6 +4,7 @@ import com.murong.nets.service.NodeService;
 import com.murong.nets.vo.CpuUsageVo;
 import com.murong.nets.vo.HardUsageVo;
 import com.murong.nets.vo.MemoryUsageVo;
+import com.murong.nets.vo.OperateSystemVo;
 import com.murong.nets.vo.ProcessActiveVo;
 import com.murong.nets.vo.ResultVo;
 import lombok.RequiredArgsConstructor;
@@ -54,6 +55,14 @@ public class SystemController {
     @GetMapping("/system/processList")
     public ResultVo<List<ProcessActiveVo>> processList(@RequestParam String nodeName, @RequestParam(defaultValue = "100") Integer topNumber) {
         return ResultVo.supplier(() -> nodeService.processList(nodeName, topNumber));
+    }
+
+    /**
+     * 进程实时情况
+     */
+    @GetMapping("/system/info")
+    public ResultVo<OperateSystemVo> operateSystemInfo(@RequestParam String nodeName) {
+        return ResultVo.supplier(() -> nodeService.operateSystemInfo(nodeName));
     }
 
 }

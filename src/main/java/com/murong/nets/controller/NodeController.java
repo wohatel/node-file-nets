@@ -1,16 +1,26 @@
 package com.murong.nets.controller;
 
 import com.murong.nets.config.EnvConfig;
-import com.murong.nets.input.*;
+import com.murong.nets.input.ChHomeDirInput;
+import com.murong.nets.input.ChRateLimitInput;
+import com.murong.nets.input.CpDirInput;
+import com.murong.nets.input.CpFileInput;
+import com.murong.nets.input.CpFileToDirInput;
+import com.murong.nets.input.DelFileOrDirInput;
+import com.murong.nets.input.ClearOkFileInput;
+import com.murong.nets.input.RenameFileInput;
 import com.murong.nets.service.NodeService;
 import com.murong.nets.util.FileVerify;
 import com.murong.nets.util.StringUtil;
 import com.murong.nets.vo.FileVo;
 import com.murong.nets.vo.NodeVo;
 import com.murong.nets.vo.ResultVo;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.util.Assert;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
@@ -20,17 +30,17 @@ import java.util.List;
  * @Date 2023/5/6 5:00 PM
  */
 @RestController
+@RequiredArgsConstructor
 public class NodeController {
 
-    @Autowired
-    NodeService nodeService;
+    private final NodeService nodeService;
 
     /**
      * 查询所有的节点
      */
     @GetMapping("/node/list")
     public ResultVo<List<NodeVo>> nodeList() {
-        return ResultVo.supplier(() -> nodeService.nodeList());
+        return ResultVo.supplier(nodeService::nodeList);
     }
 
     /**
@@ -66,21 +76,21 @@ public class NodeController {
      * 文件是否空闲
      * 文件如果正被其他线程写操作,会返回false
      */
-    @PostMapping("/node/file/isFree")
-    public ResultVo<Boolean> operabitilyCheck(@RequestBody FileIsOpenInput input) {
-        Assert.isTrue(EnvConfig.isFilePathOk(input.getTargetFile()), "文件名不能为空");
-        Assert.isTrue(FileVerify.isFileNameOk(input.getTargetNode()), "节点名称不能为空");
-        return ResultVo.supplier(() -> nodeService.operabitilyCheck(input.getTargetNode(), input.getTargetFile()));
+    @GetMapping("/node/file/isFree")
+    public ResultVo<Boolean> operabitilyCheck(String nodeName, String file) {
+        Assert.isTrue(EnvConfig.isFilePathOk(file), "文件名不能为空");
+        Assert.isTrue(FileVerify.isFileNameOk(nodeName), "节点名称不能为空");
+        return ResultVo.supplier(() -> nodeService.operabitilyCheck(nodeName, file));
     }
 
     /**
      * 递归清空文件夹下 .ok结尾的文件
      */
     @PostMapping("/node/file/clearOk")
-    public ResultVo<Boolean> clearOk(@RequestBody FileIsOpenInput input) {
-        Assert.isTrue(FileVerify.isFileNameOk(input.getTargetNode()), "节点名称不能为空");
-        Assert.isTrue(EnvConfig.isFilePathOk(input.getTargetFile()), "目标文件或文件夹没有匹配工作目录");
-        return ResultVo.supplier(() -> nodeService.clearOk(input.getTargetNode(), input.getTargetFile()));
+    public ResultVo<Boolean> clearOk(@RequestBody ClearOkFileInput input) {
+        Assert.isTrue(FileVerify.isFileNameOk(input.getNodeName()), "节点名称不能为空");
+        Assert.isTrue(EnvConfig.isFilePathOk(input.getFile()), "目标文件或文件夹没有匹配工作目录");
+        return ResultVo.supplier(() -> nodeService.clearOk(input.getNodeName(), input.getFile()));
     }
 
     /**
@@ -111,22 +121,22 @@ public class NodeController {
     /**
      * 查询文件描述信息
      */
-    @PostMapping("/node/fileInfo")
-    public ResultVo<FileVo> fileInfo(@RequestBody GetFileInfoInput input) {
-        Assert.isTrue(!StringUtil.isBlank(input.getFile()), "文件路径参数错误");
-        Assert.isTrue(!StringUtil.isBlank(input.getNodeName()), "节点名参数错误");
-        return ResultVo.supplier(() -> nodeService.fileInfo(input.getNodeName(), input.getFile()));
+    @GetMapping("/node/fileInfo")
+    public ResultVo<FileVo> fileInfo(String nodeName, String file) {
+        Assert.isTrue(!StringUtil.isBlank(file), "文件路径参数错误");
+        Assert.isTrue(!StringUtil.isBlank(nodeName), "节点名参数错误");
+        return ResultVo.supplier(() -> nodeService.fileInfo(nodeName, file));
     }
 
     /**
-     * 文件下的所有目录
+     * 目录下所有文件
      */
-    @PostMapping("/node/filesOfDir")
-    public ResultVo<List<FileVo>> filesOfDir(@RequestBody GetFileOfDirInput input) {
-        Assert.isTrue(!StringUtil.isBlank(input.getDir()), "文件夹路径参数错误");
-        Assert.isTrue(!StringUtil.isBlank(input.getNodeName()), "节点名参数错误");
-        Assert.isTrue(EnvConfig.isFilePathOk(input.getDir()), "目标文件夹没有匹配工作目录");
-        return ResultVo.supplier(() -> nodeService.filesOfDir(input.getNodeName(), input.getDir()));
+    @GetMapping("/node/filesOfDir")
+    public ResultVo<List<FileVo>> filesOfDir(String nodeName, String dir) {
+        Assert.isTrue(!StringUtil.isBlank(dir), "文件夹路径参数错误");
+        Assert.isTrue(!StringUtil.isBlank(nodeName), "节点名参数错误");
+        Assert.isTrue(EnvConfig.isFilePathOk(dir), "目标文件夹没有匹配工作目录");
+        return ResultVo.supplier(() -> nodeService.filesOfDir(nodeName, dir));
     }
 
     /**

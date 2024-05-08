@@ -23,6 +23,7 @@ import com.murong.nets.vo.FileVo;
 import com.murong.nets.vo.HardUsageVo;
 import com.murong.nets.vo.MemoryUsageVo;
 import com.murong.nets.vo.NodeVo;
+import com.murong.nets.vo.OperateSystemVo;
 import com.murong.nets.vo.ProcessActiveVo;
 import com.murong.nets.vo.RateLimitVo;
 import lombok.RequiredArgsConstructor;
@@ -468,5 +469,19 @@ public class NodeService {
         RpcFuture rpcFuture = client.sendSynMsg(rpcRequest);
         RpcResponse rpcResponse = rpcFuture.get();
         return RpcResponseHandler.handler(rpcResponse, Boolean::valueOf);
+    }
+
+    /**
+     * 获取操作系统信息
+     *
+     * @param targetNode 目标节点
+     */
+    public OperateSystemVo operateSystemInfo(String targetNode) {
+        RpcAutoReconnectClient client = ClientSitePool.getOrConnectClient(targetNode);
+        RpcRequest rpcRequest = new RpcRequest();
+        rpcRequest.setRequestType(RequestTypeEnmu.operateSystemInfo.name());
+        RpcFuture rpcFuture = client.sendSynMsg(rpcRequest);
+        RpcResponse rpcResponse = rpcFuture.get();
+        return RpcResponseHandler.handler(rpcResponse, t -> JsonUtil.parseObject(t, OperateSystemVo.class));
     }
 }

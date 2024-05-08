@@ -113,5 +113,10 @@ public enum RequestTypeEnmu {
     /**
      * 递归清空clear文件
      */
-    clearOk;
+    clearOk,
+
+    /**
+     * 获取操作系统信息
+     */
+    operateSystemInfo;
 }

@@ -19,6 +19,7 @@ import com.murong.nets.util.ThreadUtil;
 import com.murong.nets.vo.EnvConfVo;
 import com.murong.nets.vo.FileVo;
 import com.murong.nets.vo.NodeVo;
+import com.murong.nets.vo.OperateSystemVo;
 import io.netty.channel.ChannelHandlerContext;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
@@ -377,6 +378,17 @@ public class RpcMsgService {
         rpcResponse.setCode(CodeConfig.SUCCESS);
         boolean clear = FileUtil.clearOk(new File(targetFile));
         rpcResponse.setBody(String.valueOf(clear));
+        RpcMsgTransUtil.write(ctx.channel(), rpcResponse);
+    }
+
+    @RpcMethod("operateSystemInfo")
+    public void operateSystemInfo(ChannelHandlerContext ctx, RpcRequest request) {
+        RpcResponse rpcResponse = request.toResponse();
+        rpcResponse.setCode(CodeConfig.SUCCESS);
+        OperateSystemVo vo = new OperateSystemVo();
+        vo.setOsName(System.getProperty("os.name"));
+        vo.setOsVersion(System.getProperty("os.version"));
+        rpcResponse.setBody(JsonUtil.toJSONString(vo));
         RpcMsgTransUtil.write(ctx.channel(), rpcResponse);
     }
 

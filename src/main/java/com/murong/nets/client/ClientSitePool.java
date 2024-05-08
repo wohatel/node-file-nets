@@ -37,7 +37,7 @@ public class ClientSitePool {
      * 配置公用的eventLoopGroup
      */
 
-    private static NioEventLoopGroup nioEventLoopGroup = new NioEventLoopGroup();
+    private static final NioEventLoopGroup NIO_EVENT_LOOP_GROUP = new NioEventLoopGroup();
     /**
      * 连接配置三个
      */
@@ -64,13 +64,13 @@ public class ClientSitePool {
         List<RpcAutoReconnectClient> list = new ArrayList<>();
         KeyValue<List<RpcAutoReconnectClient>, RpcHeartClient, NodeVo> clients = new KeyValue<>();
         for (int i = 0; i < poolSize; i++) {
-            RpcAutoReconnectClient client = new RpcAutoReconnectClient(nodeVo.getHost(), nodeVo.getPort(), nioEventLoopGroup);
+            RpcAutoReconnectClient client = new RpcAutoReconnectClient(nodeVo.getHost(), nodeVo.getPort(), NIO_EVENT_LOOP_GROUP);
             client.reConnect();
             // 链接本身, 注册node节点的启动时间, 本次链接注册node的开始时间
             list.add(client);
         }
         // 同时建立心跳链接
-        RpcHeartClient rpcHeartClient = new RpcHeartClient(nodeVo.getHost(), nodeVo.getPort(), nioEventLoopGroup);
+        RpcHeartClient rpcHeartClient = new RpcHeartClient(nodeVo.getHost(), nodeVo.getPort(), NIO_EVENT_LOOP_GROUP);
         rpcHeartClient.connect();
 
         clients.setData(nodeVo);
