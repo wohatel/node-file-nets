@@ -8,6 +8,7 @@ import lombok.Setter;
 import lombok.extern.java.Log;
 
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * @author yaochuang
@@ -20,7 +21,7 @@ public class RpcAutoReconnectClient extends RpcDefaultClient {
     /**
      * 是否允许自动重连
      */
-    private volatile boolean allowAutoConnect = true;
+    private AtomicBoolean allowAutoConnect = new AtomicBoolean(true);
 
     public RpcAutoReconnectClient(String host, int port, NioEventLoopGroup nioEventLoopGroup) {
         super(host, port, nioEventLoopGroup);
@@ -31,7 +32,7 @@ public class RpcAutoReconnectClient extends RpcDefaultClient {
     }
 
     public void reConnect() {
-        if (!allowAutoConnect) {
+        if (!allowAutoConnect.get()) {
             return; // 销毁后,禁止重连
         }
         ChannelFuture future = this.connect();
@@ -60,7 +61,7 @@ public class RpcAutoReconnectClient extends RpcDefaultClient {
 
     @Override
     public void closeChannel() {
-        this.allowAutoConnect = false; // 不允许重连
+        this.allowAutoConnect.getAndSet(false);
         if (channel != null) {
             channel.close();
         }
