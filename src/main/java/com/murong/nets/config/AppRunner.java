@@ -41,6 +41,9 @@ public class AppRunner implements ApplicationRunner {
                 nodeVo.setPort(Integer.parseInt(split[1]));
                 nodeVo.setHost(split[0]);
                 nodeVo.setName(MD5Util.getMD5(ipPort).substring(0, 8));
+                if (nodeVo.getName().equals(nodeConfig.getLocalNodeName())) {// 本地节点是中心节点
+                    nodeVo.setStartTime(nodeConfig.getStartTime());
+                }
                 EnvConfig.addCenterNode(nodeVo);
             }
         }

@@ -261,10 +261,10 @@ public class NodeService {
      * 尝试建立center链接
      */
     public void acceptCenter() {
-        List<NodeVo> nodeVos = EnvConfig.getCenterNodes();
-        if (!CollectionUtils.isEmpty(nodeVos)) {
-            for (NodeVo nodeVo : nodeVos) {
-                ThreadUtil.execSilentException(() -> ClientSitePool.accept(nodeVo), e -> logger.error("acceptCenter", e));
+        List<NodeVo> centorNodes = EnvConfig.getCenterNodes();
+        if (!CollectionUtils.isEmpty(centorNodes)) {
+            for (NodeVo centerNode : centorNodes) {
+                ThreadUtil.execSilentException(() -> ClientSitePool.accept(centerNode), e -> logger.error("acceptCenter", e));
             }
         }
     }
