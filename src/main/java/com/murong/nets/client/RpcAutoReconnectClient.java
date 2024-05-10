@@ -20,7 +20,7 @@ public class RpcAutoReconnectClient extends RpcDefaultClient {
     /**
      * 是否允许自动重连
      */
-    private boolean allowAutoConnect = true;
+    private volatile boolean allowAutoConnect = true;
 
     public RpcAutoReconnectClient(String host, int port, NioEventLoopGroup nioEventLoopGroup) {
         super(host, port, nioEventLoopGroup);
