@@ -23,6 +23,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -195,4 +196,36 @@ public class ClientSitePool {
         throw new RpcException("getCenterClient: 未获取到中心链接");
     }
 
+    /**
+     * 关闭连接
+     *
+     * @param nodeName 指向节点的连接
+     * @return boolean
+     */
+    public static boolean closeConnect(String nodeName) {
+        KeyValue<List<RpcAutoReconnectClient>, RpcHeartClient, NodeVo> remove = clientPool.remove(nodeName);
+        if (remove == null) {
+            return false;
+        }
+        List<RpcAutoReconnectClient> clients = remove.getKey();
+        for (RpcAutoReconnectClient client : clients) {
+            ThreadUtil.execSilentVoid(client::closeChannel);
+        }
+        RpcHeartClient value = remove.getValue();
+        ThreadUtil.execSilentVoid(value::closeChannel);
+        return true;
+    }
+
+    /**
+     * 清理所有链接
+     *
+     * @return boolean
+     */
+    public static boolean closeAllConnect() {
+        Set<String> nodeNames = clientPool.keySet();
+        for (String nodeName : nodeNames) {
+            closeConnect(nodeName);
+        }
+        return true;
+    }
 }

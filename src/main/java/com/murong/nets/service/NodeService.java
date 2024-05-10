@@ -484,4 +484,35 @@ public class NodeService {
         RpcResponse rpcResponse = rpcFuture.get();
         return RpcResponseHandler.handler(rpcResponse, t -> JsonUtil.parseObject(t, OperateSystemVo.class));
     }
+
+    /**
+     * 关闭单向sourceNode的链接targetNode
+     *
+     * @param sourceNode 源节点
+     * @param targetNode 目标节点
+     * @return boolean
+     */
+    public Boolean nodeCloseConnect(String sourceNode, String targetNode) {
+        RpcAutoReconnectClient client = ClientSitePool.getOrConnectClient(sourceNode);
+        RpcRequest rpcRequest = new RpcRequest();
+        rpcRequest.setRequestType(RequestTypeEnmu.nodeCloseConnect.name());
+        rpcRequest.setBody(targetNode);
+        RpcFuture rpcFuture = client.sendSynMsg(rpcRequest);
+        RpcResponse rpcResponse = rpcFuture.get();
+        return RpcResponseHandler.handler(rpcResponse, Boolean::valueOf);
+    }
+
+    /**
+     * 节点清理所有链接
+     *
+     * @param nodeName 节点名
+     */
+    public Boolean nodeClearConnect(String nodeName) {
+        RpcAutoReconnectClient client = ClientSitePool.getOrConnectClient(nodeName);
+        RpcRequest rpcRequest = new RpcRequest();
+        rpcRequest.setRequestType(RequestTypeEnmu.nodeClearConnect.name());
+        RpcFuture rpcFuture = client.sendSynMsg(rpcRequest);
+        RpcResponse rpcResponse = rpcFuture.get();
+        return RpcResponseHandler.handler(rpcResponse, Boolean::valueOf);
+    }
 }

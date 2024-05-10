@@ -3,7 +3,9 @@ package com.murong.nets.controller;
 import com.murong.nets.config.EnvConfig;
 import com.murong.nets.input.ChHomeDirInput;
 import com.murong.nets.input.ChRateLimitInput;
+import com.murong.nets.input.ClearNodeConnectInput;
 import com.murong.nets.input.ClearOkFileInput;
+import com.murong.nets.input.ColseNodeConnectInput;
 import com.murong.nets.input.CpDirInput;
 import com.murong.nets.input.CpFileInput;
 import com.murong.nets.input.CpFileToDirInput;
@@ -49,6 +51,25 @@ public class NodeController {
     public ResultVo<List<NodeVo>> nodeList(String nodeName) {
         Assert.hasLength(nodeName, "节点名参数有误");
         return ResultVo.supplier(() -> nodeService.linkedList(nodeName));
+    }
+
+    /**
+     * 关闭连接的节点
+     */
+    @PostMapping("/node/close/connect")
+    public ResultVo<Boolean> nodeCloseConnect(@RequestBody ColseNodeConnectInput input) {
+        Assert.hasLength(input.getSourceNode(), "源节点名参数有误");
+        Assert.hasLength(input.getTargetNode(), "目标节点名参数有误");
+        return ResultVo.supplier(() -> nodeService.nodeCloseConnect(input.getSourceNode(), input.getTargetNode()));
+    }
+
+    /**
+     * 清理所有链接
+     */
+    @PostMapping("/node/close/all/connect")
+    public ResultVo<Boolean> nodeClearConnect(@RequestBody ClearNodeConnectInput input) {
+        Assert.hasLength(input.getNodeName(), "节点名参数有误");
+        return ResultVo.supplier(() -> nodeService.nodeClearConnect(input.getNodeName()));
     }
 
     /**

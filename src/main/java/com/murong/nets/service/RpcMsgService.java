@@ -392,4 +392,28 @@ public class RpcMsgService {
         RpcMsgTransUtil.write(ctx.channel(), rpcResponse);
     }
 
+    /**
+     * 单向清理两个节点间的连接
+     */
+    @RpcMethod("nodeCloseConnect")
+    public void nodeCloseConnect(ChannelHandlerContext ctx, RpcRequest request) {
+        String targetNodeName = request.getBody();
+        boolean result = ClientSitePool.closeConnect(targetNodeName);
+        RpcResponse rpcResponse = request.toResponse();
+        rpcResponse.setCode(CodeConfig.SUCCESS);
+        rpcResponse.setBody(String.valueOf(result));
+        RpcMsgTransUtil.write(ctx.channel(), rpcResponse);
+    }
+
+    /**
+     * 单向清理节点的所有对外的连接
+     */
+    @RpcMethod("nodeClearConnect")
+    public void nodeClearConnect(ChannelHandlerContext ctx, RpcRequest request) {
+        boolean result = ClientSitePool.closeAllConnect();
+        RpcResponse rpcResponse = request.toResponse();
+        rpcResponse.setCode(CodeConfig.SUCCESS);
+        rpcResponse.setBody(String.valueOf(result));
+        RpcMsgTransUtil.write(ctx.channel(), rpcResponse);
+    }
 }

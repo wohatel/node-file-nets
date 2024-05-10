@@ -118,5 +118,15 @@ public enum RequestTypeEnmu {
     /**
      * 获取操作系统信息
      */
-    operateSystemInfo;
+    operateSystemInfo,
+
+    /**
+     * 单向关闭两个节点间的连接
+     */
+    nodeCloseConnect,
+
+    /**
+     * 清理链接
+     */
+    nodeClearConnect;
 }
