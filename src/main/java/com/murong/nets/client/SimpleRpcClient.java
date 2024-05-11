@@ -2,6 +2,7 @@ package com.murong.nets.client;
 
 import com.murong.nets.client.handler.RpcClientRequestHandler;
 import com.murong.nets.client.handler.RpcMessageClientInteractionHandler;
+import com.murong.nets.constant.FileParamConstant;
 import com.murong.nets.interaction.*;
 import com.murong.nets.util.FileUtil;
 import com.murong.nets.util.RpcException;
@@ -82,7 +83,7 @@ public class SimpleRpcClient {
         if (!realFile.isFile()) {
             throw new RpcException("非文件传输,请检查");
         }
-        RpcMsgTransUtil.writeFile(channel, file, targetFile, 64 * 1024);
+        RpcMsgTransUtil.writeFile(channel, file, targetFile, FileParamConstant.READ_SIZE.intValue());
     }
 
     public void sendFile(String file, String targetFile, int buffer) throws IOException {

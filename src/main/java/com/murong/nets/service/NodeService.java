@@ -6,7 +6,9 @@ import com.murong.nets.client.RpcDefaultClient;
 import com.murong.nets.config.EnvConfig;
 import com.murong.nets.config.ExecutorPool;
 import com.murong.nets.config.NodeConfig;
+import com.murong.nets.constant.FileParamConstant;
 import com.murong.nets.constant.RequestTypeEnmu;
+import com.murong.nets.input.ReadFileInput;
 import com.murong.nets.input.RenameFileInput;
 import com.murong.nets.interaction.RpcFuture;
 import com.murong.nets.interaction.RpcRequest;
@@ -26,6 +28,7 @@ import com.murong.nets.vo.NodeVo;
 import com.murong.nets.vo.OperateSystemVo;
 import com.murong.nets.vo.ProcessActiveVo;
 import com.murong.nets.vo.RateLimitVo;
+import com.murong.nets.vo.ReadFileVo;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.slf4j.Logger;
@@ -132,7 +135,7 @@ public class NodeService {
             final String targetDirF = targetDir;
             ExecutorPool.getExecutorService().submit(() -> {
                 try {
-                    rpcDefaultClient.sendDir(sourceDirF, targetDirF, 64 * 1024);
+                    rpcDefaultClient.sendDir(sourceDirF, targetDirF, FileParamConstant.READ_SIZE.intValue());
                 } catch (Exception e) {
                     throw new RpcException(e);
                 }
@@ -534,5 +537,21 @@ public class NodeService {
         RpcFuture rpcFuture = client.sendSynMsg(rpcRequest);
         RpcResponse rpcResponse = rpcFuture.get();
         return RpcResponseHandler.handler(rpcResponse, t -> JsonUtil.parseArray(t, String.class));
+    }
+
+    /**
+     * 读取文件内容
+     *
+     * @param input 文件读取
+     * @return ReadFileVo
+     */
+    public ReadFileVo readFileContent(ReadFileInput input) {
+        RpcAutoReconnectClient client = ClientSitePool.getOrConnectClient(input.getNodeName());
+        RpcRequest rpcRequest = new RpcRequest();
+        rpcRequest.setRequestType(RequestTypeEnmu.readFileContent.name());
+        rpcRequest.setBody(JsonUtil.toJSONString(input));
+        RpcFuture rpcFuture = client.sendSynMsg(rpcRequest);
+        RpcResponse rpcResponse = rpcFuture.get();
+        return RpcResponseHandler.handler(rpcResponse, t -> JsonUtil.parseObject(t, ReadFileVo.class));
     }
 }

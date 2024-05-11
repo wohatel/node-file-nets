@@ -7,13 +7,16 @@ import com.murong.nets.client.RpcDefaultClient;
 import com.murong.nets.config.CodeConfig;
 import com.murong.nets.config.EnvConfig;
 import com.murong.nets.config.ExecutorPool;
+import com.murong.nets.constant.FileParamConstant;
 import com.murong.nets.constant.RequestTypeEnmu;
+import com.murong.nets.input.ReadFileInput;
 import com.murong.nets.input.RenameFileInput;
 import com.murong.nets.interaction.RpcMsgTransUtil;
 import com.murong.nets.interaction.RpcRequest;
 import com.murong.nets.interaction.RpcResponse;
 import com.murong.nets.util.FileUtil;
 import com.murong.nets.util.JsonUtil;
+import com.murong.nets.util.KeyValue;
 import com.murong.nets.util.OperationMsg;
 import com.murong.nets.util.RpcException;
 import com.murong.nets.util.RunTimeUtil;
@@ -22,7 +25,9 @@ import com.murong.nets.vo.EnvConfVo;
 import com.murong.nets.vo.FileVo;
 import com.murong.nets.vo.NodeVo;
 import com.murong.nets.vo.OperateSystemVo;
+import com.murong.nets.vo.ReadFileVo;
 import io.netty.channel.ChannelHandlerContext;
+import lombok.SneakyThrows;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -107,7 +112,7 @@ public class RpcMsgService {
         }
         ExecutorPool.getExecutorService().submit(() -> {
             try {
-                rpcDefaultClient.sendDir(bodyCmd.get(1), bodyCmd.get(2), 64 * 1024);
+                rpcDefaultClient.sendDir(bodyCmd.get(1), bodyCmd.get(2), FileParamConstant.READ_SIZE.intValue());
             } catch (Exception e) {
                 throw new RpcException(e);
             }
@@ -458,5 +463,33 @@ public class RpcMsgService {
         if (!isCenterNode) {
             System.exit(0);
         }
+    }
+
+
+    /**
+     * 读取文件内容
+     */
+    @SneakyThrows
+    @RpcMethod("readFileContent")
+    public void readFileContent(ChannelHandlerContext ctx, RpcRequest request) {
+        RpcResponse rpcResponse = request.toResponse();
+
+        ReadFileInput readFileInput = JsonUtil.parseObject(request.getBody(), ReadFileInput.class);
+        File file = new File(readFileInput.getFile());
+        ReadFileVo readFileVo = new ReadFileVo();
+        if (!file.exists()) {
+            readFileVo.setErrorMsg("文件不存在");
+            rpcResponse.setBody(JsonUtil.toJSONString(readFileVo));
+            RpcMsgTransUtil.write(ctx.channel(), rpcResponse);
+        } else {
+            KeyValue<byte[], Long, String> keyValue = FileUtil.readBytesFromPosition(file, readFileInput.getPosition(), readFileInput.getReadSize());
+            long next = readFileInput.getPosition() + keyValue.getKey().length;
+            readFileVo.setContent(new String(keyValue.getKey()));
+            readFileVo.setTotalByteSize(keyValue.getValue());
+            readFileVo.setNextPosition(next);
+            rpcResponse.setBody(JsonUtil.toJSONString(readFileVo));
+        }
+        rpcResponse.setCode(CodeConfig.SUCCESS);
+        RpcMsgTransUtil.write(ctx.channel(), rpcResponse);
     }
 }

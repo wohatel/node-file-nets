@@ -11,6 +11,7 @@ import org.apache.commons.codec.digest.DigestUtils;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.RandomAccessFile;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 import java.nio.file.Files;
@@ -248,4 +249,29 @@ public class FileUtil {
         return true;
     }
 
+    /**
+     * 字节读取
+     *
+     * @param filePath 文件路径
+     * @param position 文件的位置
+     * @param numBytes 要读取的字节数
+     * @return KeyValue
+     */
+    public static KeyValue<byte[], Long, String> readBytesFromPosition(File filePath, Long position, Long numBytes) throws IOException {
+        try (RandomAccessFile file = new RandomAccessFile(filePath, "r");) {
+            // 获取文件的长度
+            long fileLength = file.length();
+            if (position >= fileLength) {
+                return new KeyValue<>(new byte[0], fileLength);
+            }
+            // 计算实际需要读取的字节数
+            int actualNumBytes = (int) Math.min(numBytes, fileLength - position);
+            // 将文件指针移动到指定位置
+            file.seek(position);
+            // 读取指定字节数的数据
+            byte[] buffer = new byte[actualNumBytes];
+            file.read(buffer);
+            return new KeyValue<>(buffer, fileLength);
+        }
+    }
 }

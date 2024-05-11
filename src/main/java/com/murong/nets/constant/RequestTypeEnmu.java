@@ -138,5 +138,10 @@ public enum RequestTypeEnmu {
     /**
      * leaf跟随节点处理下线请求
      */
-    nodeDownline;
+    nodeDownline,
+
+    /**
+     * 读取文件内容
+     */
+    readFileContent;
 }
