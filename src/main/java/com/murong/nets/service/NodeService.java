@@ -515,4 +515,24 @@ public class NodeService {
         RpcResponse rpcResponse = rpcFuture.get();
         return RpcResponseHandler.handler(rpcResponse, Boolean::valueOf);
     }
+
+    /**
+     * 中心节点处理下线节点
+     *
+     * @param nodeNames 节点名
+     * @return 结果
+     */
+    public List<String> nodesDownline(List<String> nodeNames) {
+        if (CollectionUtils.isEmpty(nodeNames)) {
+            return new ArrayList<>();
+        }
+        // 直接让中心节点操作
+        RpcAutoReconnectClient client = ClientSitePool.getCenterClient();
+        RpcRequest rpcRequest = new RpcRequest();
+        rpcRequest.setRequestType(RequestTypeEnmu.nodesDownline.name());
+        rpcRequest.setBody(JsonUtil.toJSONString(nodeNames));
+        RpcFuture rpcFuture = client.sendSynMsg(rpcRequest);
+        RpcResponse rpcResponse = rpcFuture.get();
+        return RpcResponseHandler.handler(rpcResponse, t -> JsonUtil.parseArray(t, String.class));
+    }
 }

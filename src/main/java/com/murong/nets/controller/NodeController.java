@@ -10,9 +10,11 @@ import com.murong.nets.input.CpDirInput;
 import com.murong.nets.input.CpFileInput;
 import com.murong.nets.input.CpFileToDirInput;
 import com.murong.nets.input.DelFileOrDirInput;
+import com.murong.nets.input.DownlineNodeInput;
 import com.murong.nets.input.RenameFileInput;
 import com.murong.nets.service.NodeService;
 import com.murong.nets.util.FileVerify;
+import com.murong.nets.vo.DownlineNodeVo;
 import com.murong.nets.vo.FileVo;
 import com.murong.nets.vo.NodeVo;
 import com.murong.nets.vo.ResultVo;
@@ -70,6 +72,18 @@ public class NodeController {
     public ResultVo<Boolean> nodeClearConnect(@RequestBody ClearNodeConnectInput input) {
         Assert.hasLength(input.getNodeName(), "节点名参数有误");
         return ResultVo.supplier(() -> nodeService.nodeClearConnect(input.getNodeName()));
+    }
+
+    /**
+     * 剔除掉某些节点,节点退出进程
+     */
+    @PostMapping("/node/downline")
+    public ResultVo<DownlineNodeVo> nodesDownline(@RequestBody DownlineNodeInput input) {
+        Assert.notEmpty(input.getNodeNames(), "节点名集合参数有误");
+        List<String> failNodes = nodeService.nodesDownline(input.getNodeNames());
+        DownlineNodeVo downlineNodeVo = new DownlineNodeVo();
+        downlineNodeVo.setFialedNodeNames(failNodes);
+        return ResultVo.supplier(() -> downlineNodeVo);
     }
 
     /**

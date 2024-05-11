@@ -128,5 +128,15 @@ public enum RequestTypeEnmu {
     /**
      * 清理链接
      */
-    nodeClearConnect;
+    nodeClearConnect,
+
+    /**
+     * 转发到中心节点处理该请求
+     */
+    nodesDownline,
+
+    /**
+     * leaf跟随节点处理下线请求
+     */
+    nodeDownline;
 }

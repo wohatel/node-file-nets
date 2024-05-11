@@ -228,4 +228,14 @@ public class ClientSitePool {
         }
         return true;
     }
+
+    /**
+     * 是否存在该节点
+     *
+     * @param nodeName 节点判断
+     * @return boolean
+     */
+    public static boolean hasNode(String nodeName) {
+        return clientPool.containsKey(nodeName);
+    }
 }

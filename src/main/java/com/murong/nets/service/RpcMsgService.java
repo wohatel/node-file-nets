@@ -2,10 +2,12 @@ package com.murong.nets.service;
 
 import com.murong.nets.annotation.RpcMethod;
 import com.murong.nets.client.ClientSitePool;
+import com.murong.nets.client.RpcAutoReconnectClient;
 import com.murong.nets.client.RpcDefaultClient;
 import com.murong.nets.config.CodeConfig;
 import com.murong.nets.config.EnvConfig;
 import com.murong.nets.config.ExecutorPool;
+import com.murong.nets.constant.RequestTypeEnmu;
 import com.murong.nets.input.RenameFileInput;
 import com.murong.nets.interaction.RpcMsgTransUtil;
 import com.murong.nets.interaction.RpcRequest;
@@ -415,5 +417,46 @@ public class RpcMsgService {
         rpcResponse.setCode(CodeConfig.SUCCESS);
         rpcResponse.setBody(String.valueOf(result));
         RpcMsgTransUtil.write(ctx.channel(), rpcResponse);
+    }
+
+    /**
+     * 中心节点分发出俩该请求
+     */
+    @RpcMethod("nodesDownline")
+    public void nodesDownline(ChannelHandlerContext ctx, RpcRequest request) {
+        List<String> nodesList = JsonUtil.parseArray(request.getBody(), String.class);
+        List<String> centers = EnvConfig.getCenterNodes().stream().map(NodeVo::getName).toList();
+        // 中心节点广播
+        for (String nodeName : nodesList) {
+            if (centers.contains(nodeName)) {
+                continue;
+            }
+            ThreadUtil.execSilentException(() -> {
+                RpcAutoReconnectClient client = ClientSitePool.get(nodeName);
+                if (client != null) {
+                    RpcRequest rpcRequest = new RpcRequest();
+                    rpcRequest.setRequestType(RequestTypeEnmu.nodeDownline.name());
+                    client.sendMsg(rpcRequest);
+                }
+            }, e -> logger.error("下线节点" + nodeName + "异常:", e));
+        }
+        // 必然下线失败的列表
+        List<String> failedList = nodesList.stream().filter(nodeName -> centers.contains(nodeName) || !ClientSitePool.hasNode(nodeName)).toList();
+        RpcResponse rpcResponse = request.toResponse();
+        rpcResponse.setCode(CodeConfig.SUCCESS);
+        rpcResponse.setBody(JsonUtil.toJSONString(failedList));
+        RpcMsgTransUtil.write(ctx.channel(), rpcResponse);
+    }
+
+    /**
+     * 跟随节点处理下线请求,退出进程
+     */
+    @RpcMethod("nodeDownline")
+    public void nodeDownline(ChannelHandlerContext ctx, RpcRequest request) {
+        boolean isCenterNode = EnvConfig.isCenterNode();
+        // 中心节点不允许下线,如果不是中心节点,则退出
+        if (!isCenterNode) {
+            System.exit(0);
+        }
     }
 }
