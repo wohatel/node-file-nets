@@ -17,4 +17,6 @@ public class EnvConfVo {
     private DirsVo dirsVo;
 
     private List<NodeVo> nodeVoList;
+
+    private AuthenticationVo authenticationVo;
 }

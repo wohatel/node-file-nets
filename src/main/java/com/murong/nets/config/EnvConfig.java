@@ -1,5 +1,6 @@
 package com.murong.nets.config;
 
+import com.murong.nets.vo.AuthenticationVo;
 import com.murong.nets.vo.DirsVo;
 import com.murong.nets.vo.NodeVo;
 import com.murong.nets.vo.RateLimitVo;
@@ -27,7 +28,15 @@ public class EnvConfig {
     @Getter
     private static final RateLimitVo rateLimitVo = new RateLimitVo();
 
+    /**
+     * 集群的认证
+     */
+    @Getter
+    private static final AuthenticationVo authenticationVo = new AuthenticationVo();
 
+    /**
+     * 中心节点
+     */
     @Getter
     private static final List<NodeVo> centerNodes = new ArrayList<>();
 
