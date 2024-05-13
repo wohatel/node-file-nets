@@ -18,12 +18,12 @@ public class RateLimiter {
     /**
      * 开始记录
      */
-    private KeyValue<Long, Long, Long> firstRecord = new KeyValue<>(0L, System.currentTimeMillis());
+    private KeyValueData<Long, Long, Long> firstRecord = new KeyValueData<>(0L, System.currentTimeMillis());
 
     /**
      * 第二记录
      */
-    private KeyValue<Long, Long, Long> secondRecord = new KeyValue<>(0L, System.currentTimeMillis());
+    private KeyValueData<Long, Long, Long> secondRecord = new KeyValueData<>(0L, System.currentTimeMillis());
 
     /**
      * 已经发送的字节

@@ -20,11 +20,13 @@ import com.murong.nets.vo.NodeVo;
 import com.murong.nets.vo.ResultVo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.util.Assert;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.constraints.NotBlank;
 import java.util.List;
 
 
@@ -34,6 +36,7 @@ import java.util.List;
  */
 @RestController
 @RequiredArgsConstructor
+@Validated
 public class NodeController {
 
     private final NodeService nodeService;
@@ -50,8 +53,7 @@ public class NodeController {
      * 查询节点连接情况
      */
     @GetMapping("/node/linkedList")
-    public ResultVo<List<NodeVo>> nodeList(String nodeName) {
-        Assert.hasLength(nodeName, "节点名参数有误");
+    public ResultVo<List<NodeVo>> nodeList(@NotBlank String nodeName) {
         return ResultVo.supplier(() -> nodeService.linkedList(nodeName));
     }
 
@@ -59,9 +61,7 @@ public class NodeController {
      * 关闭连接的节点
      */
     @PostMapping("/node/close/connect")
-    public ResultVo<Boolean> nodeCloseConnect(@RequestBody ColseNodeConnectInput input) {
-        Assert.hasLength(input.getSourceNode(), "源节点名参数有误");
-        Assert.hasLength(input.getTargetNode(), "目标节点名参数有误");
+    public ResultVo<Boolean> nodeCloseConnect(@RequestBody @Validated ColseNodeConnectInput input) {
         return ResultVo.supplier(() -> nodeService.nodeCloseConnect(input.getSourceNode(), input.getTargetNode()));
     }
 
@@ -69,7 +69,7 @@ public class NodeController {
      * 清理所有链接
      */
     @PostMapping("/node/close/all/connect")
-    public ResultVo<Boolean> nodeClearConnect(@RequestBody ClearNodeConnectInput input) {
+    public ResultVo<Boolean> nodeClearConnect(@RequestBody @Validated ClearNodeConnectInput input) {
         Assert.hasLength(input.getNodeName(), "节点名参数有误");
         return ResultVo.supplier(() -> nodeService.nodeClearConnect(input.getNodeName()));
     }
@@ -78,8 +78,7 @@ public class NodeController {
      * 剔除掉某些节点,节点退出进程
      */
     @PostMapping("/node/downline")
-    public ResultVo<DownlineNodeVo> nodesDownline(@RequestBody DownlineNodeInput input) {
-        Assert.notEmpty(input.getNodeNames(), "节点名集合参数有误");
+    public ResultVo<DownlineNodeVo> nodesDownline(@RequestBody @Validated DownlineNodeInput input) {
         List<String> failNodes = nodeService.nodesDownline(input.getNodeNames());
         DownlineNodeVo downlineNodeVo = new DownlineNodeVo();
         downlineNodeVo.setFialedNodeNames(failNodes);
@@ -90,7 +89,7 @@ public class NodeController {
      * 节点cp文件内容
      */
     @PostMapping("/node/cpFile")
-    public ResultVo<Boolean> cpFile(@RequestBody CpFileInput input) {
+    public ResultVo<Boolean> cpFile(@RequestBody @Validated CpFileInput input) {
         Assert.isTrue(EnvConfig.isFilePathOk(input.getTargetFile()), "目标文件没有匹配工作目录");
         return ResultVo.supplier(() -> nodeService.cpFile(input.getSourceNode(), input.getTargetNode(), input.getSourceFile(), input.getTargetFile()));
     }
@@ -99,8 +98,8 @@ public class NodeController {
      * 节点cp文件内容
      */
     @PostMapping("/node/renameFile")
-    public ResultVo<Boolean> renameFile(@RequestBody RenameFileInput input) {
-        Assert.isTrue(EnvConfig.isFilePathOk(input.getNewName()), "新文件名不能为空");
+    public ResultVo<Boolean> renameFile(@RequestBody @Validated RenameFileInput input) {
+        Assert.isTrue(EnvConfig.isFilePathOk(input.getNewName()), "目标文件没有匹配工作目录");
         Assert.isTrue(FileVerify.isFileNameOk(input.getNewName()), "新文件名不能包含特殊字符");
         Assert.isTrue(!input.getNewName().contains("/"), "新文件名不能包含'/'等路径符号");
         return ResultVo.supplier(() -> nodeService.renameFile(input.getNodeName(), input.getFile(), input.getNewName()));
@@ -111,9 +110,8 @@ public class NodeController {
      * 文件如果正被其他线程写操作,会返回false
      */
     @GetMapping("/node/file/isFree")
-    public ResultVo<Boolean> operabitilyCheck(String nodeName, String file) {
-        Assert.isTrue(EnvConfig.isFilePathOk(file), "文件名不能为空");
-        Assert.hasLength(nodeName, "节点名参数有误");
+    public ResultVo<Boolean> operabitilyCheck(@NotBlank String nodeName, @NotBlank String file) {
+        Assert.isTrue(EnvConfig.isFilePathOk(file), "目标文件没有匹配工作目录");
         return ResultVo.supplier(() -> nodeService.operabitilyCheck(nodeName, file));
     }
 
@@ -121,8 +119,7 @@ public class NodeController {
      * 递归清空文件夹下 .ok结尾的文件
      */
     @PostMapping("/node/file/clearOk")
-    public ResultVo<Boolean> clearOk(@RequestBody ClearOkFileInput input) {
-        Assert.hasLength(input.getNodeName(), "节点名参数有误");
+    public ResultVo<Boolean> clearOk(@RequestBody @Validated ClearOkFileInput input) {
         Assert.isTrue(EnvConfig.isFilePathOk(input.getFile()), "目标文件或文件夹没有匹配工作目录");
         return ResultVo.supplier(() -> nodeService.clearOk(input.getNodeName(), input.getFile()));
     }
@@ -131,7 +128,7 @@ public class NodeController {
      * 节点cp文件到目录
      */
     @PostMapping("/node/cpFileToDir")
-    public ResultVo<Boolean> cpFileToDir(@RequestBody CpFileToDirInput input) {
+    public ResultVo<Boolean> cpFileToDir(@RequestBody @Validated CpFileToDirInput input) {
         String targetDir = input.getTargetDir();
         String sourceFile = input.getSourceFile();
         String sourceNode = input.getSourceNode();
@@ -147,7 +144,7 @@ public class NodeController {
      * 节点cp文件内容
      */
     @PostMapping("/node/cpDir")
-    public ResultVo<Boolean> cpDir(@RequestBody CpDirInput input) {
+    public ResultVo<Boolean> cpDir(@RequestBody @Validated CpDirInput input) {
         Assert.isTrue(EnvConfig.isFilePathOk(input.getTargetDir()), "目标文件夹没有匹配工作目录");
         return ResultVo.supplier(() -> nodeService.cpDir(input.getSourceNode(), input.getTargetNode(), input.getSourceDir(), input.getTargetDir()));
     }
@@ -156,9 +153,7 @@ public class NodeController {
      * 查询文件描述信息
      */
     @GetMapping("/node/fileInfo")
-    public ResultVo<FileVo> fileInfo(String nodeName, String file) {
-        Assert.hasLength(file, "文件路径参数错误");
-        Assert.hasLength(nodeName, "节点名参数有误");
+    public ResultVo<FileVo> fileInfo(@NotBlank String nodeName, @NotBlank String file) {
         return ResultVo.supplier(() -> nodeService.fileInfo(nodeName, file));
     }
 
@@ -166,9 +161,7 @@ public class NodeController {
      * 目录下所有文件
      */
     @GetMapping("/node/filesOfDir")
-    public ResultVo<List<FileVo>> filesOfDir(String nodeName, String dir) {
-        Assert.hasLength(dir, "文件夹路径参数错误");
-        Assert.hasLength(nodeName, "节点名参数有误");
+    public ResultVo<List<FileVo>> filesOfDir(@NotBlank String nodeName, @NotBlank String dir) {
         Assert.isTrue(EnvConfig.isFilePathOk(dir), "目标文件夹没有匹配工作目录");
         return ResultVo.supplier(() -> nodeService.filesOfDir(nodeName, dir));
     }
@@ -177,9 +170,7 @@ public class NodeController {
      * 删除文件或目录
      */
     @PostMapping("/node/fileDelete")
-    public ResultVo<Boolean> fileDelete(@RequestBody DelFileOrDirInput input) {
-        Assert.hasLength(input.getFileOrDir(), "文件路径参数错误");
-        Assert.hasLength(input.getNodeName(), "节点名参数有误");
+    public ResultVo<Boolean> fileDelete(@RequestBody @Validated DelFileOrDirInput input) {
         return ResultVo.supplier(() -> nodeService.fileDelete(input.getNodeName(), input.getFileOrDir()));
     }
 
@@ -187,7 +178,7 @@ public class NodeController {
      * 变更工作目录
      */
     @PostMapping("/node/chHomeDirs")
-    public ResultVo<Boolean> chHomeDirs(@RequestBody ChHomeDirInput input) {
+    public ResultVo<Boolean> chHomeDirs(@RequestBody @Validated ChHomeDirInput input) {
         return ResultVo.supplier(() -> nodeService.chHomeDirs(input.getHomeDirs()));
     }
 
@@ -204,7 +195,7 @@ public class NodeController {
      * 单位kb
      */
     @PostMapping("/node/chRateLimit")
-    public ResultVo<Boolean> chRateLimit(@RequestBody ChRateLimitInput input) {
+    public ResultVo<Boolean> chRateLimit(@RequestBody @Validated ChRateLimitInput input) {
         return ResultVo.supplier(() -> nodeService.chRateLimit(input.getRateLimit()));
     }
 

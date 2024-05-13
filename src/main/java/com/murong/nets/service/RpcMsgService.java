@@ -16,7 +16,7 @@ import com.murong.nets.interaction.RpcRequest;
 import com.murong.nets.interaction.RpcResponse;
 import com.murong.nets.util.FileUtil;
 import com.murong.nets.util.JsonUtil;
-import com.murong.nets.util.KeyValue;
+import com.murong.nets.util.KeyValueData;
 import com.murong.nets.util.OperationMsg;
 import com.murong.nets.util.RpcException;
 import com.murong.nets.util.RunTimeUtil;
@@ -473,7 +473,6 @@ public class RpcMsgService {
     @RpcMethod("readFileContent")
     public void readFileContent(ChannelHandlerContext ctx, RpcRequest request) {
         RpcResponse rpcResponse = request.toResponse();
-
         ReadFileInput readFileInput = JsonUtil.parseObject(request.getBody(), ReadFileInput.class);
         File file = new File(readFileInput.getFile());
         ReadFileVo readFileVo = new ReadFileVo();
@@ -482,11 +481,10 @@ public class RpcMsgService {
             rpcResponse.setBody(JsonUtil.toJSONString(readFileVo));
             RpcMsgTransUtil.write(ctx.channel(), rpcResponse);
         } else {
-            KeyValue<byte[], Long, String> keyValue = FileUtil.readBytesFromPosition(file, readFileInput.getPosition(), readFileInput.getReadSize());
-            long next = readFileInput.getPosition() + keyValue.getKey().length;
-            readFileVo.setContent(new String(keyValue.getKey()));
+            KeyValueData<Long, Long, String> keyValue = FileUtil.readBytesFromPosition(file, readFileInput.getPosition(), readFileInput.getReadCharSize());
+            readFileVo.setContent(keyValue.getData());
             readFileVo.setTotalByteSize(keyValue.getValue());
-            readFileVo.setNextPosition(next);
+            readFileVo.setNextPosition(keyValue.getValue());
             rpcResponse.setBody(JsonUtil.toJSONString(readFileVo));
         }
         rpcResponse.setCode(CodeConfig.SUCCESS);

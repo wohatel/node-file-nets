@@ -78,12 +78,12 @@ public final class ThreadUtil {
      *
      * @param supplier
      */
-    public static <T> T execSilentExceptionToNull(Supplier<T> supplier) {
+    public static <T> T execSilentExceptionTo(Supplier<T> supplier, T result) {
         try {
             return supplier.get();
         } catch (Exception e) {
         }
-        return null;
+        return result;
     }
 
     /**

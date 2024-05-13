@@ -28,7 +28,7 @@ public class FileUtil {
      * 文件处理
      * node2 keyValue: 1文件传输的大小, FileChannel 文件打开的通道, Long当前时间
      */
-    private static Map<String, KeyValue<AtomicLong, FileChannel, Long>> channelMap = new ConcurrentHashMap<>();
+    private static Map<String, KeyValueData<AtomicLong, FileChannel, Long>> channelMap = new ConcurrentHashMap<>();
 
     /**
      * 默认处于关闭中,上下文可见
@@ -82,7 +82,7 @@ public class FileUtil {
     public static boolean appendFile(RpcFileRequest rpcFileRequest) throws IOException {
         // 说明是首次上传,则应该是先删除
         boolean contains = channelMap.containsKey(rpcFileRequest.getHash());
-        KeyValue<AtomicLong, FileChannel, Long> keyValue = null;
+        KeyValueData<AtomicLong, FileChannel, Long> keyValue = null;
         if (contains) {
             keyValue = channelMap.get(rpcFileRequest.getHash());
             keyValue.setData(System.currentTimeMillis()); // 设置时间
@@ -93,7 +93,7 @@ public class FileUtil {
             reCreateFile(rpcFileRequest.getTargetFilePath());
             // 尝试创建父目录
             FileChannel fileChannel = FileChannel.open(Paths.get(rpcFileRequest.getTargetFilePath()), StandardOpenOption.CREATE, StandardOpenOption.WRITE, StandardOpenOption.APPEND);
-            keyValue = new KeyValue<>(new AtomicLong(rpcFileRequest.getBytes().length), fileChannel, System.currentTimeMillis(), rpcFileRequest.getTargetFilePath());
+            keyValue = new KeyValueData<>(new AtomicLong(rpcFileRequest.getBytes().length), fileChannel, System.currentTimeMillis(), rpcFileRequest.getTargetFilePath());
             channelMap.put(rpcFileRequest.getHash(), keyValue);
         }
         FileChannel fileChannel = keyValue.getValue();
@@ -143,10 +143,10 @@ public class FileUtil {
             clearing = true; // 占位
             try {
                 TimeUtil.execDapByFunction(() -> {
-                    Iterator<Map.Entry<String, KeyValue<AtomicLong, FileChannel, Long>>> iterator = channelMap.entrySet().iterator();
+                    Iterator<Map.Entry<String, KeyValueData<AtomicLong, FileChannel, Long>>> iterator = channelMap.entrySet().iterator();
                     while (iterator.hasNext()) {
-                        Map.Entry<String, KeyValue<AtomicLong, FileChannel, Long>> next = iterator.next();
-                        KeyValue<AtomicLong, FileChannel, Long> value = next.getValue();
+                        Map.Entry<String, KeyValueData<AtomicLong, FileChannel, Long>> next = iterator.next();
+                        KeyValueData<AtomicLong, FileChannel, Long> value = next.getValue();
                         Long time = value.getData();
                         long current = System.currentTimeMillis();
                         if (current - time > 20 * 1000) { // 如果超过20s的时间没有活动,则认为文件已处理完成
@@ -173,7 +173,7 @@ public class FileUtil {
      * @param fileHash 文件hash
      */
     public static void release(String fileHash) {
-        KeyValue<AtomicLong, FileChannel, Long> keyValue = channelMap.remove(fileHash);
+        KeyValueData<AtomicLong, FileChannel, Long> keyValue = channelMap.remove(fileHash);
         if (keyValue == null) {
             return;
         }
@@ -254,24 +254,31 @@ public class FileUtil {
      *
      * @param filePath 文件路径
      * @param position 文件的位置
-     * @param numBytes 要读取的字节数
-     * @return KeyValue
+     * @param charSize 要读取的字符数
+     * @return KeyValue(文件总的大小, 文件下次读取文职, 字符集)
      */
-    public static KeyValue<byte[], Long, String> readBytesFromPosition(File filePath, Long position, Long numBytes) throws IOException {
+    public static KeyValueData<Long, Long, String> readBytesFromPosition(File filePath, Long position, Integer charSize) throws IOException {
+        int maxBytes = charSize * 4;
         try (RandomAccessFile file = new RandomAccessFile(filePath, "r");) {
             // 获取文件的长度
             long fileLength = file.length();
             if (position >= fileLength) {
-                return new KeyValue<>(new byte[0], fileLength);
+                return new KeyValueData<>(fileLength, fileLength, "");
             }
             // 计算实际需要读取的字节数
-            int actualNumBytes = (int) Math.min(numBytes, fileLength - position);
+            int actualNumBytes = (int) Math.min(maxBytes, fileLength - position);
             // 将文件指针移动到指定位置
             file.seek(position);
             // 读取指定字节数的数据
             byte[] buffer = new byte[actualNumBytes];
             file.read(buffer);
-            return new KeyValue<>(buffer, fileLength);
+            String content = new String(buffer);
+            if (content.length() >= charSize) {
+                String realContent = content.substring(0, charSize);
+                return new KeyValueData<>(fileLength, position + realContent.getBytes().length, realContent);
+            }
+            // 如果读取到的内容比预想中的小,说明去读完毕
+            return new KeyValueData<>(fileLength, fileLength, content);
         }
     }
 }

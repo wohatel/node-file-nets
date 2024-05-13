@@ -6,7 +6,7 @@ import com.murong.nets.interaction.RpcFuture;
 import com.murong.nets.interaction.RpcRequest;
 import com.murong.nets.interaction.RpcResponse;
 import com.murong.nets.util.JsonUtil;
-import com.murong.nets.util.KeyValue;
+import com.murong.nets.util.KeyValueData;
 import com.murong.nets.util.RpcException;
 import com.murong.nets.util.SecureRandomUtil;
 import com.murong.nets.util.ThreadUtil;
@@ -49,7 +49,7 @@ public class ClientSitePool {
      * 第二个long表示连接建立的时间
      * 第三个long表示最后一次使用时间
      */
-    private static final Map<String, KeyValue<List<RpcAutoReconnectClient>, RpcHeartClient, NodeVo>> clientPool = new ConcurrentHashMap<>();
+    private static final Map<String, KeyValueData<List<RpcAutoReconnectClient>, RpcHeartClient, NodeVo>> clientPool = new ConcurrentHashMap<>();
 
     /**
      * 接收配置
@@ -63,7 +63,7 @@ public class ClientSitePool {
             return;
         }
         List<RpcAutoReconnectClient> list = new ArrayList<>();
-        KeyValue<List<RpcAutoReconnectClient>, RpcHeartClient, NodeVo> clients = new KeyValue<>();
+        KeyValueData<List<RpcAutoReconnectClient>, RpcHeartClient, NodeVo> clients = new KeyValueData<>();
         for (int i = 0; i < poolSize; i++) {
             RpcAutoReconnectClient client = new RpcAutoReconnectClient(nodeVo.getHost(), nodeVo.getPort(), NIO_EVENT_LOOP_GROUP);
             client.reConnect();
@@ -84,7 +84,7 @@ public class ClientSitePool {
      * 销毁连接
      */
     public static void destory(String nodeName) {
-        KeyValue<List<RpcAutoReconnectClient>, RpcHeartClient, NodeVo> remove = clientPool.remove(nodeName);
+        KeyValueData<List<RpcAutoReconnectClient>, RpcHeartClient, NodeVo> remove = clientPool.remove(nodeName);
         if (remove == null) {
             return;
         }
@@ -98,11 +98,11 @@ public class ClientSitePool {
      * 检测连接是否可用个,不可用将予以清除
      */
     public static void monitorAndDestory() {
-        Iterator<Map.Entry<String, KeyValue<List<RpcAutoReconnectClient>, RpcHeartClient, NodeVo>>> iterator = clientPool.entrySet().iterator();
+        Iterator<Map.Entry<String, KeyValueData<List<RpcAutoReconnectClient>, RpcHeartClient, NodeVo>>> iterator = clientPool.entrySet().iterator();
         while (iterator.hasNext()) {
             ThreadUtil.execSilentVoid(() -> {
-                Map.Entry<String, KeyValue<List<RpcAutoReconnectClient>, RpcHeartClient, NodeVo>> next = iterator.next();
-                KeyValue<List<RpcAutoReconnectClient>, RpcHeartClient, NodeVo> value = next.getValue();
+                Map.Entry<String, KeyValueData<List<RpcAutoReconnectClient>, RpcHeartClient, NodeVo>> next = iterator.next();
+                KeyValueData<List<RpcAutoReconnectClient>, RpcHeartClient, NodeVo> value = next.getValue();
 
 
                 List<RpcAutoReconnectClient> clients = value.getKey();
@@ -123,7 +123,7 @@ public class ClientSitePool {
      * 根据名称获取连接
      */
     public static RpcAutoReconnectClient get(String nodeName) {
-        KeyValue<List<RpcAutoReconnectClient>, RpcHeartClient, NodeVo> kv = clientPool.get(nodeName);
+        KeyValueData<List<RpcAutoReconnectClient>, RpcHeartClient, NodeVo> kv = clientPool.get(nodeName);
         if (kv == null || CollectionUtils.isEmpty(kv.getKey())) {
             return null;
         }
@@ -203,7 +203,7 @@ public class ClientSitePool {
      * @return boolean
      */
     public static boolean closeConnect(String nodeName) {
-        KeyValue<List<RpcAutoReconnectClient>, RpcHeartClient, NodeVo> remove = clientPool.remove(nodeName);
+        KeyValueData<List<RpcAutoReconnectClient>, RpcHeartClient, NodeVo> remove = clientPool.remove(nodeName);
         if (remove == null) {
             return false;
         }

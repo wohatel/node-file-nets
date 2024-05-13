@@ -1,4 +1,5 @@
 package com.murong.nets.util;
+
 import org.springframework.util.CollectionUtils;
 
 import java.util.Arrays;
@@ -209,4 +210,5 @@ public class StringUtil {
         String regx = "^\\w+$";
         return verify(source, regx);
     }
+
 }
