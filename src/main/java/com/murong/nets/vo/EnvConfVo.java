@@ -15,6 +15,4 @@ public class EnvConfVo {
     private DirsVo dirsVo;
 
     private AuthenticationVo authenticationVo;
-
-    private boolean nodeServiceAvailable = true;
 }

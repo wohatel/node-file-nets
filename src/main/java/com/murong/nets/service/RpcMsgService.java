@@ -8,6 +8,7 @@ import com.murong.nets.config.CodeConfig;
 import com.murong.nets.config.EnvConfig;
 import com.murong.nets.config.ExecutorPool;
 import com.murong.nets.constant.FileParamConstant;
+import com.murong.nets.constant.NodeAvaiableType;
 import com.murong.nets.constant.RequestTypeEnmu;
 import com.murong.nets.input.ReadFileInput;
 import com.murong.nets.input.RenameFileInput;
@@ -155,14 +156,17 @@ public class RpcMsgService {
     @RpcMethod("getNode")
     public void getNode(ChannelHandlerContext ctx, RpcRequest request) {
         OperationMsg vo = new OperationMsg();
+        String nodeName = request.getBody();
         List<NodeVo> nodeVos = ClientSitePool.nodeList();
-        NodeVo nodeVo = nodeVos.stream().filter(t -> t.getName().equals(request.getBody())).findFirst().orElse(null);
+        NodeVo nodeVo = nodeVos.stream().filter(t -> t.getName().equals(nodeName)).findFirst().orElse(null);
         if (request.isNeedResponse()) {
             RpcResponse rpcResponse = request.toResponse();
             rpcResponse.setCode(vo.getCode());
             rpcResponse.setSuccess(vo.isOperateStatus());
             rpcResponse.setMsg(vo.getMsg());
             if (nodeVo != null) {
+                NodeAvaiableType nodeServiceAvailable = EnvConfig.isNodeServiceAvailable(nodeName);
+                nodeVo.setNodeAvaiable(nodeServiceAvailable == NodeAvaiableType.AVAIABLE);
                 rpcResponse.setBody(JsonUtil.toJSONString(nodeVo));
             }
             RpcMsgTransUtil.write(ctx.channel(), rpcResponse);

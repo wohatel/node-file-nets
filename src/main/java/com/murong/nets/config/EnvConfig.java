@@ -1,5 +1,7 @@
 package com.murong.nets.config;
 
+import com.murong.nets.client.ClientSitePool;
+import com.murong.nets.constant.NodeAvaiableType;
 import com.murong.nets.vo.AuthenticationVo;
 import com.murong.nets.vo.DirsVo;
 import com.murong.nets.vo.NodeVo;
@@ -10,8 +12,10 @@ import lombok.Setter;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.Map;
 
 /**
  * rpc的一些配置
@@ -35,12 +39,6 @@ public class EnvConfig {
      */
     @Getter
     private static final AuthenticationVo authenticationVo = new AuthenticationVo();
-
-    /**
-     * 节点服务是否可用
-     */
-    @Getter
-    private static final AtomicBoolean serviceAvailable = new AtomicBoolean(true);
 
     /**
      * 中心节点
@@ -118,6 +116,13 @@ public class EnvConfig {
     }
 
     /**
+     * 判断是否是中心节点
+     */
+    public static boolean isCenterNode(String nodeName) {
+        return centerNodes.stream().anyMatch(t -> t.getName().equals(nodeName));
+    }
+
+    /**
      * 服务已过期
      */
     public static boolean isTokeExpired() {
@@ -129,15 +134,33 @@ public class EnvConfig {
     }
 
     /**
-     * 超出节点数
+     * 判断节点是否可用
+     *
+     * @param nodeName 节点判断
+     * @return boolean
      */
-    public static boolean isServiceAvailable() {
-
-        LocalDateTime expireTime = authenticationVo.getExpireTime();
-        if (LocalDateTime.now().isAfter(expireTime)) {
-            return true;
+    public static NodeAvaiableType isNodeServiceAvailable(String nodeName) {
+        if (!ClientSitePool.hasNode(nodeName)) {
+            return NodeAvaiableType.NO_CONNECT;
         }
-        return false;
+        if (isCenterNode(nodeName)) {
+            return NodeAvaiableType.AVAIABLE;
+        }
+        if (ClientSitePool.nodeList().size() <= authenticationVo.getNodeMax()) {
+            return NodeAvaiableType.AVAIABLE;
+        }
+        List<String> centerNodeNames = centerNodes.stream().map(NodeVo::getName).toList();
+        List<NodeVo> list = ClientSitePool.nodeList().stream().filter(t -> !centerNodeNames.contains(t.getName())).sorted(Comparator.comparing(NodeVo::getStartTime)).toList();
+        Map<String, Integer> map = new HashMap<>();
+        for (int i = 0; i < list.size(); i++) {
+            NodeVo nodeVo = list.get(i);
+            map.put(nodeVo.getName(), i);
+        }
+        Integer index = map.get(nodeName);
+        if (index > authenticationVo.getNodeMax()) {
+            return NodeAvaiableType.NOT_AVAIABLE;
+        }
+        return NodeAvaiableType.AVAIABLE;
     }
 
 }

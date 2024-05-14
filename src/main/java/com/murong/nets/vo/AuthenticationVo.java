@@ -3,6 +3,7 @@ package com.murong.nets.vo;
 import lombok.Data;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -31,5 +32,5 @@ public class AuthenticationVo extends AuthenAccessVo {
     /**
      * 中心节点
      */
-    private List<String> accessIps;
+    private List<String> accessHostPorts = new ArrayList<>();
 }

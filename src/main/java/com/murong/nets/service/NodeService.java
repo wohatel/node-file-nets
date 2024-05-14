@@ -14,6 +14,7 @@ import com.murong.nets.interaction.RpcFuture;
 import com.murong.nets.interaction.RpcRequest;
 import com.murong.nets.interaction.RpcResponse;
 import com.murong.nets.util.JsonUtil;
+import com.murong.nets.util.ListUtil;
 import com.murong.nets.util.RSAAlgorithmUtil;
 import com.murong.nets.util.RpcException;
 import com.murong.nets.util.RpcResponseHandler;
@@ -360,7 +361,7 @@ public class NodeService {
                                 authenticationVoConfig.setRefreshTime(refreshTime);
                                 authenticationVoConfig.setNodeMax(authenticationVo.getNodeMax());
                                 authenticationVoConfig.setExpireTime(authenticationVo.getExpireTime());
-                                authenticationVoConfig.setAccessIps(authenticationVo.getAccessIps());
+                                authenticationVoConfig.setAccessHostPorts(authenticationVo.getAccessHostPorts());
                                 authenticationVoConfig.setSignTime(authenticationVo.getSignTime());
 
                             }
@@ -412,11 +413,9 @@ public class NodeService {
                 authenticationVoConfig.setRefreshTime(refreshTime);
                 authenticationVoConfig.setNodeMax(authenticationVo.getNodeMax());
                 authenticationVoConfig.setExpireTime(authenticationVo.getExpireTime());
-                authenticationVoConfig.setAccessIps(authenticationVo.getAccessIps());
+                authenticationVoConfig.setAccessHostPorts(authenticationVo.getAccessHostPorts());
                 authenticationVoConfig.setSignTime(authenticationVo.getSignTime());
             }
-            // 节点是否可用
-            EnvConfig.getServiceAvailable().set(confVo.isNodeServiceAvailable());
         }
 
     }
@@ -606,6 +605,16 @@ public class NodeService {
     public boolean refreshToken(String accessToken) {
         String decrypt = RSAAlgorithmUtil.decrypt(accessToken);
         AuthenticationVo authenticationVo = JsonUtil.parseObject(decrypt, AuthenticationVo.class);
+
+        List<String> accessIps = authenticationVo.getAccessHostPorts();
+        List<NodeVo> centerNodes = EnvConfig.getCenterNodes();
+        List<String> centreIps = centerNodes.stream().map(n -> n.getHost() + ":" + n.getName()).collect(Collectors.toList());
+
+        List<String> retain = ListUtil.retain(accessIps, centreIps);
+        int needSize = centreIps.size() % 2 == 0 ? centreIps.size() / 2 : centreIps.size() / 2 + 1;
+        if (retain.size() < needSize) {
+            throw new RpcException("提供的token中心节点不匹配,至少提供" + needSize + "个中心节点ip配置");
+        }
         AuthenticationVo authenticationVoConfig = EnvConfig.getAuthenticationVo();
 
         LocalDateTime refreshTime = LocalDateTime.now();
@@ -613,7 +622,7 @@ public class NodeService {
         authenticationVoConfig.setRefreshTime(refreshTime);
         authenticationVoConfig.setNodeMax(authenticationVo.getNodeMax());
         authenticationVoConfig.setExpireTime(authenticationVo.getExpireTime());
-        authenticationVoConfig.setAccessIps(authenticationVo.getAccessIps());
+        authenticationVoConfig.setAccessHostPorts(authenticationVo.getAccessHostPorts());
         authenticationVoConfig.setSignTime(authenticationVo.getSignTime());
         return true;
     }

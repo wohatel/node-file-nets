@@ -162,13 +162,16 @@ public class ClientSitePool {
         RpcFuture rpcFuture = centerClient.sendSynMsg(request);
         RpcResponse rpcResponse = rpcFuture.get();
         if (rpcResponse == null) {
-            throw new RpcException("未查询到接目标:" + nodeName + " 节点信息");
+            throw new RpcException("未查询到链接目标:" + nodeName + " 节点信息");
         }
         String body = rpcResponse.getBody();
         NodeVo nodeVo = JsonUtil.parseObject(body, NodeVo.class);
-
         if (nodeVo == null) {
-            throw new RpcException("未查询到接目标:" + nodeName + " 节点信息");
+            throw new RpcException("未查询到链接目标:" + nodeName + " 节点信息");
+        }
+
+        if (!nodeVo.isNodeAvaiable()) {
+            throw new RpcException("链接目标:" + nodeName + " 节点不可用或超出认证节点数限制");
         }
 
         ClientSitePool.accept(nodeVo);
@@ -238,4 +241,5 @@ public class ClientSitePool {
     public static boolean hasNode(String nodeName) {
         return clientPool.containsKey(nodeName);
     }
+
 }

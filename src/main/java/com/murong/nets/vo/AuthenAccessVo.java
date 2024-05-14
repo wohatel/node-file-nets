@@ -23,4 +23,5 @@ public class AuthenAccessVo {
      * token刷新时间
      */
     private LocalDateTime refreshTime;
+
 }
