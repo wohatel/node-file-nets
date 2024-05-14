@@ -8,8 +8,10 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * rpc的一些配置
@@ -33,6 +35,12 @@ public class EnvConfig {
      */
     @Getter
     private static final AuthenticationVo authenticationVo = new AuthenticationVo();
+
+    /**
+     * 节点服务是否可用
+     */
+    @Getter
+    private static final AtomicBoolean serviceAvailable = new AtomicBoolean(true);
 
     /**
      * 中心节点
@@ -108,4 +116,28 @@ public class EnvConfig {
     public static boolean isCenterNode() {
         return centerNodes.stream().anyMatch(t -> t.getName().equals(localNodeName));
     }
+
+    /**
+     * 服务已过期
+     */
+    public static boolean isTokeExpired() {
+        LocalDateTime expireTime = authenticationVo.getExpireTime();
+        if (LocalDateTime.now().isAfter(expireTime)) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * 超出节点数
+     */
+    public static boolean isServiceAvailable() {
+
+        LocalDateTime expireTime = authenticationVo.getExpireTime();
+        if (LocalDateTime.now().isAfter(expireTime)) {
+            return true;
+        }
+        return false;
+    }
+
 }

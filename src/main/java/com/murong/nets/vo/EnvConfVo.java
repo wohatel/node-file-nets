@@ -2,8 +2,6 @@ package com.murong.nets.vo;
 
 import lombok.Data;
 
-import java.util.List;
-
 /**
  * description
  *
@@ -16,7 +14,7 @@ public class EnvConfVo {
 
     private DirsVo dirsVo;
 
-    private List<NodeVo> nodeVoList;
-
     private AuthenticationVo authenticationVo;
+
+    private boolean nodeServiceAvailable = true;
 }

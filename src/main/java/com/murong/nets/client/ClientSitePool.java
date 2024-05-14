@@ -186,8 +186,8 @@ public class ClientSitePool {
         List<NodeVo> nodeVos = EnvConfig.getCenterNodes();
         List<NodeVo> newList = new ArrayList<>(nodeVos);
         Collections.shuffle(newList);
-        for (int i = 0; i < newList.size(); i++) {
-            String centerNode = newList.get(0).getName();
+        for (NodeVo nodeVo : newList) {
+            String centerNode = nodeVo.getName();
             RpcAutoReconnectClient client = ClientSitePool.get(centerNode);
             if (client != null) {
                 return client;

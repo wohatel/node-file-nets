@@ -47,7 +47,6 @@ public class PoolManagerRunner implements ApplicationRunner {
                 TimeUtil.execDapByFunction(() -> false, 2000, 1);
                 log.info("中心节点间的节点配置信息同步...");
                 ThreadUtil.execSilentException(nodeService::syncCenterConf, e -> log.warning(e.getMessage()));
-
                 log.info("初始化完毕...");
                 return false;
             }, 15000);

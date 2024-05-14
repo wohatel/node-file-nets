@@ -415,6 +415,8 @@ public class NodeService {
                 authenticationVoConfig.setAccessIps(authenticationVo.getAccessIps());
                 authenticationVoConfig.setSignTime(authenticationVo.getSignTime());
             }
+            // 节点是否可用
+            EnvConfig.getServiceAvailable().set(confVo.isNodeServiceAvailable());
         }
 
     }
