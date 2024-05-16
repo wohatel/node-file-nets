@@ -53,7 +53,7 @@ public class Aspects {
             for (int i = 0; i < parameterNames.length; i++) {
                 paramMap.put(parameterNames[i], args[i]);
             }
-            log.info(clazzName + "." + methodName + "." + paramMap);
+            log.info("web请求:" + clazzName + "." + methodName + " 参数:" + paramMap);
         }
         return proceedingJoinPoint.proceed();
     }
