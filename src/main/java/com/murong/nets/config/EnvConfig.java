@@ -73,8 +73,8 @@ public class EnvConfig {
         }
         for (int i = 0; i < homeDirs.getDirs().size(); i++) {
             String dir = homeDirs.getDirs().get(i);
-            if (dir.endsWith("/")) {
-                dir = dir.substring(0, dir.length() - 1);
+            if (!dir.endsWith("/")) {
+                dir += "/";
             }
             boolean b = file.startsWith(dir);
             if (b) {

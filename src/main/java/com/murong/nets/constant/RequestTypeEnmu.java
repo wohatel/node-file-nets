@@ -143,5 +143,8 @@ public enum RequestTypeEnmu {
     /**
      * 读取文件内容
      */
-    readFileContent;
+    readFileContent,
+
+    execCommand
+    ;
 }

@@ -1,5 +1,6 @@
 package com.murong.nets.controller;
 
+import com.murong.nets.input.ExecCommandInput;
 import com.murong.nets.service.NodeService;
 import com.murong.nets.vo.CpuUsageVo;
 import com.murong.nets.vo.HardUsageVo;
@@ -10,6 +11,8 @@ import com.murong.nets.vo.ResultVo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -69,4 +72,11 @@ public class SystemController {
         return ResultVo.supplier(() -> nodeService.operateSystemInfo(nodeName));
     }
 
+    /**
+     * 执行命令
+     */
+    @PostMapping("/system/exec/command")
+    public ResultVo<Boolean> execCommand(@RequestBody @Validated ExecCommandInput input) {
+        return ResultVo.supplier(() -> nodeService.execCommand(input));
+    }
 }

@@ -8,6 +8,7 @@ import com.murong.nets.config.ExecutorPool;
 import com.murong.nets.config.NodeConfig;
 import com.murong.nets.constant.FileParamConstant;
 import com.murong.nets.constant.RequestTypeEnmu;
+import com.murong.nets.input.ExecCommandInput;
 import com.murong.nets.input.ReadFileInput;
 import com.murong.nets.input.RenameFileInput;
 import com.murong.nets.interaction.RpcFuture;
@@ -34,6 +35,7 @@ import lombok.SneakyThrows;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
 
 import java.io.IOException;
@@ -553,5 +555,27 @@ public class NodeService {
         RpcFuture rpcFuture = client.sendSynMsg(rpcRequest);
         RpcResponse rpcResponse = rpcFuture.get();
         return RpcResponseHandler.handler(rpcResponse, t -> JsonUtil.parseObject(t, ReadFileVo.class));
+    }
+
+    /**
+     * 文件日志
+     *
+     * @param input 执行命令的input
+     * @return boolean
+     */
+    public boolean execCommand(ExecCommandInput input) {
+        if (!StringUtil.isBlank(input.getLogFile())) {
+            Assert.isTrue(EnvConfig.isFilePathOk(input.getLogFile()), "日志文件输出没有匹配工作目录");
+        }
+        if (!StringUtil.isBlank(input.getExecDir())) {
+            Assert.isTrue(EnvConfig.isFilePathOk(input.getExecDir() + "/"), "执行命令文件夹没有匹配工作目录");
+        }
+        RpcAutoReconnectClient client = ClientSitePool.getOrConnectClient(input.getNodeName());
+        RpcRequest rpcRequest = new RpcRequest();
+        rpcRequest.setRequestType(RequestTypeEnmu.execCommand.name());
+        rpcRequest.setBody(JsonUtil.toJSONString(input));
+        RpcFuture rpcFuture = client.sendSynMsg(rpcRequest);
+        RpcResponse rpcResponse = rpcFuture.get();
+        return RpcResponseHandler.handler(rpcResponse, Boolean::valueOf);
     }
 }

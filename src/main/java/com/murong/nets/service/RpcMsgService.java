@@ -9,17 +9,22 @@ import com.murong.nets.config.EnvConfig;
 import com.murong.nets.config.ExecutorPool;
 import com.murong.nets.constant.FileParamConstant;
 import com.murong.nets.constant.RequestTypeEnmu;
+import com.murong.nets.input.ExecCommandInput;
 import com.murong.nets.input.ReadFileInput;
 import com.murong.nets.input.RenameFileInput;
 import com.murong.nets.interaction.RpcMsgTransUtil;
 import com.murong.nets.interaction.RpcRequest;
 import com.murong.nets.interaction.RpcResponse;
+import com.murong.nets.util.CommandUtil;
 import com.murong.nets.util.FileUtil;
+import com.murong.nets.util.FilesTool;
 import com.murong.nets.util.JsonUtil;
 import com.murong.nets.util.KeyValueData;
 import com.murong.nets.util.OperationMsg;
 import com.murong.nets.util.RpcException;
 import com.murong.nets.util.RunTimeUtil;
+import com.murong.nets.util.SecureRandomUtil;
+import com.murong.nets.util.StringUtil;
 import com.murong.nets.util.ThreadUtil;
 import com.murong.nets.vo.EnvConfVo;
 import com.murong.nets.vo.FileVo;
@@ -29,14 +34,18 @@ import com.murong.nets.vo.ReadFileVo;
 import io.netty.channel.ChannelHandlerContext;
 import lombok.SneakyThrows;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -485,6 +494,36 @@ public class RpcMsgService {
             rpcResponse.setBody(JsonUtil.toJSONString(readFileVo));
         }
         rpcResponse.setCode(CodeConfig.SUCCESS);
+        RpcMsgTransUtil.write(ctx.channel(), rpcResponse);
+    }
+
+    /**
+     * 读取文件内容
+     */
+    @RpcMethod("execCommand")
+    public void execCommand(ChannelHandlerContext ctx, RpcRequest request) throws FileNotFoundException {
+        ExecCommandInput execCommandInput = JsonUtil.parseObject(request.getBody(), ExecCommandInput.class);
+        String logFile = execCommandInput.getLogFile();
+        File shellFile = null;
+        if (execCommandInput.getExecDir() != null) {// 执行目录
+            shellFile = new File(execCommandInput.getExecDir(), SecureRandomUtil.randomAlphabetic(12) + ".sh");
+        } else if (!StringUtil.isBlank(logFile)) { // 日志目录
+            File file = new File(logFile);
+            shellFile = new File(file.getParentFile(), SecureRandomUtil.randomAlphabetic(12) + ".sh");
+        } else { // 家目录
+            shellFile = new File(EnvConfig.homeDirs().getDirs().get(0), SecureRandomUtil.randomAlphabetic(12) + ".sh");
+        }
+        // 创建shellFile
+        FilesTool.createFile(shellFile);
+        try (FileOutputStream outputStream = new FileOutputStream(shellFile)) {
+            IOUtils.write(execCommandInput.getCommand(), outputStream, Charset.defaultCharset());
+        } catch (IOException e) {
+            throw new RpcException(e);
+        }
+        CommandUtil.exec(shellFile.getAbsolutePath(), execCommandInput.getExecDir(), logFile, execCommandInput.getExecSecondLimit());
+
+        RpcResponse rpcResponse = request.toResponse();
+        rpcResponse.setBody(Boolean.TRUE.toString());
         RpcMsgTransUtil.write(ctx.channel(), rpcResponse);
     }
 }
