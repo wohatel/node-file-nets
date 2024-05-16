@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <property name="LOG_HOME" value="logs"/>
+    <!--日志文件的名字-->
+    <property name="LOG_FILE_NAME" value="log.log"/>
+
+    <!--控制台日志-->
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <layout class="ch.qos.logback.classic.PatternLayout">
+            <!--格式化输出：%d表示日期，%thread表示线程名，%-5level：级别从左显示5个字符宽度,%msg：日志消息，%n是换行符-->
+            <Pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</Pattern>
+        </layout>
+    </appender>
+    <logger name="org.apache.kafka.clients.consumer.KafkaConsumer" level="off"/>
+
+    <!--INFO级别消息日志(文件日志， 按照每天生成日志文件)-->
+    <appender name="INFO_LOG_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_HOME}/${LOG_FILE_NAME}</file>
+        <encoder>
+            <Pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</Pattern>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <!--日志文件输出的文件名-->
+            <fileNamePattern>${LOG_HOME}/${LOG_FILE_NAME}_info_%d{yyyy-MM-dd}_%i.log</fileNamePattern>
+            <maxFileSize>500MB</maxFileSize>
+            <!--日志文件保留天数-->
+            <maxHistory>30</maxHistory>
+            <totalSizeCap>5GB</totalSizeCap>
+        </rollingPolicy>
+    </appender>
+
+    <logger name="com.murong.nets" level="INFO"/>
+    <!-- 日志输出级别 -->
+    <root level="INFO">
+        <appender-ref ref="STDOUT"/>
+        <appender-ref ref="INFO_LOG_FILE"/>
+    </root>
+</configuration>
+
