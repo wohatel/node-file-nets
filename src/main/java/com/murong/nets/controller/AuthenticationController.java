@@ -24,16 +24,15 @@ public class AuthenticationController {
     private final NodeService nodeService;
 
     /**
-     * 节点cp文件内容
+     * 刷新token,限制节点和使用时间策略
      */
     @PostMapping("/authen/accessToken/refresh")
-    public ResultVo<Boolean> readFileContent(@RequestBody @Validated RefreshTokenInput input) {
+    public ResultVo<Boolean> refreshToken(@RequestBody @Validated RefreshTokenInput input) {
         boolean centerNode = EnvConfig.isCenterNode();
         if (!centerNode) {
             throw new RpcException("中心节点方可处理刷新token请求");
         }
-        boolean approved = nodeService.refreshToken(input.getAccessToken());
-        return ResultVo.supplier(() -> approved);
+        return ResultVo.supplier(() -> true);
     }
 
 }

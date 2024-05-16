@@ -14,13 +14,10 @@ import com.murong.nets.interaction.RpcFuture;
 import com.murong.nets.interaction.RpcRequest;
 import com.murong.nets.interaction.RpcResponse;
 import com.murong.nets.util.JsonUtil;
-import com.murong.nets.util.ListUtil;
-import com.murong.nets.util.RSAAlgorithmUtil;
 import com.murong.nets.util.RpcException;
 import com.murong.nets.util.RpcResponseHandler;
 import com.murong.nets.util.StringUtil;
 import com.murong.nets.util.ThreadUtil;
-import com.murong.nets.vo.AuthenticationVo;
 import com.murong.nets.vo.CpuUsageVo;
 import com.murong.nets.vo.DirsVo;
 import com.murong.nets.vo.EnvConfVo;
@@ -40,7 +37,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import java.io.IOException;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -344,28 +340,6 @@ public class NodeService {
                         if (rateLimitVo != null) {// 如果非空
                             EnvConfig.casRateLimit(rateLimitVo.getRateLimit(), rateLimitVo.getTime());
                         }
-                        // 本地的缓存认证
-                        AuthenticationVo authenticationVoConfig = EnvConfig.getAuthenticationVo();
-                        // 同步authenAcessVo,校验集群的授权
-                        AuthenticationVo authenAccessVo = confVo.getAuthenticationVo();
-                        if (authenAccessVo.getRefreshTime() != null) {
-                            // 1 如果本地的refreshTime ==null,或者同步过来的时间比旧有的本地缓存的时间靠后
-                            if (authenticationVoConfig.getRefreshTime() == null || authenAccessVo.getRefreshTime().isAfter(authenticationVoConfig.getRefreshTime())) {
-                                String accessToken = authenAccessVo.getAccessToken();
-                                LocalDateTime refreshTime = authenAccessVo.getRefreshTime();
-
-                                String decrypt = RSAAlgorithmUtil.decrypt(accessToken);
-                                AuthenticationVo authenticationVo = JsonUtil.parseObject(decrypt, AuthenticationVo.class);
-
-                                authenticationVoConfig.setAccessToken(accessToken);
-                                authenticationVoConfig.setRefreshTime(refreshTime);
-                                authenticationVoConfig.setNodeMax(authenticationVo.getNodeMax());
-                                authenticationVoConfig.setExpireTime(authenticationVo.getExpireTime());
-                                authenticationVoConfig.setAccessHostPorts(authenticationVo.getAccessHostPorts());
-                                authenticationVoConfig.setSignTime(authenticationVo.getSignTime());
-
-                            }
-                        }
                     }
                 }
             }, e -> logger.error("syncCenterConf:", e));
@@ -400,21 +374,6 @@ public class NodeService {
             RateLimitVo rateLimitVo = confVo.getRateLimitVo();
             if (rateLimitVo != null) {// 如果非空
                 EnvConfig.casRateLimit(rateLimitVo.getRateLimit(), rateLimitVo.getTime());
-            }
-            AuthenticationVo authenticationVoConfig = EnvConfig.getAuthenticationVo();
-            // 同步access配置
-            AuthenticationVo authenticationVo = confVo.getAuthenticationVo();
-            // 本地的节点缓存,和中心节点不相等,则变更本地节点
-            if (authenticationVo.getRefreshTime() != authenticationVoConfig.getRefreshTime()) {
-                String accessToken = authenticationVo.getAccessToken();
-                LocalDateTime refreshTime = authenticationVo.getRefreshTime();
-
-                authenticationVoConfig.setAccessToken(accessToken);
-                authenticationVoConfig.setRefreshTime(refreshTime);
-                authenticationVoConfig.setNodeMax(authenticationVo.getNodeMax());
-                authenticationVoConfig.setExpireTime(authenticationVo.getExpireTime());
-                authenticationVoConfig.setAccessHostPorts(authenticationVo.getAccessHostPorts());
-                authenticationVoConfig.setSignTime(authenticationVo.getSignTime());
             }
         }
 
@@ -594,36 +553,5 @@ public class NodeService {
         RpcFuture rpcFuture = client.sendSynMsg(rpcRequest);
         RpcResponse rpcResponse = rpcFuture.get();
         return RpcResponseHandler.handler(rpcResponse, t -> JsonUtil.parseObject(t, ReadFileVo.class));
-    }
-
-    /**
-     * 只有中心节点才可以处理该请求
-     *
-     * @param accessToken 通行token
-     * @return boolean
-     */
-    public boolean refreshToken(String accessToken) {
-        String decrypt = RSAAlgorithmUtil.decrypt(accessToken);
-        AuthenticationVo authenticationVo = JsonUtil.parseObject(decrypt, AuthenticationVo.class);
-
-        List<String> accessIps = authenticationVo.getAccessHostPorts();
-        List<NodeVo> centerNodes = EnvConfig.getCenterNodes();
-        List<String> centreIps = centerNodes.stream().map(n -> n.getHost() + ":" + n.getName()).collect(Collectors.toList());
-
-        List<String> retain = ListUtil.retain(accessIps, centreIps);
-        int needSize = centreIps.size() % 2 == 0 ? centreIps.size() / 2 : centreIps.size() / 2 + 1;
-        if (retain.size() < needSize) {
-            throw new RpcException("提供的token中心节点不匹配,至少提供" + needSize + "个中心节点ip配置");
-        }
-        AuthenticationVo authenticationVoConfig = EnvConfig.getAuthenticationVo();
-
-        LocalDateTime refreshTime = LocalDateTime.now();
-        authenticationVoConfig.setAccessToken(accessToken);
-        authenticationVoConfig.setRefreshTime(refreshTime);
-        authenticationVoConfig.setNodeMax(authenticationVo.getNodeMax());
-        authenticationVoConfig.setExpireTime(authenticationVo.getExpireTime());
-        authenticationVoConfig.setAccessHostPorts(authenticationVo.getAccessHostPorts());
-        authenticationVoConfig.setSignTime(authenticationVo.getSignTime());
-        return true;
     }
 }

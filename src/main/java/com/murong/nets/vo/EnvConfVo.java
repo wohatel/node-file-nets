@@ -13,6 +13,4 @@ public class EnvConfVo {
     private RateLimitVo rateLimitVo;
 
     private DirsVo dirsVo;
-
-    private AuthenticationVo authenticationVo;
 }

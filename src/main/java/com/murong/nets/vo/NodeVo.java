@@ -12,5 +12,4 @@ public class NodeVo {
     private String host;
     private boolean isActive = true;
     private long startTime;
-    private boolean isNodeAvaiable;
 }

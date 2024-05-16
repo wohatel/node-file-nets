@@ -169,11 +169,6 @@ public class ClientSitePool {
         if (nodeVo == null) {
             throw new RpcException("未查询到链接目标:" + nodeName + " 节点信息");
         }
-
-        if (!nodeVo.isNodeAvaiable()) {
-            throw new RpcException("链接目标:" + nodeName + " 节点不可用或超出认证节点数限制");
-        }
-
         ClientSitePool.accept(nodeVo);
         RpcAutoReconnectClient rpcAutoReconnectClient = ClientSitePool.get(nodeVo.getName());
         if (rpcAutoReconnectClient == null) {
