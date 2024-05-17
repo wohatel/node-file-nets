@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 /**
  * description
@@ -13,7 +14,7 @@ import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
  * @author yaochuang 2024/05/08 18:17
  */
 @Configuration
-public class WebConfig {
+public class WebConfig implements WebMvcConfigurer {
 
     /**
      * 返回非null值的序列化

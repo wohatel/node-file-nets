@@ -10,18 +10,25 @@ import com.murong.nets.input.ReadFileInput;
 import com.murong.nets.input.RenameFileInput;
 import com.murong.nets.service.NodeService;
 import com.murong.nets.util.FileVerify;
+import com.murong.nets.util.FilesTool;
 import com.murong.nets.vo.FileVo;
 import com.murong.nets.vo.ReadFileVo;
 import com.murong.nets.vo.ResultVo;
+import com.murong.nets.vo.UploadFileVo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.util.Assert;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.NotBlank;
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 
@@ -133,6 +140,20 @@ public class FileController {
     public ResultVo<ReadFileVo> readFileContent(@RequestBody @Validated ReadFileInput input) {
         ReadFileVo readFileVo = nodeService.readFileContent(input);
         return ResultVo.supplier(() -> readFileVo);
+    }
+
+    /**
+     * 上传文件
+     */
+    @PostMapping("/node/upload/file")
+    public ResultVo<UploadFileVo> uploadFile(@RequestPart(value = "file") MultipartFile file, @RequestParam String dir) throws IOException {
+        Assert.isTrue(EnvConfig.isFilePathOk(dir), "目标文件夹没有匹配工作目录");
+        File localFile = FilesTool.copyToFile(file.getInputStream(), file.getOriginalFilename(), dir);
+        UploadFileVo uploadFileVo = new UploadFileVo();
+        uploadFileVo.setFile(localFile.getAbsolutePath());
+        uploadFileVo.setNodeName(EnvConfig.getLocalNodeName());
+        uploadFileVo.setTotalByteSize(file.getSize());
+        return ResultVo.supplier(() -> uploadFileVo);
     }
 
 }

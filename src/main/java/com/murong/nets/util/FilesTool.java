@@ -1,13 +1,16 @@
 package com.murong.nets.util;
 
 import lombok.SneakyThrows;
+import org.apache.commons.io.IOUtils;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.StringReader;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -35,6 +38,15 @@ public class FilesTool implements AutoCloseable {
      * [医]缓冲的作家
      */
     private BufferedWriter bufferedWriter;
+
+    public static File copyToFile(InputStream inputStream, String originalFilename, String dir) throws IOException {
+        File file = new File(dir, originalFilename);
+        try (inputStream; FileOutputStream outputStream = new FileOutputStream(file)) {
+            createFile(file);
+            IOUtils.copy(inputStream, outputStream);
+            return file;
+        }
+    }
 
     /**
      * 建立reader

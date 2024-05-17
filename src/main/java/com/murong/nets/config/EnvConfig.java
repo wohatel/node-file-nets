@@ -33,7 +33,6 @@ public class EnvConfig {
     @Getter
     private static final List<NodeVo> centerNodes = new ArrayList<>();
 
-
     @Getter
     @Setter
     private static String localNodeName;
