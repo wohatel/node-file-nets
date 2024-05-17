@@ -1,5 +1,6 @@
 package com.murong.nets.config;
 
+import com.murong.nets.constant.NodeModelEnum;
 import com.murong.nets.util.IpUtil;
 import com.murong.nets.util.MD5Util;
 import lombok.Data;
@@ -12,6 +13,7 @@ import java.util.List;
 @ConfigurationProperties(prefix = "node.base")
 @Data
 public class NodeConfig {
+
 
     /**
      * node的配置节点
@@ -26,6 +28,11 @@ public class NodeConfig {
      * 本机的rpc服务启动的host
      */
     private String localNodeHost = IpUtil.getIp();
+
+    /**
+     * node的节点模式,默认是simple
+     */
+    private NodeModelEnum localNodeModel = NodeModelEnum.simple;
 
     /**
      * 启动时间

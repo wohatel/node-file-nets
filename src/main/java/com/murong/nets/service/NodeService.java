@@ -232,6 +232,7 @@ public class NodeService {
                 localNode.setPort(nodeConfig.getLocalNodePort());
                 localNode.setHost(nodeConfig.getLocalNodeHost());
                 localNode.setStartTime(nodeConfig.getStartTime());
+                localNode.setNodeModel(nodeConfig.getLocalNodeModel());
 
                 ThreadUtil.execSilentVoid(() -> {
                     logger.info(String.format(format, nodeConfig.getLocalNodeHost(), nodeConfig.getLocalNodePort(), nodeVo.getHost(), nodeVo.getPort()));
@@ -285,7 +286,11 @@ public class NodeService {
         rpcRequest.setBody(nodeName);
         RpcFuture rpcFuture = orConnectClient.sendSynMsg(rpcRequest);
         RpcResponse rpcResponse = rpcFuture.get();
-        return RpcResponseHandler.handler(rpcResponse, t -> JsonUtil.parseArray(t, NodeVo.class));
+        return RpcResponseHandler.handler(rpcResponse, t -> {
+            List<NodeVo> nodeVos = JsonUtil.parseArray(t, NodeVo.class);
+            nodeVos.forEach(m -> m.setNodeModel(null));
+            return nodeVos;
+        });
     }
 
     /**
