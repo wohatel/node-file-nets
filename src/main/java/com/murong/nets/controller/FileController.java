@@ -16,6 +16,11 @@ import com.murong.nets.vo.ReadFileVo;
 import com.murong.nets.vo.ResultVo;
 import com.murong.nets.vo.UploadFileVo;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.util.Assert;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,7 +33,11 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.NotBlank;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.URLEncoder;
+import java.nio.charset.Charset;
 import java.util.List;
 
 
@@ -154,6 +163,22 @@ public class FileController {
         uploadFileVo.setNodeName(EnvConfig.getLocalNodeName());
         uploadFileVo.setTotalByteSize(file.getSize());
         return ResultVo.supplier(() -> uploadFileVo);
+    }
+
+    /**
+     * 文件下载
+     */
+    @GetMapping("/node/download/file")
+    public ResponseEntity<InputStreamResource> downloadFile(@RequestParam String file) throws FileNotFoundException {
+        Assert.isTrue(EnvConfig.isFilePathOk(file), "目标文件夹没有匹配工作目录");
+        // 设置响应头
+        int i = file.lastIndexOf("/");
+        String fileName = file.substring(i + 1);
+        String encoder = URLEncoder.encode(fileName, Charset.defaultCharset());
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+        headers.setContentDispositionFormData("attachment", encoder);
+        return new ResponseEntity<>(new InputStreamResource(new FileInputStream(file)), headers, HttpStatus.OK);
     }
 
 }
