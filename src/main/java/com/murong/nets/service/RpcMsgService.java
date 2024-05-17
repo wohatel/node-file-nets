@@ -489,7 +489,7 @@ public class RpcMsgService {
         } else {
             KeyValueData<Long, Long, String> keyValue = FileUtil.readBytesFromPosition(file, readFileInput.getPosition(), readFileInput.getReadCharSize());
             readFileVo.setContent(keyValue.getData());
-            readFileVo.setTotalByteSize(keyValue.getValue());
+            readFileVo.setTotalByteSize(keyValue.getKey());
             readFileVo.setNextPosition(keyValue.getValue());
             rpcResponse.setBody(JsonUtil.toJSONString(readFileVo));
         }
