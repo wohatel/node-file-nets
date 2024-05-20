@@ -3,10 +3,12 @@ package com.murong.nets.controller;
 import com.murong.nets.input.ClearNodeConnectInput;
 import com.murong.nets.input.ColseNodeConnectInput;
 import com.murong.nets.input.DownlineNodeInput;
+import com.murong.nets.input.WebSericeOpenInput;
 import com.murong.nets.service.NodeService;
 import com.murong.nets.vo.DownlineNodeVo;
 import com.murong.nets.vo.NodeVo;
 import com.murong.nets.vo.ResultVo;
+import com.murong.nets.vo.WebServiceStatusVo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.util.Assert;
 import org.springframework.validation.annotation.Validated;
@@ -72,6 +74,41 @@ public class NodeController {
         DownlineNodeVo downlineNodeVo = new DownlineNodeVo();
         downlineNodeVo.setFialedNodeNames(failNodes);
         return ResultVo.supplier(() -> downlineNodeVo);
+    }
+
+    /**
+     * 所有的web服务节点停用
+     */
+    @PostMapping("/node/webService/all/close")
+    public ResultVo<Boolean> webSericeAllClose() {
+        boolean bool = nodeService.webSericeAllClose();
+        return ResultVo.supplier(() -> bool);
+    }
+
+    /**
+     * 所有的web服务节点放开
+     */
+    @PostMapping("/node/webService/all/open")
+    public ResultVo<Boolean> webSericeAllOpen() {
+        boolean bool = nodeService.webSericeAllOpen();
+        return ResultVo.supplier(() -> bool);
+    }
+
+    /**
+     * 所有的web服务节点放开
+     */
+    @PostMapping("/node/webService/section/open")
+    public ResultVo<Boolean> webSericeSectionOpen(@Validated @RequestBody WebSericeOpenInput input) {
+        boolean bool = nodeService.webSericeSectionOpen(input);
+        return ResultVo.supplier(() -> bool);
+    }
+
+    /**
+     * 查询节点开发情况
+     */
+    @GetMapping("/node/webService/status")
+    public ResultVo<WebServiceStatusVo> webSericeStatus() {
+        return ResultVo.supplier(() -> nodeService.webSericeStatus());
     }
 
 }

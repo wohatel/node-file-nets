@@ -2,9 +2,12 @@ package com.murong.nets.config;
 
 
 import com.alibaba.fastjson2.JSON;
+import com.murong.nets.constant.LimitMode;
 import com.murong.nets.constant.LogRecord;
+import com.murong.nets.util.RpcException;
 import com.murong.nets.util.ThreadUtil;
 import com.murong.nets.util.UserAgentUtil;
+import com.murong.nets.vo.WebServiceStatusVo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -59,6 +62,8 @@ public class LogAspects {
             LogRecord logRecord = new LogRecord(UserAgentUtil.getIp(), UserAgentUtil.getOsName(), UserAgentUtil.getBrowser(), perFunc, getParamsAsString(args), LocalDateTime.now());
             log.info("web请求node:{} and 请求详情:{}", EnvConfig.getLocalNodeName(), logRecord);
         });
+        // 校验web服务开启状态
+        webServiceVal();
         return joinPoint.proceed();
     }
 
@@ -78,4 +83,17 @@ public class LogAspects {
         return JSON.toJSONString(arguments);
     }
 
+    public void webServiceVal() {
+        if (EnvConfig.isCenterNode()) {
+            return;
+        }
+        WebServiceStatusVo webServiceStatusVo = EnvConfig.getWebServiceStatusVo();
+        if (webServiceStatusVo.getLimitMode() == LimitMode.all_open) {
+            return;
+        }
+        if (webServiceStatusVo.getLimitMode() == LimitMode.section_open && webServiceStatusVo.getClients().contains(EnvConfig.getLocalNodeName())) {
+            return;
+        }
+        throw new RpcException("节点web服务已被停用");
+    }
 }

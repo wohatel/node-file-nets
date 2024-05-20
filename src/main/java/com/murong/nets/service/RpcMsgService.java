@@ -8,6 +8,7 @@ import com.murong.nets.config.CodeConfig;
 import com.murong.nets.config.EnvConfig;
 import com.murong.nets.config.ExecutorPool;
 import com.murong.nets.constant.FileParamConstant;
+import com.murong.nets.constant.LimitMode;
 import com.murong.nets.constant.RequestTypeEnmu;
 import com.murong.nets.input.ExecCommandInput;
 import com.murong.nets.input.ReadFileInput;
@@ -31,6 +32,7 @@ import com.murong.nets.vo.FileVo;
 import com.murong.nets.vo.NodeVo;
 import com.murong.nets.vo.OperateSystemVo;
 import com.murong.nets.vo.ReadFileVo;
+import com.murong.nets.vo.WebServiceStatusVo;
 import io.netty.channel.ChannelHandlerContext;
 import lombok.SneakyThrows;
 import org.apache.commons.io.FileUtils;
@@ -297,6 +299,7 @@ public class RpcMsgService {
         EnvConfVo result = new EnvConfVo();
         result.setDirsVo(EnvConfig.homeDirs());
         result.setRateLimitVo(EnvConfig.getRateLimitVo());
+        ClientSitePool.nodeList();
 
         RpcResponse rpcResponse = request.toResponse();
         rpcResponse.setCode(CodeConfig.SUCCESS);
@@ -526,4 +529,65 @@ public class RpcMsgService {
         rpcResponse.setBody(Boolean.TRUE.toString());
         RpcMsgTransUtil.write(ctx.channel(), rpcResponse);
     }
+
+
+    /**
+     * 读取文件内容
+     */
+    @RpcMethod("webSericeAllClose")
+    public void webSericeAllClose(ChannelHandlerContext ctx, RpcRequest request) {
+        WebServiceStatusVo webServiceStatusVo = EnvConfig.getWebServiceStatusVo();
+        webServiceStatusVo.setTime(System.currentTimeMillis());
+        webServiceStatusVo.getClients().clear();
+        webServiceStatusVo.setLimitMode(LimitMode.all_close);
+
+        RpcResponse rpcResponse = request.toResponse();
+        rpcResponse.setBody(Boolean.TRUE.toString());
+        RpcMsgTransUtil.write(ctx.channel(), rpcResponse);
+    }
+
+    /**
+     * 读取文件内容
+     */
+    @RpcMethod("webSericeAllOpen")
+    public void webSericeAllOpen(ChannelHandlerContext ctx, RpcRequest request) {
+        WebServiceStatusVo webServiceStatusVo = EnvConfig.getWebServiceStatusVo();
+        webServiceStatusVo.setTime(System.currentTimeMillis());
+        webServiceStatusVo.getClients().clear();
+        webServiceStatusVo.setLimitMode(LimitMode.all_open);
+
+        RpcResponse rpcResponse = request.toResponse();
+        rpcResponse.setBody(Boolean.TRUE.toString());
+        RpcMsgTransUtil.write(ctx.channel(), rpcResponse);
+    }
+
+    /**
+     * 读取文件内容
+     */
+    @RpcMethod("webSericeSectionOpen")
+    public void webSericeSectionOpen(ChannelHandlerContext ctx, RpcRequest request) {
+        String body = request.getBody();
+        List<String> nodeNames = JsonUtil.parseArray(body, String.class);
+        WebServiceStatusVo webServiceStatusVo = EnvConfig.getWebServiceStatusVo();
+        webServiceStatusVo.setTime(System.currentTimeMillis());
+        webServiceStatusVo.getClients().clear();
+        webServiceStatusVo.getClients().addAll(nodeNames);
+        webServiceStatusVo.setLimitMode(LimitMode.section_open);
+
+        RpcResponse rpcResponse = request.toResponse();
+        rpcResponse.setBody(Boolean.TRUE.toString());
+        RpcMsgTransUtil.write(ctx.channel(), rpcResponse);
+    }
+
+    /**
+     * 读取文件内容
+     */
+    @RpcMethod("webSericeStatus")
+    public void webSericeStatus(ChannelHandlerContext ctx, RpcRequest request) {
+        WebServiceStatusVo webServiceStatusVo = EnvConfig.getWebServiceStatusVo();
+        RpcResponse rpcResponse = request.toResponse();
+        rpcResponse.setBody(JsonUtil.toJSONString(webServiceStatusVo));
+        RpcMsgTransUtil.write(ctx.channel(), rpcResponse);
+    }
+
 }

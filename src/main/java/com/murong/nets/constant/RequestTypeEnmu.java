@@ -145,6 +145,25 @@ public enum RequestTypeEnmu {
      */
     readFileContent,
 
-    execCommand
-    ;
+    execCommand,
+
+    /**
+     * 停用所有节点web服务
+     */
+    webSericeAllClose,
+
+    /**
+     * 停用所有节点web开启
+     */
+    webSericeAllOpen,
+
+    /**
+     * 停用所有节点web开启
+     */
+    webSericeSectionOpen,
+
+    /**
+     * 获取web服务状态
+     */
+    webSericeStatus;
 }

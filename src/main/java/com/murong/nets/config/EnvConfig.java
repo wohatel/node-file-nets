@@ -1,8 +1,10 @@
 package com.murong.nets.config;
 
+import com.murong.nets.constant.LimitMode;
 import com.murong.nets.vo.DirsVo;
 import com.murong.nets.vo.NodeVo;
 import com.murong.nets.vo.RateLimitVo;
+import com.murong.nets.vo.WebServiceStatusVo;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
@@ -32,6 +34,12 @@ public class EnvConfig {
      */
     @Getter
     private static final List<NodeVo> centerNodes = new ArrayList<>();
+
+    /**
+     * web服务节点开启状态
+     */
+    @Getter
+    private static final WebServiceStatusVo webServiceStatusVo = new WebServiceStatusVo();
 
     @Getter
     @Setter
@@ -89,6 +97,17 @@ public class EnvConfig {
     public static void casRateLimit(long rateLimit, long time) {
         if (time > rateLimitVo.getTime()) {
             rateLimitVo.setRateLimit(rateLimit);
+            rateLimitVo.setTime(time);
+        }
+    }
+
+    /**
+     * 设置web服务开启状态
+     */
+    public static void casWebServiceStatus(List<String> lists, LimitMode limitMode, long time) {
+        if (time > webServiceStatusVo.getTime()) {
+            webServiceStatusVo.setClients(lists);
+            webServiceStatusVo.setLimitMode(limitMode);
             rateLimitVo.setTime(time);
         }
     }

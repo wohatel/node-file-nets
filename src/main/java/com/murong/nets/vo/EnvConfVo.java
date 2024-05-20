@@ -13,4 +13,6 @@ public class EnvConfVo {
     private RateLimitVo rateLimitVo;
 
     private DirsVo dirsVo;
+
+    private WebServiceStatusVo webServiceStatusVo;
 }

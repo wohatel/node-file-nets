@@ -11,6 +11,7 @@ import com.murong.nets.constant.RequestTypeEnmu;
 import com.murong.nets.input.ExecCommandInput;
 import com.murong.nets.input.ReadFileInput;
 import com.murong.nets.input.RenameFileInput;
+import com.murong.nets.input.WebSericeOpenInput;
 import com.murong.nets.interaction.RpcFuture;
 import com.murong.nets.interaction.RpcRequest;
 import com.murong.nets.interaction.RpcResponse;
@@ -30,6 +31,7 @@ import com.murong.nets.vo.OperateSystemVo;
 import com.murong.nets.vo.ProcessActiveVo;
 import com.murong.nets.vo.RateLimitVo;
 import com.murong.nets.vo.ReadFileVo;
+import com.murong.nets.vo.WebServiceStatusVo;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.slf4j.Logger;
@@ -347,6 +349,11 @@ public class NodeService {
                         if (rateLimitVo != null) {// 如果非空
                             EnvConfig.casRateLimit(rateLimitVo.getRateLimit(), rateLimitVo.getTime());
                         }
+                        // 同步web服务开启状态
+                        WebServiceStatusVo webServiceStatusVo = confVo.getWebServiceStatusVo();
+                        if (webServiceStatusVo != null) {
+                            EnvConfig.casWebServiceStatus(webServiceStatusVo.getClients(), webServiceStatusVo.getLimitMode(), webServiceStatusVo.getTime());
+                        }
                     }
                 }
             }, e -> logger.error("syncCenterConf:", e));
@@ -368,6 +375,7 @@ public class NodeService {
         RpcAutoReconnectClient client = ClientSitePool.getCenterClient();
         RpcRequest rpcRequest = new RpcRequest();
         rpcRequest.setRequestType(RequestTypeEnmu.getConf.name());
+        rpcRequest.setBody(nodeConfig.getLocalNodeName());
         RpcFuture rpcFuture = client.sendSynMsg(rpcRequest);
         RpcResponse rpcResponse = rpcFuture.get();
         EnvConfVo confVo = JsonUtil.parseObject(rpcResponse.getBody(), EnvConfVo.class);
@@ -381,6 +389,11 @@ public class NodeService {
             RateLimitVo rateLimitVo = confVo.getRateLimitVo();
             if (rateLimitVo != null) {// 如果非空
                 EnvConfig.casRateLimit(rateLimitVo.getRateLimit(), rateLimitVo.getTime());
+            }
+            // 同步web服务开启状态
+            WebServiceStatusVo webServiceStatusVo = confVo.getWebServiceStatusVo();
+            if (webServiceStatusVo != null) {
+                EnvConfig.casWebServiceStatus(webServiceStatusVo.getClients(), webServiceStatusVo.getLimitMode(), webServiceStatusVo.getTime());
             }
         }
 
@@ -582,5 +595,54 @@ public class NodeService {
         RpcFuture rpcFuture = client.sendSynMsg(rpcRequest);
         RpcResponse rpcResponse = rpcFuture.get();
         return RpcResponseHandler.handler(rpcResponse, Boolean::valueOf);
+    }
+
+    public boolean webSericeAllClose() {
+        RpcAutoReconnectClient client = ClientSitePool.getCenterClient();
+        RpcRequest rpcRequest = new RpcRequest();
+        rpcRequest.setRequestType(RequestTypeEnmu.webSericeAllClose.name());
+        RpcFuture rpcFuture = client.sendSynMsg(rpcRequest);
+        RpcResponse rpcResponse = rpcFuture.get();
+        return RpcResponseHandler.handler(rpcResponse, Boolean::valueOf);
+    }
+
+    public boolean webSericeAllOpen() {
+        RpcAutoReconnectClient client = ClientSitePool.getCenterClient();
+        RpcRequest rpcRequest = new RpcRequest();
+        rpcRequest.setRequestType(RequestTypeEnmu.webSericeAllOpen.name());
+        RpcFuture rpcFuture = client.sendSynMsg(rpcRequest);
+        RpcResponse rpcResponse = rpcFuture.get();
+        return RpcResponseHandler.handler(rpcResponse, Boolean::valueOf);
+    }
+
+    /**
+     * 开启部分节点的web服务
+     *
+     * @param input 服务配置
+     * @return boolean
+     */
+    public boolean webSericeSectionOpen(WebSericeOpenInput input) {
+        List<String> nodeNames = input.getNodeNames();
+        RpcAutoReconnectClient client = ClientSitePool.getCenterClient();
+        RpcRequest rpcRequest = new RpcRequest();
+        rpcRequest.setRequestType(RequestTypeEnmu.webSericeSectionOpen.name());
+        rpcRequest.setBody(JsonUtil.toJSONString(nodeNames));
+        RpcFuture rpcFuture = client.sendSynMsg(rpcRequest);
+        RpcResponse rpcResponse = rpcFuture.get();
+        return RpcResponseHandler.handler(rpcResponse, Boolean::valueOf);
+    }
+
+    /**
+     * web服务开启状态
+     *
+     * @return vo
+     */
+    public WebServiceStatusVo webSericeStatus() {
+        RpcAutoReconnectClient client = ClientSitePool.getCenterClient();
+        RpcRequest rpcRequest = new RpcRequest();
+        rpcRequest.setRequestType(RequestTypeEnmu.webSericeStatus.name());
+        RpcFuture rpcFuture = client.sendSynMsg(rpcRequest);
+        RpcResponse rpcResponse = rpcFuture.get();
+        return RpcResponseHandler.handler(rpcResponse, t -> JsonUtil.parseObject(t, WebServiceStatusVo.class));
     }
 }
