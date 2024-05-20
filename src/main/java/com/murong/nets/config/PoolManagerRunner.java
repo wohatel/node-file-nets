@@ -3,14 +3,19 @@ package com.murong.nets.config;
 import com.murong.nets.client.ClientSitePool;
 import com.murong.nets.server.RpcServer;
 import com.murong.nets.service.NodeService;
+import com.murong.nets.util.MD5Util;
 import com.murong.nets.util.ThreadUtil;
 import com.murong.nets.util.TimeUtil;
+import com.murong.nets.vo.NodeVo;
 import io.netty.channel.nio.NioEventLoopGroup;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
+
+import java.util.List;
 
 @Component
 @Log
@@ -23,6 +28,8 @@ public class PoolManagerRunner implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
+        // 检测配置中国男性节点
+        configCenterNodes();
         // 首先启动当前节点
         rpcStart();
         // 管理本机链接远程的端口
@@ -63,5 +70,28 @@ public class PoolManagerRunner implements ApplicationRunner {
         log.info("结束启动节点服务...");
         Thread.sleep(3000);
         return true;
+    }
+
+    /**
+     * 检查配置中心节点
+     */
+    public void configCenterNodes() {
+        // 设置本机节点名称
+        EnvConfig.setLocalNodeName(nodeConfig.getLocalNodeName());
+        // 中心节点
+        List<String> list = nodeConfig.getMainNodes();
+        if (!CollectionUtils.isEmpty(list)) {
+            for (String ipPort : list) {
+                String[] split = ipPort.split(":");
+                NodeVo nodeVo = new NodeVo();
+                nodeVo.setPort(Integer.parseInt(split[1]));
+                nodeVo.setHost(split[0]);
+                nodeVo.setName(MD5Util.getMD5(ipPort).substring(0, 8));
+                if (nodeVo.getName().equals(nodeConfig.getLocalNodeName())) {// 本地节点是中心节点
+                    nodeVo.setStartTime(nodeConfig.getStartTime());
+                }
+                EnvConfig.addCenterNode(nodeVo);
+            }
+        }
     }
 }
