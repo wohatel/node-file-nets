@@ -20,15 +20,8 @@ public class AppRunner implements ApplicationRunner {
 
     private final NodeConfig nodeConfig;
 
-    private final HomeDirConfig homeDirConfig;
-
     @Override
     public void run(ApplicationArguments args) {
-        List<String> homeDirs = homeDirConfig.getList();
-        // 安全的工作目录
-        if (!CollectionUtils.isEmpty(homeDirs)) {
-            EnvConfig.clearHomeDirsAndAddAll(homeDirs, System.currentTimeMillis());
-        }
         logger.info("读取中心节点");
         // 设置本机节点名称
         EnvConfig.setLocalNodeName(nodeConfig.getLocalNodeName());
