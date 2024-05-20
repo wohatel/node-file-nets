@@ -6,7 +6,6 @@ import com.murong.nets.client.RpcDefaultClient;
 import com.murong.nets.config.EnvConfig;
 import com.murong.nets.config.ExecutorPool;
 import com.murong.nets.config.NodeConfig;
-import com.murong.nets.constant.FileParamConstant;
 import com.murong.nets.constant.RequestTypeEnmu;
 import com.murong.nets.input.ExecCommandInput;
 import com.murong.nets.input.ReadFileInput;
@@ -102,57 +101,6 @@ public class NodeService {
             body.add(targetNode);// 传输文件到targetNode
             body.add(sourceFile);// sourceNode的文件
             body.add(targetFile);// targetNode的文件
-            rpcRequest.setBody(JsonUtil.toJSONString(body));
-            rpcDefaultClient.sendMsg(rpcRequest);
-            return true;
-        }
-    }
-
-    /**
-     * 拷贝目录
-     *
-     * @param sourceNode 源节点
-     * @param targetNode 目标节点
-     * @param sourceDir  源节点文件夹
-     * @param targetDir  目标节点文件夹
-     *                   响应结果
-     */
-    public boolean cpDir(String sourceNode, String targetNode, String sourceDir, String targetDir) {
-        if (!sourceDir.endsWith("/")) {
-            sourceDir += "/";
-        }
-        if (!targetDir.endsWith("/")) {
-            targetDir += "/";
-        }
-        if (sourceNode.equals(targetNode)) {
-            if (sourceDir.equals(targetDir)) {
-                throw new RpcException("来源节点和目标节点一致且来源文件和目标文件一样,不需要拷贝");
-            }
-            if (targetDir.startsWith(sourceDir)) {
-                throw new RpcException("父目录不可向子目录拷贝");
-            }
-        }
-        // 如果本机是来源节点
-        if (sourceNode.equals(nodeConfig.getLocalNodeName())) {
-            RpcDefaultClient rpcDefaultClient = ClientSitePool.getOrConnectClient(targetNode);
-            final String sourceDirF = sourceDir;
-            final String targetDirF = targetDir;
-            ExecutorPool.getExecutorService().submit(() -> {
-                try {
-                    rpcDefaultClient.sendDir(sourceDirF, targetDirF, FileParamConstant.READ_SIZE.intValue());
-                } catch (Exception e) {
-                    throw new RpcException(e);
-                }
-            });
-            return true;
-        } else {
-            RpcDefaultClient rpcDefaultClient = ClientSitePool.getOrConnectClient(sourceNode);
-            RpcRequest rpcRequest = new RpcRequest();
-            rpcRequest.setRequestType(RequestTypeEnmu.sendDir.name());
-            List<String> body = new ArrayList<>(); // 此body是需要告诉sourceNode
-            body.add(targetNode);// 传输文件到targetNode
-            body.add(sourceDir);// sourceNode的文件夹
-            body.add(targetDir);// targetNode的文件夹
             rpcRequest.setBody(JsonUtil.toJSONString(body));
             rpcDefaultClient.sendMsg(rpcRequest);
             return true;

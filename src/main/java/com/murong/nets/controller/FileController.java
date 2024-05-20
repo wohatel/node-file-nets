@@ -2,7 +2,6 @@ package com.murong.nets.controller;
 
 import com.murong.nets.config.EnvConfig;
 import com.murong.nets.input.ClearOkFileInput;
-import com.murong.nets.input.CpDirInput;
 import com.murong.nets.input.CpFileInput;
 import com.murong.nets.input.CpFileToDirInput;
 import com.murong.nets.input.DelFileOrDirInput;
@@ -105,15 +104,6 @@ public class FileController {
         String targetPathFile = targetDir.endsWith("/") ? targetDir + fileName.substring(1) : targetDir + fileName;
         Assert.isTrue(EnvConfig.isFilePathOk(input.getTargetDir()), "目标文件夹没有匹配工作目录");
         return ResultVo.supplier(() -> nodeService.cpFile(sourceNode, targetNode, sourceFile, targetPathFile));
-    }
-
-    /**
-     * 节点cp文件内容
-     */
-    @PostMapping("/node/cpDir")
-    public ResultVo<Boolean> cpDir(@RequestBody @Validated CpDirInput input) {
-        Assert.isTrue(EnvConfig.isFilePathOk(input.getTargetDir()), "目标文件夹没有匹配工作目录");
-        return ResultVo.supplier(() -> nodeService.cpDir(input.getSourceNode(), input.getTargetNode(), input.getSourceDir(), input.getTargetDir()));
     }
 
     /**
