@@ -77,9 +77,6 @@ public class FileController {
      */
     @GetMapping("/node/file/isFree")
     public ResultVo<Boolean> operabitilyCheck(@NotBlank String nodeName, @NotBlank String file) {
-        if (!EnvConfig.isFilePathOk(file)) {// 如果不是家目录文件,放权
-            return ResultVo.supplier(() -> true);
-        }
         return ResultVo.supplier(() -> nodeService.operabitilyCheck(nodeName, file));
     }
 
