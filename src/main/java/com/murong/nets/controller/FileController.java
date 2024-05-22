@@ -8,7 +8,6 @@ import com.murong.nets.input.DelFileOrDirInput;
 import com.murong.nets.input.ReadFileInput;
 import com.murong.nets.input.RenameFileInput;
 import com.murong.nets.service.NodeService;
-import com.murong.nets.util.FileVerify;
 import com.murong.nets.util.FilesTool;
 import com.murong.nets.vo.FileVo;
 import com.murong.nets.vo.ReadFileVo;
@@ -66,7 +65,6 @@ public class FileController {
     @PostMapping("/node/renameFile")
     public ResultVo<Boolean> renameFile(@RequestBody @Validated RenameFileInput input) {
         Assert.isTrue(EnvConfig.isFilePathOk(input.getNewName()), "目标文件没有匹配工作目录");
-        Assert.isTrue(FileVerify.isFileNameOk(input.getNewName()), "新文件名不能包含特殊字符");
         Assert.isTrue(!input.getNewName().contains("/"), "新文件名不能包含'/'等路径符号");
         return ResultVo.supplier(() -> nodeService.renameFile(input.getNodeName(), input.getFile(), input.getNewName()));
     }
@@ -118,7 +116,6 @@ public class FileController {
      */
     @GetMapping("/node/filesOfDir")
     public ResultVo<List<FileVo>> filesOfDir(@NotBlank String nodeName, @NotBlank String dir) {
-        Assert.isTrue(EnvConfig.isFilePathOk(dir), "目标文件夹没有匹配工作目录");
         return ResultVo.supplier(() -> nodeService.filesOfDir(nodeName, dir));
     }
 
@@ -159,7 +156,6 @@ public class FileController {
      */
     @GetMapping("/node/download/file")
     public ResponseEntity<InputStreamResource> downloadFile(@RequestParam String file) throws FileNotFoundException {
-        Assert.isTrue(EnvConfig.isFilePathOk(file), "目标文件夹没有匹配工作目录");
         // 设置响应头
         int i = file.lastIndexOf("/");
         String fileName = file.substring(i + 1);
